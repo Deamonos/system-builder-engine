@@ -1,0 +1,3465 @@
+/**
+ * SBE — Styles des objets
+ * Feuille du TEMPLATE (atelier WYSIWYG) + feuille de l'OBJET.
+ * Tout consomme les jetons --sbe-* du manager de thème.
+ */
+
+/* ============================================================
+ * TEMPLATE — l'atelier
+ * ============================================================ */
+
+.sbe-template-sheet .window-content,
+.sbe-objet-sheet .window-content {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.sbe-tpl-root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sbe-space-sm, 6px);
+  height: 100%;
+  /* Le DÉFILEMENT vit dans .sbe-obj-scroll (zone interne) : la racine
+     reste libre de déborder (décors, éléments épinglés). */
+  overflow: visible;
+  padding: var(--sbe-space-md, 10px);
+  background: var(--sbe-surf-1);
+  color: var(--sbe-text);
+}
+
+/* --- En-tête --- */
+.sbe-tpl-header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.sbe-tpl-img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border: 1px solid var(--sbe-tone-3);
+  border-radius: var(--sbe-radius, 6px);
+  background: var(--sbe-surf-2);
+  cursor: pointer;
+}
+.sbe-tpl-img:hover { border-color: var(--sbe-accent); }
+.sbe-tpl-header input[type="text"] {
+  flex: 1;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+/* --- Options fixes du modèle --- */
+.sbe-tpl-opts {
+  border: 1px solid var(--sbe-tone-3);
+  border-radius: var(--sbe-radius, 6px);
+  background: var(--sbe-surf-2);
+  flex-shrink: 0;
+}
+.sbe-tpl-opts > summary {
+  padding: 6px 10px;
+  font-weight: 600;
+  color: var(--sbe-text-2);
+  cursor: pointer;
+  font-size: 0.9em;
+}
+.sbe-tpl-opts-rows {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: start;
+  gap: 3px 24px;
+  padding: 3px 12px 9px;
+  font-size: 0.95em;
+}
+.sbe-tpl-opts-rows label {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  color: var(--sbe-text-2);
+}
+
+/* --- Le + d'ajout --- */
+.sbe-tpl-addbar {
+  display: flex;
+  justify-content: center;
+  padding: 2px 0 6px;
+  flex-shrink: 0;
+}
+.sbe-tpl-plus {
+  /* Verrouillé dans les 2 sens : les styles de boutons Foundry imposent
+     des hauteurs mini qui transformaient le rond en ovale. */
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  max-width: 24px;
+  min-height: 24px;
+  max-height: 24px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid var(--sbe-accent-dark);
+  color: var(--sbe-accent);
+  background: color-mix(in srgb, var(--sbe-accent) 12%, transparent);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+.sbe-tpl-plus:hover {
+  background: color-mix(in srgb, var(--sbe-accent) 28%, transparent);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--sbe-accent) 50%, transparent);
+}
+
+/* --- Zone de construction --- */
+.sbe-tpl-canvas {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.sbe-tpl-empty {
+  text-align: center;
+  color: var(--sbe-text-dim);
+  font-size: 0.85em;
+  font-style: italic;
+  padding: 14px 0;
+}
+
+/* --- Un élément en rendu réel --- */
+.sbe-tpl-el {
+  display: grid;
+  /* Libellé à côté : sa colonne prend la largeur de SON texte (130 px
+     au plus) — pas de grand vide derrière « Force », et dans une
+     colonne étroite le champ ne déborde plus chez le voisin. */
+  grid-template-columns: fit-content(130px) minmax(min-content, 1fr);
+  gap: 8px;
+  align-items: center;
+  padding: 5px 6px;
+  position: relative;
+  border-radius: 4px;
+  font-size: 1em;
+}
+.sbe-tpl-el:hover {
+  outline: 1px dashed var(--sbe-accent-dark);
+  outline-offset: 1px;
+}
+.sbe-tpl-el-label { color: var(--sbe-text-2); }
+.sbe-tpl-el input:disabled,
+.sbe-tpl-el select:disabled {
+  opacity: 1;
+  color: var(--sbe-text);
+  background: var(--sbe-surf-2);
+  border-color: var(--sbe-tone-3);
+  cursor: default;
+}
+.sbe-tpl-el-img {
+  border: 1px solid var(--sbe-tone-3);
+  border-radius: 4px;
+  object-fit: contain;
+  background: var(--sbe-surf-2);
+  max-width: 100%;
+  justify-self: start;
+}
+.sbe-tpl-el-img--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sbe-text-dim);
+  min-width: 80px;
+  min-height: 40px; /* repli visible quand aucune dimension n'est fixée */
+}
+.sbe-tpl-el-unknown {
+  color: var(--sbe-warn);
+  font-style: italic;
+  font-size: 0.85em;
+}
+
+/* Clé affichée discrètement au survol. */
+.sbe-tpl-el-key {
+  position: absolute;
+  right: 76px;
+  top: -8px;
+  font-size: 0.68em;
+  color: var(--sbe-text-dim);
+  background: var(--sbe-surf-3);
+  border: 1px solid var(--sbe-tone-3);
+  border-radius: 4px;
+  padding: 0 5px;
+  opacity: 0;
+  pointer-events: none;
+}
+.sbe-tpl-el:hover .sbe-tpl-el-key { opacity: 1; }
+
+/* Outils au survol : ⠿ ✏ 🗑 */
+.sbe-tpl-tools {
+  position: absolute;
+  right: 0;   /* -2px faisait apparaître une barre de défilement horizontale au survol */
+  top: -9px;
+  display: none;
+  gap: 6px;
+  align-items: center;
+  font-size: 0.75em;
+  background: var(--sbe-surf-3);
+  border: 1px solid var(--sbe-tone-3);
+  border-radius: 4px;
+  padding: 1px 6px;
+  color: var(--sbe-text-2);
+  z-index: 2;
+}
+/* Barre de l'élément SURVOLÉ (et de ses parents) seulement — jamais
+   celles de tous ses descendants : dans une zone libre, les barres des
+   voisins recouvraient les éléments et un clic tombait sur ⠿ ou
+   « arrière-plan » d'un autre élément au lieu de le déplacer. */
+.sbe-tpl-el:hover > .sbe-tpl-tools { display: flex; }
+/* Un style d'élément peut couper ce qui dépasse (« overflow: hidden »
+   pour un écran, une carte…) : dans l'ATELIER, au survol, on rouvre
+   pour que la barre ⠿ ✏ 🗑 et la clé, posées au-dessus du bord,
+   restent toujours atteignables. La fiche n'est pas concernée. */
+.sbe-tpl-el:hover { overflow: visible !important; }
+.sbe-tpl-tools a { color: var(--sbe-text-2); }
+.sbe-tpl-tools a:hover { color: var(--sbe-accent); }
+.sbe-tpl-drag { cursor: grab; }
+.sbe-tpl-dragging { opacity: 0.4; }
+
+/* ============================================================
+ * Fenêtre d'édition d'élément (Base / Style)
+ * ============================================================ */
+
+/* La fenêtre est redimensionnable : toute la chaîne remplit la
+   hauteur, les onglets défilent, le footer reste COLLÉ EN BAS.
+   DialogV2 intercale form.dialog-form et .dialog-content entre
+   .window-content et notre racine : TOUS doivent s'étirer. */
+.sbe-el-dialog-app .window-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.sbe-el-dialog-app .window-content form,
+.sbe-el-dialog-app .window-content .dialog-form,
+.sbe-el-dialog-app .window-content .dialog-content,
+.sbe-el-dialog-app .window-content .standard-form {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: 0;
+}
+.sbe-el-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+}
+.sbe-el-tabs {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid var(--sbe-tone-3, #3b3f45);
+  flex-shrink: 0;
+}
+.sbe-el-tab {
+  width: auto;
+  padding: 5px 16px;
+  font-size: 0.9em;
+  border: none;
+  background: none;
+  color: var(--sbe-text-dim, #9c988f);
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  cursor: pointer;
+}
+.sbe-el-tab.active {
+  color: var(--sbe-text-strong, inherit);
+  font-weight: 600;
+  border-bottom-color: var(--sbe-accent, #d2622c);
+}
+.sbe-el-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;   /* scroll vertical ET horizontal (zone de code étirée) */
+  scrollbar-gutter: stable;
+}
+.sbe-el-pane > * { flex-shrink: 0; }
+.sbe-el-opts { display: flex; flex-direction: column; gap: 6px; }
+
+/* Les champs du dialogue S'ADAPTENT à la largeur de la fenêtre
+   (règle UI : jamais de zone minuscule figée). Les largeurs fixées
+   inline (petits champs numériques) restent prioritaires. */
+.sbe-el-pane textarea {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 90px;
+}
+.sbe-el-pane .form-group input[type="text"],
+.sbe-el-pane .form-group select {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Aperçu de démonstration du type de graphique sélectionné. */
+.sbe-chart-preview {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background: var(--sbe-surf-2);
+  border: 1px dashed var(--sbe-tone-3);
+  border-radius: 4px;
+  padding: 8px 4px;
+}
+
+/* ============================================================
+ * OBJET — feuille minimale (palier 1)
+ * ============================================================ */
+
+.sbe-obj-root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sbe-space-sm, 6px);
+  height: 100%;
+  /* Le DÉFILEMENT vit dans .sbe-obj-scroll (zone interne) : la racine
+     reste libre de déborder (décors, éléments épinglés). */
+  overflow: visible;
+  padding: var(--sbe-space-md, 10px);
+  background: var(--sbe-surf-1);
+  color: var(--sbe-text);
+}
+.sbe-obj-header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.sbe-obj-img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border: 1px solid var(--sbe-tone-3);
+  border-radius: var(--sbe-radius, 6px);
+  background: var(--sbe-surf-2);
+  cursor: pointer;
+}
+.sbe-obj-img:hover { border-color: var(--sbe-accent); }
+.sbe-obj-header input[type="text"] {
+  flex: 1;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+.sbe-obj-tplinfo {
+  margin: 0;
+  font-size: 0.85em;
+  color: var(--sbe-text-dim);
+  flex-shrink: 0;
+}
+.sbe-obj-tplinfo--warn { color: var(--sbe-warn); }
+.sbe-obj-tabs {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid var(--sbe-tone-3);
+  flex-shrink: 0;
+}
+.sbe-obj-tabs > a,
+.sbe-obj-tabs > span {
+  padding: 6px 16px;
+  font-size: 0.9em;
+  color: var(--sbe-text-dim);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+.sbe-obj-tabs > a.active,
+.sbe-obj-tabs > span.active {
+  color: var(--sbe-text-strong);
+  font-weight: 600;
+  border-bottom-color: var(--sbe-accent);
+}
+
+/* Onglets en DOSSIERS (fiche d'objet) : 1re ligne = natifs du système,
+   2e ligne = ajoutés par le modèle. L'onglet actif « tient » au contenu. */
+.sbe-obj-tabs.sbe-folder-tabs {
+  flex-direction: column;
+  gap: 0;
+  border-bottom: 1px solid var(--sbe-accent-dark, var(--sbe-tone-3));
+}
+.sbe-folder-tabs .sbe-ftab-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 3px;
+  padding: 0 4px;
+}
+.sbe-folder-tabs .sbe-ftab-row + .sbe-ftab-row {
+  margin-top: 2px;
+  padding-left: 14px;
+}
+.sbe-folder-tabs .sbe-ftab-row > a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px 3px;
+  font-size: 0.88em;
+  color: var(--sbe-text-dim);
+  cursor: pointer;
+  border: 1px solid var(--sbe-tone-3);
+  border-bottom: none;
+  border-radius: 7px 7px 0 0;
+  background: color-mix(in srgb, var(--sbe-tone-3) 35%, transparent);
+  margin-bottom: -1px;
+  transition: background 0.12s, color 0.12s;
+}
+.sbe-folder-tabs .sbe-ftab-native > a { font-size: 0.84em; }
+.sbe-folder-tabs .sbe-ftab-row > a:hover {
+  color: var(--sbe-text-strong);
+  background: color-mix(in srgb, var(--sbe-accent) 12%, transparent);
+}
+.sbe-folder-tabs .sbe-ftab-row > a.active {
+  color: var(--sbe-text-strong);
+  font-weight: 600;
+  border-color: var(--sbe-accent-dark, var(--sbe-accent));
+  background: color-mix(in srgb, var(--sbe-accent) 18%, transparent);
+  box-shadow: inset 0 2px 0 var(--sbe-accent);
+  z-index: 1;
+}
+/* Ligne native au-dessus d'une ligne de modèle : séparée d'un trait. */
+.sbe-folder-tabs .sbe-ftab-native:not(:last-child) {
+  border-bottom: 1px solid var(--sbe-tone-3);
+}
+
+/* Bandeau « template plus récent disponible » */
+.sbe-obj-newer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border: 1px solid var(--sbe-accent-dark);
+  border-radius: var(--sbe-radius, 6px);
+  background: color-mix(in srgb, var(--sbe-accent) 10%, transparent);
+  color: var(--sbe-text-2);
+  font-size: 0.85em;
+  flex-shrink: 0;
+}
+.sbe-obj-newer i { color: var(--sbe-accent); }
+.sbe-obj-newer span { flex: 1; }
+.sbe-obj-newer button {
+  width: auto;
+  padding: 2px 12px;
+  font-size: 0.95em;
+}
+
+/* Onglet Fiche : les champs avec leurs valeurs */
+.sbe-obj-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 4px;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+/* Onglets fixes de l'objet (Médias, Effets…) : leur propre barre de
+   défilement quand le contenu dépasse la fenêtre. */
+.sbe-obj-fields.sbe-obj-tabscroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  padding-right: 6px;
+}
+.sbe-obj-fields.sbe-obj-tabscroll > * { flex-shrink: 0; }
+
+/* La zone de contenu de la fenêtre ne grandit JAMAIS au-delà de la
+   fenêtre — même quand un thème la passe en overflow visible (sans
+   ceci, min-height:auto du flexbox la laisse gonfler et tout dépasse). */
+.sbe-window > .window-content {
+  min-height: 0;
+}
+.sbe-obj-root,
+.sbe-tpl-root {
+  min-height: 0;
+}
+
+/* --- Zone de défilement PAR DÉFAUT (fiche ET atelier) ---
+   Générée autour des éléments non épinglés : la barre n'apparaît que
+   si le contenu dépasse. Les éléments « épinglés en haut » (option du
+   cadre) restent AU-DESSUS, hors défilement — un débord (photo…) y
+   reste donc possible. */
+.sbe-obj-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sbe-space-sm, 6px);
+}
+/* Atelier : la barre d'outils d'un élément flotte AU-DESSUS de lui
+   (top négatif). Le PREMIER élément de la zone de défilement l'avait
+   donc hors de la zone visible — rognée, impossible de modifier ou de
+   supprimer ce cadre. Pour lui seul, la barre descend dans sa boîte :
+   rien ne bouge dans la mise en page, l'atelier reste l'aperçu exact. */
+.sbe-obj-scroll > .sbe-tpl-el:first-child > .sbe-tpl-tools { top: 0; }
+.sbe-obj-scroll::-webkit-scrollbar { width: 8px; }
+.sbe-obj-scroll::-webkit-scrollbar-track { background: transparent; }
+.sbe-obj-scroll::-webkit-scrollbar-thumb {
+  background: var(--sbe-tone-3);
+  border-radius: 4px;
+}
+.sbe-obj-scroll::-webkit-scrollbar-thumb:hover { background: var(--sbe-text-dim); }
+
+/* L'onglet Description garde son propre défilement. */
+.sbe-obj-desc { overflow-y: auto; flex: 1 1 auto; min-height: 0; }
+.sbe-obj-el {
+  display: grid;
+  grid-template-columns: fit-content(130px) minmax(min-content, 1fr);
+  gap: 8px;
+  align-items: center;
+  padding: 4px 6px;
+  font-size: 1em;
+}
+.sbe-obj-el > label { color: var(--sbe-text-2); }
+/* Sans libellé : plus de colonne réservée, le champ occupe la ligne. */
+.sbe-obj-el.sbe-el--nolabel,
+.sbe-tpl-el.sbe-el--nolabel { grid-template-columns: 1fr; }
+.sbe-obj-el.sbe-el--nolabel > label,
+.sbe-tpl-el.sbe-el--nolabel > label { display: none; }
+.sbe-obj-el-imgwrap { justify-self: start; min-width: 0; max-width: 100%; }
+.sbe-el--nolabel .sbe-obj-el-imgwrap { justify-self: stretch; }
+.sbe-obj-el-imgwrap .sbe-tpl-el-img { cursor: pointer; }
+.sbe-obj-el-imgwrap .sbe-tpl-el-img:hover { border-color: var(--sbe-accent); }
+.sbe-obj-desc {
+  flex: 1;
+  /* Hauteur minimale réglée sur l'élément (Texte riche → Hauteur
+     minimale), sinon 200 px. */
+  min-height: var(--sbe-rich-h, 200px);
+  display: flex;
+  flex-direction: column;
+}
+.sbe-obj-desc prose-mirror {
+  flex: 1;
+  min-height: var(--sbe-rich-h, 180px);
+}
+/* Description d'un objet SUIVIE de ses champs : la zone de texte se fait
+   plus basse (elle grandit encore s'il reste de la place), pour que les
+   champs du modèle se voient sans défiler. */
+.sbe-obj-desc:has(> .sbe-obj-descextra) { min-height: 0; }
+.sbe-obj-desc:has(> .sbe-obj-descextra) > prose-mirror { min-height: 96px; }
+
+/* ---- Texte riche : éditeur toujours ouvert ---- */
+.sbe-obj-desc.sbe-rich--open prose-mirror { display: flex; flex-direction: column; }
+.sbe-obj-desc.sbe-rich--open prose-mirror .editor-content { flex: 1 1 auto; overflow-y: auto; }
+
+/* ---- Texte riche : la zone où l'on écrit se voit ----
+   Cadre de saisie (fond des champs, bordure) autour du texte, comme
+   un champ de formulaire ; le papier ligné a déjà le sien. */
+.sbe-obj-desc:not(.sbe-rich--lined) prose-mirror .editor-container,
+.sbe-obj-desc:not(.sbe-rich--lined) prose-mirror.inactive > .editor-content {
+  border: 1px solid var(--sbe-surf-4);
+  border-radius: 4px;
+  background: var(--input-background-color, var(--sbe-surf-1));
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+.sbe-obj-desc:not(.sbe-rich--lined) prose-mirror .editor-content { padding: 6px 10px; }
+.sbe-obj-desc:not(.sbe-rich--lined) prose-mirror.inactive > .editor-content { min-height: var(--sbe-rich-h, 80px); cursor: text; }
+
+/* ---- Cadre étiré (colonnes « même hauteur ») : un texte riche en
+   dernier REMPLIT la place au lieu de laisser un vide. ---- */
+.sbe-cols--equal > .sbe-col :is(details.sbe-frame) > .sbe-frame-body:has(> .sbe-obj-el--block:last-child > .sbe-obj-desc) {
+  display: flex;
+  flex-direction: column;
+}
+.sbe-cols--equal > .sbe-col :is(details.sbe-frame) > .sbe-frame-body > .sbe-obj-el--block:last-child:has(> .sbe-obj-desc) {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 0;
+}
+.sbe-cols--equal > .sbe-col :is(details.sbe-frame) > .sbe-frame-body > .sbe-obj-el--block:last-child > .sbe-obj-desc { flex: 1 1 auto; width: 100%; }
+
+/* ---- Texte riche : PAPIER LIGNÉ (bloc-notes) ----
+   Variables surchargeables par un thème : --sbe-paper (fond),
+   --sbe-paper-line (lignes), --sbe-paper-margin (marge), --sbe-paper-ink. */
+.sbe-rich--lined {
+  --sbe-paper: #fbf8ef;
+  --sbe-paper-line: rgba(70, 110, 160, 0.20);
+  --sbe-paper-margin: rgba(205, 70, 70, 0.55);
+  --sbe-paper-ink: #2b2a28;
+  --sbe-paper-step: 28px;
+}
+.sbe-rich--lined .editor-content {
+  box-sizing: border-box;
+  min-height: var(--sbe-rich-h, 180px);
+  padding: 0 14px 0 60px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  background-color: var(--sbe-paper);
+  background-image:
+    linear-gradient(90deg, transparent 47px, var(--sbe-paper-margin) 47px, var(--sbe-paper-margin) 48px, transparent 48px),
+    repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--sbe-paper-step) - 1px), var(--sbe-paper-line) calc(var(--sbe-paper-step) - 1px), var(--sbe-paper-line) var(--sbe-paper-step));
+  background-attachment: local;
+  color: var(--sbe-paper-ink);
+  line-height: var(--sbe-paper-step);
+}
+.sbe-rich--open .editor-content { min-height: calc(var(--sbe-rich-h, 180px) - 40px); }
+.sbe-rich--lined .editor-content .ProseMirror { padding: 0; min-height: 100%; outline: none; background: transparent; color: inherit; }
+.sbe-rich--lined .editor-content :is(p, li, h1, h2, h3, h4, h5, h6, blockquote, pre) {
+  margin: 0;
+  line-height: var(--sbe-paper-step);
+}
+.sbe-rich--lined .editor-content :is(ul, ol) { margin: 0; }
+/* Aperçu de l'atelier : le même papier. */
+.sbe-richtext-preview.sbe-rich--lined { padding: 0; border: none; background: none; }
+.sbe-richtext-preview.sbe-rich--lined .editor-content { font-style: italic; opacity: .85; }
+.sbe-richtext-preview[style*="--sbe-rich-h"] .editor-content { min-height: var(--sbe-rich-h); }
+
+/* ============================================================
+ * STRUCTURE (palier 3) — cadres, colonnes, navigation, séparateur
+ * Partagé atelier + fiche objet.
+ * ============================================================ */
+
+/* Éléments-blocs de l'atelier : pas la grille libellé/valeur. */
+.sbe-tpl-el--block {
+  display: block;
+}
+
+/* Petit + des zones internes */
+.sbe-tpl-plus--small {
+  width: 19px;
+  height: 19px;
+  min-width: 19px;
+  max-width: 19px;
+  min-height: 19px;
+  max-height: 19px;
+  font-size: 12px;
+}
+
+/* --- Élément GRAPHIQUE --- */
+.sbe-chart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 0;
+}
+.sbe-chart svg { overflow: visible; }
+.sbe-chart-title {
+  font-weight: 600;
+  font-size: 0.9em;
+  color: var(--sbe-text-2);
+}
+/* Dans une colonne étroite, le graphe SE RÉDUIT au lieu de pousser
+   la colonne (le viewBox garde les proportions). */
+.sbe-chart svg {
+  max-width: 100%;
+  height: auto;
+}
+/* Pilotés par l'onglet Style de l'élément (variables --sbe-ch-*) */
+.sbe-chart .sbe-chart-label {
+  font-size: var(--sbe-ch-labels, 9px);
+  font-weight: 600;
+  fill: var(--sbe-ch-label, var(--sbe-text-2));
+  font-family: var(--sbe-ch-font, inherit);
+}
+.sbe-chart .sbe-chart-tick {
+  font-size: var(--sbe-ch-tick, 9px);
+  font-weight: 600;
+  fill: var(--sbe-ch-label, var(--sbe-text-2));
+  font-family: var(--sbe-ch-font, inherit);
+}
+.sbe-chart .sbe-chart-value {
+  font-size: var(--sbe-ch-values, 10.5px);
+  font-weight: 700;
+  fill: var(--sbe-ch-value, var(--sbe-text));
+  font-family: var(--sbe-ch-font, inherit);
+  paint-order: stroke;
+  stroke: var(--sbe-surf-1);
+  stroke-width: 2px;
+}
+/* Barres horizontales */
+.sbe-chart-bars {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.sbe-chart-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 34px;
+  gap: 8px;
+  align-items: center;
+}
+.sbe-chart-rowlabel {
+  font-size: var(--sbe-ch-labels, 0.8em);
+  font-weight: 600;
+  color: var(--sbe-ch-label, var(--sbe-text-2));
+  font-family: var(--sbe-ch-font, inherit);
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sbe-chart-track {
+  display: block;
+  height: 12px;
+  background: var(--sbe-surf-3);
+  border: 1px solid var(--sbe-tone-3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.sbe-chart-track i {
+  display: block;
+  height: 100%;
+}
+.sbe-chart-rowvalue {
+  font-size: var(--sbe-ch-values, 0.8em);
+  font-weight: 700;
+  color: var(--sbe-ch-value, var(--sbe-text));
+  font-family: var(--sbe-ch-font, inherit);
+}
+.sbe-chart-scale {
+  display: grid;
+  grid-template-columns: 110px 1fr 34px;
+  gap: 8px;
+}
+.sbe-chart-scalemarks {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--sbe-ch-tick, 8px);
+  color: var(--sbe-text-dim);
+  font-style: normal;
+}
+.sbe-chart-scalemarks i { font-style: normal; }
+/* Info-bulle configurée des éléments (rendue dans #tooltip Foundry) */
+/* Garde-fou : la bulle de Foundry reste « fixed », quoi que dise un
+   CSS avancé. En « relative », elle entrerait dans la page et
+   pousserait la barre latérale à chaque survol. */
+#tooltip, .locked-tooltip { position: fixed !important; }
+#tooltip .sbe-tt { text-align: left; }
+#tooltip .sbe-tt-formula {
+  font-family: monospace;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+#tooltip .sbe-tt-src {
+  opacity: 0.7;
+  font-size: 0.85em;
+}
+
+/* Slots des graphiques (atelier) : puces + zone de dépôt */
+.sbe-chart-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+  padding: 3px 0;
+}
+.sbe-chart-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border: 1px solid var(--sbe-tone-3);
+  border-radius: 10px;
+  background: var(--sbe-surf-2);
+  color: var(--sbe-text-2);
+}
+.sbe-chart-chip a {
+  color: var(--sbe-text-dim);
+  cursor: pointer;
+  font-weight: 700;
+}
+.sbe-chart-chip a:hover { color: var(--sbe-fail, #c0392b); }
+.sbe-chart-dropzone {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--sbe-text-dim);
+  border: 1px dashed var(--sbe-tone-3);
+  border-radius: 8px;
+  padding: 8px 14px;
+  min-height: 30px;
+}
+.sbe-chart-dropzone.sbe-drop-hover {
+  outline: 2px dashed var(--sbe-accent);
+  color: var(--sbe-text);
+}
+
+/* Pictogrammes : icônes répétées pleines/éteintes */
+.sbe-chart-row--picto .sbe-picto {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 15px;
+}
+.sbe-picto-off { opacity: 0.25; filter: grayscale(1); }
+.sbe-picto img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  max-width: none;
+}
+
+/* Entonnoir : barres centrées, sans piste visible */
+.sbe-chart-funnel {
+  display: block;
+  height: 14px;
+}
+.sbe-chart-funnel i {
+  display: block;
+  height: 100%;
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+/* --- Cadre repliable --- */
+.sbe-frame {
+  border: 1px solid var(--sbe-tone-3);
+  border-radius: var(--sbe-radius, 6px);
+  margin: 4px 0;
+  background: var(--sbe-surf-2);
+}
+.sbe-frame > summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: var(--sbe-surf-3);
+  border-bottom: 1px solid var(--sbe-tone-3);
+  border-radius: var(--sbe-radius, 6px) var(--sbe-radius, 6px) 0 0;
+  font-size: 1em;
+  font-weight: 600;
+  color: var(--sbe-text-2);
+  cursor: pointer;
+}
+.sbe-frame:not([open]) > summary {
+  border-bottom: none;
+  border-radius: var(--sbe-radius, 6px);
+}
+.sbe-frame-body {
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* --- Colonnes --- */
+.sbe-cols-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.95em;
+  font-weight: 600;
+  color: var(--sbe-text-dim);
+  padding: 2px 4px;
+}
+.sbe-cols {
+  display: grid;
+  gap: 8px;
+  align-items: start;
+}
+.sbe-col {
+  /* PRIORITÉ AUX LARGEURS DÉCLARÉES (%) : sans min-width:0, une
+     colonne au contenu large « pousse » et vole la place des autres
+     — le contenu doit se comprimer, pas la répartition. */
+  min-width: 0;
+  border: 2px dashed var(--sbe-tone-4);
+  border-radius: 5px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-height: 34px;
+}
+/* Sur la fiche objet, les colonnes n'ont pas de pointillés (onglets du
+   modèle comme composants posés sous la description). */
+.sbe-obj-fields .sbe-col,
+.sbe-obj-descextra .sbe-col {
+  border: none;
+  padding: 0;
+}
+
+/* --- Barre de navigation + onglets --- */
+.sbe-navbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  border-bottom: 1px solid var(--sbe-tone-3);
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+/* Alignement horizontal de la barre d'onglets */
+.sbe-navbar--center { justify-content: center; }
+.sbe-navbar--right { justify-content: flex-end; }
+
+/* Navigation VERTICALE : barre en colonne, contenu à côté */
+.sbe-nav-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.sbe-nav-wrap--right { flex-direction: row-reverse; }
+.sbe-nav-wrap > .sbe-navbar--v,
+.sbe-nav-wrap .sbe-navbar--v {
+  flex-direction: column;
+  align-items: stretch;
+  flex: 0 0 auto;
+  border-bottom: none;
+  border-right: 1px solid var(--sbe-tone-3);
+  padding-right: 4px;
+}
+.sbe-nav-wrap--right .sbe-navbar--v {
+  border-right: none;
+  border-left: 1px solid var(--sbe-tone-3);
+  padding-right: 0;
+  padding-left: 4px;
+}
+.sbe-nav-wrap > .sbe-navtab-body,
+.sbe-nav-wrap .sbe-navtab-body {
+  flex: 1;
+  min-width: 0;
+}
+.sbe-navbar--v .sbe-navtab { justify-content: flex-start; }
+
+/* Icône d'onglet (image ou FontAwesome) */
+img.sbe-navtab-ico {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  max-width: none;
+  vertical-align: -3px;
+  margin-right: 4px;
+}
+i.sbe-navtab-ico { margin-right: 4px; }
+.sbe-navtab {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+}
+.sbe-navtab > a,
+a.sbe-navtab {
+  padding: 6px 16px;
+  font-size: 1em;
+  color: var(--sbe-text-dim);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.sbe-navtab.active > a,
+a.sbe-navtab.active {
+  color: var(--sbe-text-strong);
+  font-weight: 600;
+  border-bottom-color: var(--sbe-accent);
+}
+.sbe-navtab-tools {
+  display: none;
+  gap: 4px;
+  font-size: 0.7em;
+  color: var(--sbe-text-2);
+  padding-right: 4px;
+}
+.sbe-navtab:hover .sbe-navtab-tools { display: inline-flex; }
+.sbe-navtab-tools a:hover { color: var(--sbe-accent); }
+.sbe-navtab-body {
+  padding: 4px 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* --- Séparateur --- */
+.sbe-separator {
+  border: none;
+  border-top: 2px solid var(--sbe-tone-4);
+  margin: 8px 0;
+  width: 100%;
+}
+
+/* Séparateur en image : pleine largeur, hauteur libre ou fixée. */
+.sbe-separator-img {
+  display: block;
+  width: 100%;
+  object-fit: fill;
+  margin: 6px 0;
+  border: none;
+}
+.sbe-tpl-el--sep { padding: 2px 6px; }
+
+/* --- Badge « masqué aux joueurs » --- */
+.sbe-tpl-hidden-badge {
+  color: var(--sbe-warn);
+  font-size: 0.85em;
+  margin-right: 4px;
+}
+
+/* Imbrication : les éléments internes gardent la grille champ/valeur */
+/* ⚠ « :not(.sbe-el--stack) » indispensable : sans lui, cette règle (plus
+   spécifique) écrasait le mode LIBELLÉ AU-DESSUS/EN DESSOUS dans les
+   cadres, colonnes et onglets — donc partout dans l'atelier. */
+.sbe-frame-body .sbe-tpl-el:not(.sbe-tpl-el--block):not(.sbe-el--stack),
+.sbe-col .sbe-tpl-el:not(.sbe-tpl-el--block):not(.sbe-el--stack),
+.sbe-navtab-body .sbe-tpl-el:not(.sbe-tpl-el--block):not(.sbe-el--stack) {
+  display: grid;
+}
+
+/* ============================================================
+ * Fenêtre d'édition d'élément : nos boutons (le pied natif du
+ * DialogV2 est masqué — la validation doit pouvoir échouer sans
+ * fermer ni figer la fenêtre).
+ * ============================================================ */
+.sbe-el-dialog-app .form-footer { display: none !important; }
+.sbe-el-footer {
+  display: flex;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--sbe-tone-3, #3b3f45);
+  flex-shrink: 0;
+  margin-top: auto;   /* toujours collé en bas de la fenêtre */
+}
+.sbe-el-footer button {
+  flex: 1;
+  padding: 6px 0;
+}
+
+/* ============================================================
+ * JAUGE (palier 4)
+ * ============================================================ */
+.sbe-gauge {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+}
+/* Barre jamais écrasée : trop étroite à côté des cases (colonne serrée,
+   points temporaires), elle passe seule sur sa ligne, les cases dessous
+   — les cases et le « / max » restent toujours ensemble. */
+.sbe-gauge-bar {
+  flex: 1 1 64px;
+  min-width: 64px;
+  overflow: hidden;
+  position: relative;
+}
+.sbe-gauge-vals { display: inline-flex; align-items: center; gap: 8px; flex: 0 0 auto; white-space: nowrap; }
+.sbe-gauge-bar i {
+  display: block;
+  height: 100%;
+  transition: width 0.25s ease;
+}
+.sbe-gauge-text {
+  font-size: 0.85em;
+  color: var(--sbe-text-2);
+  white-space: nowrap;
+}
+.sbe-gauge-input {
+  width: 70px !important;
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+/* Un réglage désactivé se voit (ex. décimales d'un nombre entier). */
+.sbe-el-pane :is(select, input):disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* Groupes de l'onglet Style */
+.sbe-st-group {
+  min-width: 0;   /* un fieldset prend sinon la largeur de son contenu */
+  border: 1px solid var(--sbe-tone-3, #3b3f45);
+  border-radius: 6px;
+  padding: 6px 10px 8px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+/* Points temporaires : cumul / disparition / rounds / minutes en deux colonnes. */
+.sbe-g-tempopts:not([hidden]) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 12px; }
+.sbe-g-tempopts > .form-group { min-width: 0; }
+.sbe-st-group > legend {
+  font-size: 0.85em;
+  font-weight: 600;
+  color: var(--sbe-text-dim, #9c988f);
+  padding: 0 6px;
+}
+
+/* Champ calculé (formule) : lecture seule, marqué à l'accent. */
+.sbe-computed {
+  font-style: italic;
+  border-left: 3px solid var(--sbe-accent) !important;
+}
+
+/* ============================================================
+ * TABLES (palier 6)
+ * ============================================================ */
+.sbe-tbl-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 0.95em;
+  color: var(--sbe-text-2);
+  padding: 2px 2px 4px;
+}
+.sbe-tbl-mode {
+  font-size: 0.72em;
+  font-weight: 400;
+  color: var(--sbe-text-dim);
+  font-style: italic;
+}
+.sbe-tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92em;
+}
+.sbe-tbl th,
+.sbe-tbl td {
+  border: 1px solid var(--sbe-tone-3);
+  padding: 3px 8px;
+  text-align: left;
+  vertical-align: middle;
+}
+.sbe-tbl thead th {
+  background: var(--sbe-surf-3);
+  font-weight: 600;
+  color: var(--sbe-text-2);
+  position: relative;
+}
+.sbe-tbl tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--sbe-text) 4%, transparent);
+}
+.sbe-tbl input,
+.sbe-tbl select {
+  width: 100%;
+  min-width: 50px;
+  border: none;
+  background: transparent;
+  padding: 2px 4px;
+}
+.sbe-tbl input[type="checkbox"] { width: auto; }
+.sbe-tbl-computed {
+  font-style: italic;
+  color: var(--sbe-accent-text);
+  text-align: center;
+}
+.sbe-tbl-computedmark {
+  color: var(--sbe-accent);
+  font-weight: 700;
+  margin-right: 2px;
+}
+.sbe-tbl-free {
+  color: var(--sbe-text-dim);
+  font-style: italic;
+  font-size: 0.85em;
+  text-align: center;
+}
+.sbe-tbl-rowdel {
+  width: 28px;
+  text-align: center;
+}
+.sbe-tbl-rowdel a { color: var(--sbe-text-dim); }
+.sbe-tbl-rowdel a:hover { color: var(--sbe-fail); }
+.sbe-tbl-empty {
+  text-align: center;
+  color: var(--sbe-text-dim);
+  font-style: italic;
+}
+.sbe-tbl-sort { cursor: pointer; color: inherit; }
+.sbe-tbl-sort:hover { color: var(--sbe-accent); }
+.sbe-tbl-addcol { width: 32px; text-align: center; }
+.sbe-tbl-colhead {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.sbe-tbl-coltools {
+  display: none;
+  gap: 4px;
+  font-size: 0.8em;
+}
+.sbe-tbl th:hover .sbe-tbl-coltools { display: inline-flex; }
+.sbe-tbl-coltools a { color: var(--sbe-text-2); }
+.sbe-tbl-coltools a:hover { color: var(--sbe-accent); }
+.sbe-tbl-dynnote {
+  text-align: center;
+  color: var(--sbe-text-dim);
+  font-style: italic;
+  font-size: 0.85em;
+  margin: 4px 0;
+}
+.sbe-obj-el--block {
+  display: block;
+}
+
+/* ============================================================
+ * BOUTONS D'ACTION
+ * ============================================================ */
+.sbe-btn-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+}
+.sbe-btn-face {
+  width: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 16px;
+  border: 1px solid var(--sbe-accent-dark);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--sbe-accent) 14%, transparent);
+  color: var(--sbe-text-strong);
+  font-weight: 600;
+  cursor: pointer;
+}
+.sbe-btn-face:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--sbe-accent) 30%, transparent);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--sbe-accent) 45%, transparent);
+}
+.sbe-btn-face:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.sbe-btn-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  border: none;
+}
+i.sbe-btn-icon { width: auto; height: auto; font-size: 15px; line-height: 1; }
+.sbe-btn-charges {
+  font-size: 0.8em;
+  background: var(--sbe-surf-1);
+  border: 1px solid var(--sbe-tone-3);
+  border-radius: 10px;
+  padding: 0 8px;
+  color: var(--sbe-text-2);
+}
+.sbe-btn-menumark { color: var(--sbe-accent); font-size: 0.85em; }
+.sbe-btn-children {
+  border-left: 2px dashed var(--sbe-tone-4);
+  margin-left: 14px;
+  padding-left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.sbe-btnmenu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 4px 0;
+}
+.sbe-btnmenu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 14px;
+  border: 1px solid var(--sbe-tone-3, #3b3f45);
+  border-radius: 6px;
+  background: var(--sbe-surf-2, rgba(0,0,0,0.05));
+  cursor: pointer;
+  font-weight: 600;
+}
+.sbe-btnmenu-item:hover {
+  border-color: var(--sbe-accent, #b5471f);
+  color: var(--sbe-accent-text, #b5471f);
+}
+
+/* ============================================================
+ * ÉTIQUETTES (badges d'en-tête) + zone Description
+ * ============================================================ */
+.sbe-tags-bar,
+.sbe-tags-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 2px 4px;
+  flex-shrink: 0;
+}
+.sbe-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 12px;
+  border-radius: 4px;
+  font-size: 0.78em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--sbe-surf-3);
+  border: 1px solid var(--sbe-tone-3);
+  color: var(--sbe-text-2);
+}
+/* Mise en avant (réglage de l'élément : les @clé par défaut, la
+   première, toutes ou aucune). */
+.sbe-tag--hot {
+  background: var(--sbe-accent);
+  border-color: var(--sbe-accent-dark);
+  color: var(--sbe-text-max, #fff);
+}
+/* Dans l'en-tête, au-dessus du nom. */
+.sbe-native-namebox > .sbe-tags-bar { padding: 0; gap: 5px; }
+.sbe-tags-note {
+  font-size: 0.72em;
+  color: var(--sbe-text-dim);
+  font-style: italic;
+  margin-left: auto;
+}
+
+.sbe-tpl-desczone > summary { color: var(--sbe-accent-text); }
+.sbe-tpl-canvas--desc {
+  padding: 4px 8px 8px;
+}
+.sbe-obj-descextra {
+  margin-top: 8px;
+  border-top: 1px solid var(--sbe-tone-3);
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ============================================================
+ * Onglets de l'atelier (Description verrouillé / Fiche renommable)
+ * ============================================================ */
+.sbe-wtabs { flex-shrink: 0; }
+.sbe-wtab-lock {
+  font-size: 0.75em;
+  color: var(--sbe-text-dim);
+}
+.sbe-wtab-sheet input {
+  border: none;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  width: 110px;
+  padding: 0;
+  text-align: center;
+}
+.sbe-wtab-sheet input:focus {
+  border-bottom: 1px dashed var(--sbe-accent);
+  box-shadow: none;
+  outline: none;
+}
+.sbe-desc-placeholder {
+  border: 1px dashed var(--sbe-tone-4);
+  border-radius: 6px;
+  padding: 18px 12px;
+  text-align: center;
+  color: var(--sbe-text-dim);
+  font-style: italic;
+  font-size: 0.9em;
+  margin-bottom: 4px;
+}
+
+/* Onglets personnalisés de l'atelier : outils au survol */
+.sbe-wtab-extra {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.sbe-wtab-extra input { width: 96px; }
+/* Toujours visibles, à la suite du champ — jamais par-dessus. */
+.sbe-wtab-tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85em;
+}
+.sbe-wtab-tools a,
+.sbe-wtab-tools .sbe-wtab-act { color: var(--sbe-text-2); cursor: pointer; }
+.sbe-wtab-tools a:hover,
+.sbe-wtab-tools .sbe-wtab-act:hover { color: var(--sbe-accent); }
+.sbe-wtab-tools .sbe-wtab-act.is-on { color: var(--sbe-accent); }
+
+/* ============================================================
+ * SLOTS + TEXTE RICHE
+ * ============================================================ */
+.sbe-slot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px dashed var(--sbe-accent-dark);
+  border-radius: 6px;
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--sbe-accent) 5%, transparent);
+  color: var(--sbe-text-dim);
+  font-size: 0.9em;
+}
+.sbe-slot--empty { justify-content: center; }
+.sbe-slot--empty i { color: var(--sbe-accent); }
+.sbe-slot-note {
+  font-size: 0.78em;
+  font-style: italic;
+  opacity: 0.75;
+}
+.sbe-slot--filled {
+  border-style: solid;
+  border-color: var(--sbe-tone-3);
+  background: var(--sbe-surf-2);
+  color: var(--sbe-text);
+}
+.sbe-slot-img {
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+  border: none;
+  flex: none;
+}
+.sbe-slot-name { flex: 1; font-weight: 600; }
+.sbe-slot--filled a { color: var(--sbe-text-2); }
+.sbe-slot--filled a:hover { color: var(--sbe-accent); }
+
+.sbe-richtext-preview {
+  border: 1px dashed var(--sbe-tone-4);
+  border-radius: 4px;
+  padding: 10px;
+  color: var(--sbe-text-dim);
+  font-style: italic;
+  font-size: 0.85em;
+}
+.sbe-obj-el prose-mirror {
+  min-height: var(--sbe-rich-h, 100px);
+  width: 100%;
+}
+
+/* Slot dimensionné : contenu contenu proprement */
+.sbe-slot {
+  box-sizing: border-box;
+  overflow: hidden;
+  flex-wrap: wrap;
+}
+
+
+
+/* Titre d'un texte riche (au-dessus de son éditeur) */
+.sbe-rich-title {
+  font-weight: 600;
+  color: var(--sbe-text-2);
+  padding: 2px 2px 4px;
+  font-size: 0.95em;
+}
+
+/* ============================================================
+ * Position du libellé (Style)
+ * ============================================================ */
+.sbe-tpl-el.sbe-el--stack,
+.sbe-obj-el.sbe-el--stack {
+  display: block;
+}
+.sbe-el--stack .sbe-el-labelblock {
+  padding: 1px 2px 3px;
+}
+.sbe-el--stack .sbe-el-labelblock label {
+  display: inline-block;
+}
+.sbe-tpl-el.sbe-el--side-right,
+.sbe-obj-el.sbe-el--side-right {
+  grid-template-columns: minmax(min-content, 1fr) fit-content(130px);
+}
+.sbe-el--side-right label {
+  text-align: right;
+}
+
+/* Badge PJ/PNJ des fiches de personnage */
+.sbe-pjbadge {
+  flex: none;
+  align-self: center;
+}
+
+/* ============================================================ */
+/*  Mini-manager de thème du modèle de personnage (menu ⋮)      */
+/* ============================================================ */
+
+.sbe-tplth { display: flex; flex-direction: column; gap: 6px; padding: 4px 2px; }
+.sbe-tplth-row { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.sbe-tplth-row input[type="checkbox"] { flex: 0 0 auto; }
+.sbe-tplth .notes { margin: 0; opacity: .75; font-size: .85em; }
+
+/* ============================================================ */
+/*  Mode natif (.sbe-window) : la neutralisation de la palette   */
+/*  SBE (fiches d'un modèle qui n'utilise pas le thème général)  */
+/*  est posée par template-theme.mjs (NATIVE_TOKENS), dans la    */
+/*  feuille injectée du modèle : une feuille du système est lue  */
+/*  APRÈS le thème général injecté (couches CSS de Foundry), elle */
+/*  ne pouvait donc jamais l'emporter — l'accent du thème général */
+/*  passait sur les fiches. Une seule source : ce fichier JS.     */
+/* ============================================================ */
+
+/* ============================================================ */
+/*  Décorations SVG posées sur les fenêtres d'un modèle          */
+/* ============================================================ */
+
+.application > .sbe-tpldeco {
+  position: absolute;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* Décorations « sous le contenu » : la fenêtre garde ses couches
+   au-dessus (en-tête + contenu à z-index 1), la déco vit à z-index 0
+   SUR le fond de fenêtre — jamais de z-index négatif (une déco
+   passerait derrière le fond et deviendrait invisible). */
+.application.sbe-window > .window-header,
+.application.sbe-window > .window-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================ */
+/*  Éléments NATIFS (portrait/icône + nom du personnage)         */
+/* ============================================================ */
+
+.sbe-native-img {
+  display: block;
+  object-fit: cover;
+  border: 1px solid var(--sbe-surf-4);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.sbe-native-img--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sbe-surf-1);
+  color: var(--sbe-text-dim);
+  font-size: 28px;
+  cursor: default;
+}
+
+.sbe-native-name {
+  font-weight: 600;
+}
+
+.sbe-tpl-el-key--native {
+  opacity: 0.7;
+  font-style: italic;
+}
+
+
+/* --- Crayons des éléments natifs de l'en-tête (atelier acteur) --- */
+.sbe-tpl-header--native .sbe-native-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.sbe-tpl-header--native .sbe-native-wrap--name { flex: 1; }
+.sbe-tpl-header--native .sbe-native-wrap--name input { width: 100%; }
+.sbe-native-edit {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  border-radius: 50%;
+  background: var(--sbe-surf-3);
+  border: 1px solid var(--sbe-surf-4);
+  color: var(--sbe-text-dim);
+  opacity: 0;
+  transition: opacity .12s ease;
+  z-index: 2;
+}
+.sbe-native-wrap:hover .sbe-native-edit { opacity: 1; }
+.sbe-native-edit:hover { color: var(--sbe-accent-text); border-color: var(--sbe-accent); }
+
+/* Le portrait penché peut déborder de l'en-tête : on laisse dépasser. */
+.sbe-tpl-header--native,
+.sbe-obj-header {
+  overflow: visible;
+}
+
+/* --- Fenêtre d'élément : CSS avancé confortable --- */
+
+.sbe-el-dialog .sbe-el-customcss { display: flex; flex-direction: column; gap: 4px; }
+.sbe-el-dialog .sbe-el-customcss .notes { margin: 0; }
+.sbe-el-dialog .sbe-el-customcss textarea {
+  width: 100%;
+  min-height: 90px;
+  font-family: monospace;
+  font-size: 0.85em;
+  resize: both;      /* étirable vers le bas ET vers la droite */
+  max-width: none;
+}
+
+/* ============================================================ */
+/*  Drag & drop inter-conteneurs                                 */
+/* ============================================================ */
+
+/* Cible survolée pendant un glisser : élément ou bouton + */
+.sbe-drop-hover {
+  outline: 2px dashed var(--sbe-accent) !important;
+  outline-offset: 2px;
+  background: color-mix(in srgb, var(--sbe-accent) 10%, transparent) !important;
+}
+
+/* Poignée de glisser des natifs de l'en-tête (à côté du crayon) */
+.sbe-native-drag {
+  position: absolute;
+  top: -6px;
+  right: 18px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  border-radius: 50%;
+  background: var(--sbe-surf-3);
+  border: 1px solid var(--sbe-surf-4);
+  color: var(--sbe-text-dim);
+  opacity: 0;
+  transition: opacity .12s ease;
+  cursor: grab;
+  z-index: 2;
+}
+.sbe-native-wrap:hover .sbe-native-drag { opacity: 1; }
+.sbe-native-drag:hover { color: var(--sbe-accent-text); border-color: var(--sbe-accent); }
+
+/* --- Champ nom natif : valeur + sous-libellé (deux lignes) --- */
+.sbe-native-namebox {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+.sbe-native-namebox input { width: 100%; min-width: 0; }
+.sbe-native-sub {
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sbe-text-dim);
+  white-space: nowrap;
+}
+
+/* --- Cadres : flèche de pliage TOUJOURS visible (règle UI n°3) --- */
+.sbe-frame > summary {
+  list-style: none;
+  min-height: 24px;
+}
+.sbe-frame > summary::-webkit-details-marker { display: none; }
+.sbe-frame-caret {
+  font-size: 0.85em;
+  color: var(--sbe-text-dim);
+  transition: transform 0.15s ease;
+  flex: 0 0 auto;
+}
+.sbe-frame[open] > summary .sbe-frame-caret { transform: rotate(90deg); }
+
+/* --- Cadre « invisible » : pas de barre, pas de bordure, seule la
+       flèche de repli reste visible (option crayon du cadre). --- */
+.sbe-frame--bare {
+  border: none !important;
+  background: transparent !important;
+  margin: 0;
+  border-radius: 0;
+}
+.sbe-frame--bare > summary {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 4px;
+  min-height: 16px;
+}
+.sbe-frame--bare:not([open]) > summary {
+  border: none;
+}
+.sbe-frame--bare > .sbe-frame-body {
+  padding: 0;
+}
+
+/* --- Cadre non repliable (fiche uniquement) : bandeau inerte, pas de
+       flèche. Invisible + non repliable = le bandeau ne prend plus de
+       place du tout. --- */
+.sbe-frame--fixed > summary {
+  pointer-events: none;
+  cursor: default;
+}
+.sbe-frame--fixed > summary .sbe-frame-caret {
+  display: none;
+}
+.sbe-frame--bare.sbe-frame--fixed > summary:empty,
+.sbe-frame--bare.sbe-frame--fixed > summary {
+  min-height: 0;
+  padding: 0;
+}
+
+/* --- Cadre : titre AU-DESSUS de la boîte (option du crayon) ---
+   Le <details> devient transparent, le bandeau flotte au-dessus et
+   c'est le corps qui porte le bord/fond du cadre (styles inline). */
+.sbe-frame--title-above {
+  border: none !important;
+  background: transparent !important;
+  border-radius: 0;
+  overflow: visible;
+}
+.sbe-frame--title-above > summary {
+  background: none;
+  border-bottom: none;
+  border-radius: 0;
+  padding: 2px 4px 3px;
+}
+.sbe-frame--title-above > .sbe-frame-body {
+  border: 1px solid var(--sbe-tone-3);
+  border-radius: var(--sbe-radius, 6px);
+  background: var(--sbe-surf-2);
+}
+
+/* --- Icône de libellé (crayon → Icône du libellé) --- */
+.sbe-label-icon { flex: 0 0 auto; }
+.sbe-label-icon-img {
+  width: 1.1em;
+  height: 1.1em;
+  object-fit: contain;
+  vertical-align: -0.15em;
+  border: none;
+}
+
+/* --- Sélecteur d'icônes --- */
+/* Fenêtre étirable : la grille suit la hauteur donnée par l'utilisateur
+   au lieu d'un plafond figé. */
+.sbe-iconpicker { display: flex; flex-direction: column; gap: 8px; height: 100%; min-height: 0; }
+.sbe-iconpicker .sbe-ip-search { width: 100%; flex: none; }
+.sbe-iconpicker .sbe-ip-scroll {
+  flex: 1 1 auto;
+  min-height: 240px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.sbe-iconpicker-app .window-content { display: flex; flex-direction: column; min-height: 0; }
+.sbe-iconpicker-app .window-content > form,
+.sbe-iconpicker-app .dialog-content { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.sbe-iconpicker .sbe-ip-title {
+  font-weight: 600;
+  margin: 6px 0 4px;
+  color: var(--sbe-text-2, inherit);
+}
+.sbe-iconpicker .sbe-ip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.sbe-iconpicker .sbe-ip-cell {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  padding: 0;
+  cursor: pointer;
+  line-height: 1;
+}
+.sbe-iconpicker .sbe-ip-emoji { font-size: 18px; }
+/* Titre de rubrique COLLANT : avec près de 2000 cases, on doit savoir
+   où l'on se trouve en défilant. */
+.sbe-iconpicker .sbe-ip-title {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--sbe-surf-2, var(--color-bg, #fff));
+  padding: 4px 0;
+}
+
+/* Graduations posées PAR-DESSUS des aplats colorés (rose) : liseré du
+   fond pour rester lisibles quelle que soit la couleur du secteur. */
+.sbe-chart .sbe-chart-tick--over {
+  paint-order: stroke;
+  stroke: var(--sbe-surf-1);
+  stroke-width: 2.5px;
+  stroke-linejoin: round;
+}
+
+/* Les GRADUATIONS et les VALEURS affichées ne doivent jamais capter le
+   survol : la bulle appartient au point / au secteur qui est dessous. */
+.sbe-chart .sbe-chart-tick,
+.sbe-chart .sbe-chart-value,
+.sbe-chart .sbe-chart-rowvalue {
+  pointer-events: none;
+}
+
+/* Bouton de saisie groupée des champs d'un graphique (fiche) */
+.sbe-obj-el--chart { position: relative; }
+.sbe-chart-edit {
+  position: absolute;
+  right: 4px;
+  top: 2px;
+  z-index: 2;
+  font-size: 0.85em;
+  color: var(--sbe-text-dim);
+  opacity: 0;
+  transition: opacity 0.12s ease;
+  cursor: pointer;
+}
+.sbe-obj-el--chart:hover .sbe-chart-edit { opacity: 1; }
+.sbe-chart-edit:hover { color: var(--sbe-accent); }
+.sbe-chart-values { display: flex; flex-direction: column; gap: 4px; }
+.sbe-chart-values .form-group { align-items: center; }
+
+/* --- Atelier : pastille de CLÉ et OUTILS plus lisibles/cliquables ---
+   Elles se posent ENTIÈREMENT AU-DESSUS du liseré du conteneur : à
+   cheval dessus, les tirets leur passaient au travers et la lecture
+   devenait pénible. Décalage = hauteur de la pastille + 2 px de jeu,
+   et un z-index qui les met devant les bordures voisines. */
+.sbe-tpl-el-key {
+  font-size: 0.85em;
+  padding: 1px 7px;
+  top: -21px;
+  right: 96px;
+  z-index: 3;
+}
+.sbe-tpl-tools {
+  font-size: 1em;
+  gap: 9px;
+  padding: 2px 9px;
+  top: -23px;
+  z-index: 4;
+}
+.sbe-tpl-tools a { padding: 0 1px; }
+
+/* --- Jet de dés au clic (libellé cliquable) --- */
+.sbe-obj-el .sbe-roll-label {
+  cursor: pointer;
+  transition: color 0.12s ease;
+}
+.sbe-obj-el .sbe-roll-label:hover { color: var(--sbe-accent); }
+.sbe-roll-dice {
+  /* Le dé annonce le clic : il précède le libellé. */
+  margin-right: 5px;
+  font-size: 0.85em;
+  opacity: 0.45;
+}
+.sbe-obj-el .sbe-roll-label:hover .sbe-roll-dice { opacity: 1; }
+/* Section Jet du crayon */
+.sbe-el-rollbox { margin-top: 4px; }
+
+/* === Champ nombre « 2 en 1 » : valeur saisie + bonus de formule ===
+   Le champ montre le TOTAL ; au clic il bascule sur la base à saisir.
+   Un liseré discret indique qu'un bonus/malus est appliqué. */
+.sbe-num2 { transition: color .12s ease; }
+/* Le bonus de formule (apport de BASE du modèle) ne colore rien : il
+   se lit dans l'info-bulle. Le champ porte seulement des repères
+   neutres, data-bonus et data-bonus-sign, pour que le créateur pose
+   l'habillage qu'il veut depuis le CSS avancé du gestionnaire de
+   thème — par exemple :
+     input.sbe-num2[data-bonus-sign="up"]   { color: #3f8f3f; }
+     input.sbe-num2[data-bonus-sign="down"] { color: #c14b4b; }
+   Ces deux classes servent aux apports VARIABLES (objets portés lus
+   par carried, effets) et à la case « colorer la valeur ». Elles
+   passent devant la couleur de texte d'un thème : c'est un état. */
+.sbe-num2--up   { color: #3f8f3f !important; font-weight: 600; }
+.sbe-num2--down { color: #c14b4b !important; font-weight: 600; }
+/* En saisie on revient à la base : couleur neutre, pas de leurre. */
+.sbe-num2:focus { color: inherit !important; font-weight: inherit; }
+input.sbe-computed.sbe-num2 { font-style: italic; opacity: .85; }
+
+/* === Notes d'aide : JAMAIS en colonne à droite ===
+   Foundry range les enfants d'un .form-group côte à côte : une note un
+   peu longue se retrouvait en colonne étroite à droite des champs,
+   illisible. Règle générale à toutes les fenêtres SBE : le libellé,
+   puis la note sur toute la largeur, puis les champs en dessous. */
+.sbe-el-dialog-app .form-group,
+.sbe-template-sheet .form-group,
+.sbe-objet-sheet .form-group,
+.sbe-theme-config .form-group,
+.sbe-tooltip-config .form-group,
+.sbe-pause-config .form-group {
+  flex-wrap: wrap;
+  align-items: center;
+}
+.sbe-el-dialog-app .form-group > label:first-child,
+.sbe-template-sheet .form-group > label:first-child,
+.sbe-objet-sheet .form-group > label:first-child,
+.sbe-theme-config .form-group > label:first-child,
+.sbe-tooltip-config .form-group > label:first-child,
+.sbe-pause-config .form-group > label:first-child {
+  order: 0;
+}
+.sbe-el-dialog-app .form-group > p.notes,
+.sbe-template-sheet .form-group > p.notes,
+.sbe-objet-sheet .form-group > p.notes,
+.sbe-theme-config .form-group > p.notes,
+.sbe-tooltip-config .form-group > p.notes,
+.sbe-pause-config .form-group > p.notes {
+  order: 1;
+  flex: 1 0 100%;
+  width: 100%;
+  max-width: 100%;
+  margin: 2px 0 6px;
+  text-align: left;
+}
+/* Tout le reste (champs, menus, groupes) passe SOUS la note. */
+.sbe-el-dialog-app .form-group > :not(label:first-child):not(p.notes),
+.sbe-template-sheet .form-group > :not(label:first-child):not(p.notes),
+.sbe-objet-sheet .form-group > :not(label:first-child):not(p.notes),
+.sbe-theme-config .form-group > :not(label:first-child):not(p.notes),
+.sbe-tooltip-config .form-group > :not(label:first-child):not(p.notes),
+.sbe-pause-config .form-group > :not(label:first-child):not(p.notes) {
+  order: 2;
+}
+
+/* === Graphiques : points et libellés cliquables pour un jet ===
+   Le champ vit DANS le graphe, il n'a plus de libellé à cliquer sur la
+   fiche : c'est son point, sa barre, sa part ou son nom d'axe qui
+   lance le jet. Le marqueur data-roll est posé par le moteur. */
+.sbe-chart [data-roll] { cursor: pointer; }
+.sbe-chart text[data-roll] { transition: fill .12s ease; }
+.sbe-chart text[data-roll]:hover { fill: var(--sbe-accent); font-weight: 700; }
+.sbe-chart circle[data-roll]:hover,
+.sbe-chart rect[data-roll]:hover,
+.sbe-chart path[data-roll]:hover { filter: brightness(1.25); }
+.sbe-chart-row[data-roll]:hover { background: var(--sbe-raised, rgba(0, 0, 0, .06)); }
+/* d20 des libellés d'axe (SVG) : la police Font Awesome est appelée
+   par son NOM — une classe fa-* ne s'applique pas à un <tspan>. Les
+   familles sont listées de la plus récente à la plus ancienne, selon
+   ce que livre la version de Foundry. */
+.sbe-chart-dice {
+  font-family: "Font Awesome 7 Free", "Font Awesome 6 Free",
+               "Font Awesome 5 Free", "FontAwesome";
+  font-weight: 900;
+  opacity: .8;
+  font-size: 1.3em;
+}
+.sbe-chart text[data-roll]:hover .sbe-chart-dice { opacity: 1; }
+/* Émoji : caractère ordinaire, aucune police à imposer. */
+.sbe-chart-dice--plain { font-family: inherit; font-weight: inherit; }
+/* Aperçu du choix, dans le crayon. */
+.sbe-dice-preview { flex: none; font-size: 1.3em; opacity: .85; min-width: 1.4em; text-align: center; }
+
+/* === Images nommées : lignes de l'atelier + choix sur la fiche === */
+.sbe-imgchoices { display: flex; flex-direction: column; gap: 4px; margin-bottom: 6px; }
+.sbe-imgchoice { display: flex; gap: 4px; align-items: center; }
+.sbe-imgchoice .ic-path { flex: 1 1 auto; min-width: 0; }
+.sbe-imgchoice button { flex: none; width: auto; padding: 2px 8px; }
+.sbe-imgchoice .sbe-iconpick, .sbe-imgchoice .sbe-el-imgpick { flex: none; width: auto; padding: 2px 8px; }
+/* Choix d'image : des BOUTONS, pas un menu — une <option> ne sait pas
+   afficher d'icône. Dix placements autour de l'image. */
+.sbe-obj-el-imgwrap--choice { display: flex; gap: 6px; }
+.sbe-img-pick { display: flex; flex-wrap: wrap; gap: 4px; min-width: 0; }
+.sbe-img-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px; border: 1px solid var(--sbe-tone-3); border-radius: 4px;
+  background: var(--sbe-surf-2); color: var(--sbe-text-2);
+  cursor: pointer; line-height: 1.5; white-space: nowrap;
+}
+.sbe-img-btn:hover { border-color: var(--sbe-accent); color: var(--sbe-accent); }
+.sbe-img-btn.active {
+  border-color: var(--sbe-accent); color: var(--sbe-accent);
+  background: var(--sbe-raised, var(--sbe-surf-3)); font-weight: 600;
+}
+/* Empilement vertical : les boutons au-dessus ou en dessous. */
+.sbe-imgpick--topLeft, .sbe-imgpick--topCenter, .sbe-imgpick--topRight,
+.sbe-imgpick--bottomLeft, .sbe-imgpick--bottomCenter, .sbe-imgpick--bottomRight {
+  flex-direction: column;
+}
+.sbe-imgpick--topLeft, .sbe-imgpick--bottomLeft { align-items: flex-start; }
+.sbe-imgpick--topCenter, .sbe-imgpick--bottomCenter { align-items: center; }
+.sbe-imgpick--topRight, .sbe-imgpick--bottomRight { align-items: flex-end; }
+/* Côte à côte : les boutons en colonne, alignés en haut ou en bas. */
+.sbe-imgpick--leftTop, .sbe-imgpick--leftBottom,
+.sbe-imgpick--rightTop, .sbe-imgpick--rightBottom { flex-direction: row; }
+.sbe-imgpick--leftTop, .sbe-imgpick--rightTop { align-items: flex-start; }
+.sbe-imgpick--leftBottom, .sbe-imgpick--rightBottom { align-items: flex-end; }
+.sbe-imgpick--leftTop .sbe-img-pick, .sbe-imgpick--leftBottom .sbe-img-pick,
+.sbe-imgpick--rightTop .sbe-img-pick, .sbe-imgpick--rightBottom .sbe-img-pick {
+  flex-direction: column;
+}
+/* Ligne de choix dans l'atelier : icône, nom, fichier. */
+.sbe-imgchoice .ic-icon { flex: 0 0 68px; min-width: 0; }
+.sbe-imgchoice .ic-label { flex: 0 0 28%; min-width: 0; }
+
+/* Icônes de genre en COULEUR : les émojis ♀️/♂️ sont jaunes, Unicode
+   n'en propose pas de rose ni de bleu. On colore donc l'icône Font
+   Awesome par une classe, transportée telle quelle par le moteur. */
+.sbe-ic-pink { color: #e56ba8; }
+.sbe-ic-blue { color: #4a8fd4; }
+.sbe-ic-red { color: #c0392b; }
+.sbe-ic-green { color: #3f8f3f; }
+.sbe-ic-gold { color: #d4a52a; }
+.sbe-ic-purple { color: #8e6bc4; }
+.sbe-ic-orange { color: #d97a2b; }
+.sbe-ic-teal { color: #2aa198; }
+
+/* === DRAPEAUX : police embarquée (variante COLR) ===
+   Segoe UI Emoji (Windows) ne contient aucun drapeau de pays — le
+   navigateur affiche alors les deux lettres du code, « FR » au lieu de
+   🇫🇷. On embarque donc DEUX SOUS-ENSEMBLES de Noto Color Emoji (SIL
+   OFL 1.1, cf. assets/fonts/). La « unicode-range » restreint le
+   téléchargement à ces seuls caractères : tout le reste des émojis
+   continue d'être rendu par la police du système, et les fichiers ne
+   sont pas chargés si aucun drapeau n'est affiché.
+   ⚠ La variante COLR est OBLIGATOIRE : Chromium ne lit pas la table
+   « SVG » des polices OT-SVG et retombe alors sur des contours vides —
+   la police se charge, et les cases restent BLANCHES. */
+@font-face {
+  font-family: "SBE Emoji";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../../assets/fonts/sbe-emoji-flags-1.woff2") format("woff2");
+  unicode-range: U+1F1E6-1F1FF;
+}
+@font-face {
+  font-family: "SBE Emoji";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../../assets/fonts/sbe-emoji-flags-2.woff2") format("woff2");
+  unicode-range: U+200D, U+2620, U+26A7, U+FE0F, U+1F308, U+1F38C, U+1F3C1,
+                 U+1F3F3-1F3F4, U+1F6A9, U+E0062-E0063, U+E0065, U+E0067,
+                 U+E006C, U+E006E, U+E0073-E0074, U+E0077, U+E007F;
+}
+/* ⚠ Posée UNIQUEMENT sur les porteurs d'ÉMOJI, jamais sur une icône
+   Font Awesome. Le moteur distingue les deux : un émoji sort dans un
+   <span class="sbe-label-icon">, une icône FA dans un <i> portant la
+   MÊME classe. Viser « .sbe-label-icon » tout court imposait donc une
+   police d'émojis aux icônes FA, dont les glyphes n'y existent pas :
+   toutes les icônes du système tombaient en rectangles vides. Le
+   sélecteur d'élément « span. » est ce qui les sépare. */
+span.sbe-label-icon,
+.sbe-iconpicker .sbe-ip-emoji,
+.sbe-chart-dice--plain {
+  font-family: "SBE Emoji", "Segoe UI Emoji", "Apple Color Emoji",
+               "Noto Color Emoji", sans-serif;
+}
+
+/* === CADRE EN PLACEMENT LIBRE ===
+   Les enfants ne se suivent plus : chacun est posé à une position
+   retenue en POURCENTAGE, et CENTRÉ sur son point — on vise l'épaule
+   d'une silhouette, pas le coin d'une boîte. Le corps du cadre reçoit
+   une hauteur explicite : des enfants en absolu n'en donnent aucune. */
+.sbe-frame-body--free {
+  position: relative;
+  /* Rien ne sort du cadre : la zone s'étire à son contenu (mesuré
+     après rendu), le rognage n'est qu'un garde-fou. */
+  overflow: hidden;
+}
+.sbe-free-item {
+  position: absolute;
+  max-width: 100%;
+}
+/* Atelier : le corps se saisit à la souris, la poignée ⠿ garde son
+   rôle (sortir l'élément du cadre). */
+.sbe-template-sheet .sbe-free-item { cursor: move; }
+.sbe-template-sheet .sbe-free-item:hover { outline: 1px dashed var(--sbe-accent); }
+.sbe-template-sheet .sbe-free-item.sbe-free-dragging {
+  outline: 1px solid var(--sbe-accent);
+  opacity: .85;
+  z-index: 5;
+}
+/* Le « + » d'ajout ne doit pas flotter au milieu de la zone libre. */
+.sbe-frame-body--free > .sbe-tpl-addbar {
+  position: absolute;
+  left: 0; right: 0; bottom: 2px;
+  margin: 0;
+}
+
+/* Boutons de plan d'un élément libre : AUCUN style propre — les mêmes
+   ancres nues que le crayon et la poubelle, alignées par la barre
+   elle-même. Trois couches de CSS « correctif » ont été retirées ici :
+   c'étaient elles qui décalaient ces boutons, que la barre alignait
+   très bien toute seule. */
+/* Une image posée librement reste ENTIÈRE : elle se réduit à la place
+   disponible plutôt que d'être rognée par le bord du cadre. */
+.sbe-free-item img { max-width: 100%; height: auto; }
+/* La clé vit DANS la barre d'outils (premier membre) : le placement
+   absolu ne s'applique plus, la boîte unique s'agrandit d'elle-même
+   quels que soient les boutons présents. */
+.sbe-tpl-tools .sbe-tpl-el-key {
+  position: static;
+  opacity: 1;
+  background: none;
+  border: none;
+  padding: 0 6px 0 0;
+  margin-right: 5px;
+  border-right: 1px solid var(--sbe-tone-3);
+  border-radius: 0;
+}
+
+/* === Zone libre : les CONTENEURS respectent sa largeur ===
+   La règle « priorité aux % » (min-width:0 sur .sbe-col) autorise les
+   colonnes à se comprimer — parfait pour du contenu fluide, mais une
+   zone libre a une largeur PLANCHER (son contenu posé) : comprimée,
+   elle débordait sur la colonne voisine. Une colonne qui abrite une
+   zone libre refuse donc de descendre sous son contenu, et quand la
+   fenêtre devient trop étroite pour l'ensemble, c'est un DÉFILEMENT
+   horizontal qui prend le relais — identique dans l'atelier et sur la
+   fiche : l'atelier EST l'aperçu final. */
+.sbe-col:has(.sbe-frame-body--free) { min-width: min-content; }
+.sbe-obj-scroll { overflow-x: auto; }
+
+/* === Lisibilité sur image sombre : CONTOUR BLANC ===
+   Sur une image foncée, le texte et les icônes se fondaient dans le
+   fond. La couleur de fonte ne change pas (le problème se déplacerait
+   sur les fonds clairs) : un liseré blanc dessine chaque glyphe sur
+   huit directions — lisible sur n'importe quel fond, invisible sur
+   fond clair. Un text-shadow s'applique aussi aux icônes Font Awesome,
+   qui sont une police. */
+:root { --sbe-halo:
+  -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff,
+  0 -1px 0 #fff, 0 1px 0 #fff, -1px 0 0 #fff, 1px 0 0 #fff; }
+/* Pastilles de clé et barres d'outils : partout dans l'atelier. */
+.sbe-tpl-el-key,
+.sbe-tpl-tools { text-shadow: var(--sbe-halo); }
+/* Tout le contenu posé dans une zone libre (libellés, icônes, champs),
+   dans l'atelier COMME sur la fiche — même aperçu, même remède. */
+.sbe-frame-body--free .sbe-tpl-el,
+.sbe-frame-body--free .sbe-obj-el { text-shadow: var(--sbe-halo); }
+
+/* ============================================================
+ * CONTENEURS (inventaire)
+ * ------------------------------------------------------------
+ * Le conteneur ne détient rien : il affiche les objets portés
+ * dont le portage pointe sa clé. Même habillage dans l'atelier
+ * et sur la fiche — l'aperçu de l'atelier EST le résultat.
+ * ============================================================ */
+.sbe-cont {
+  position: relative;
+  border: 1px solid var(--sbe-tone-4);
+  border-radius: 6px;
+  background: var(--sbe-surf-2);
+  overflow: hidden;
+}
+.sbe-cont-title {
+  font-weight: 600;
+  color: var(--sbe-text-2);
+  padding: 2px 2px 4px;
+}
+.sbe-cont-head,
+.sbe-cont-row {
+  display: grid;
+  grid-template-columns: var(--sbe-cont-grid, minmax(0, 2fr) auto);
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+}
+.sbe-cont-head {
+  background: var(--sbe-surf-3);
+  color: var(--sbe-text-2);
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--sbe-tone-4);
+}
+.sbe-cont-body { min-height: 42px; }
+.sbe-cont-row { border-bottom: 1px solid color-mix(in srgb, var(--sbe-tone-4) 45%, transparent); }
+.sbe-cont-row:last-child { border-bottom: none; }
+.sbe-cont-row:hover { background: color-mix(in srgb, var(--sbe-accent) 8%, transparent); }
+.sbe-cont-row--ghost { opacity: 0.45; pointer-events: none; }
+.sbe-cont-cell {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sbe-cont-cell--name { display: flex; align-items: center; gap: 6px; }
+.sbe-cont-img {
+  width: var(--sbe-cont-icon, 22px);
+  height: var(--sbe-cont-icon, 22px);
+  object-fit: cover;
+  border: none;
+  flex: none;
+}
+.sbe-cont-name { overflow: hidden; text-overflow: ellipsis; }
+.sbe-cont-qty {
+  flex: none;
+  font-weight: 600;
+  color: var(--sbe-accent);
+}
+.sbe-cont-piles {
+  font-size: 0.78em;
+  font-style: italic;
+  opacity: 0.7;
+}
+.sbe-cont-acts { display: flex; gap: 6px; justify-content: flex-end; }
+.sbe-cont-acts a { color: var(--sbe-text-2); cursor: pointer; }
+.sbe-cont-acts a:hover { color: var(--sbe-accent); }
+.sbe-cont-load {
+  position: absolute;
+  top: 3px;
+  right: 8px;
+  font-size: 0.75em;
+  color: var(--sbe-text-dim);
+  z-index: 1;
+}
+/* Sous-liste : plusieurs exemplaires d'un même modèle, chacun intact.
+   La tête reprend la GRILLE des colonnes pour que ses totaux tombent
+   exactement sous les valeurs qu'ils additionnent. */
+.sbe-cont-grp > summary {
+  cursor: pointer;
+  user-select: none;
+  background: color-mix(in srgb, var(--sbe-tone-4) 25%, transparent);
+  font-weight: 600;
+  list-style: none;
+}
+.sbe-cont-grp > summary::-webkit-details-marker { display: none; }
+.sbe-cont-row--grp .sbe-cont-cell--name::before {
+  content: "\25B8";
+  flex: none;
+  color: var(--sbe-text-2);
+  transition: transform 0.12s;
+}
+.sbe-cont-grp[open] > summary .sbe-cont-cell--name::before { transform: rotate(90deg); }
+.sbe-cont-grp .sbe-cont-row:not(.sbe-cont-row--grp) .sbe-cont-cell--name { padding-left: 14px; }
+
+/* Sections de catégorie : même grille que les lignes, pour que les
+   totaux tombent sous les colonnes qu'ils résument. */
+.sbe-cont-cat > summary {
+  cursor: pointer;
+  user-select: none;
+  background: color-mix(in srgb, var(--sbe-accent) 14%, var(--sbe-surf-3));
+  font-weight: 600;
+  list-style: none;
+  border-bottom: 1px solid var(--sbe-tone-4);
+}
+.sbe-cont-cat > summary::-webkit-details-marker { display: none; }
+.sbe-cont-row--cat .sbe-cont-cell--name::before {
+  content: "\25B8";
+  flex: none;
+  color: var(--sbe-text-2);
+  transition: transform 0.12s;
+}
+.sbe-cont-cat[open] > summary .sbe-cont-cell--name::before { transform: rotate(90deg); }
+.sbe-cont-cat--sub > summary {
+  background: color-mix(in srgb, var(--sbe-tone-4) 35%, transparent);
+  font-size: 0.92em;
+}
+.sbe-cont-cat--sub .sbe-cont-cell--name { padding-left: 14px; }
+.sbe-cont-catbody:empty { min-height: 18px; }
+
+/* Listes répétables du conteneur, dans le dialogue de l'atelier */
+.sbe-cat-icon,
+.sbe-cat-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  margin-bottom: 3px;
+}
+.sbe-cat-icon input { flex: 1 1 90px; }
+.sbe-cat-row .sbe-ccat-label { flex: 2 1 120px; }
+.sbe-cat-row .sbe-ccat-icon { flex: 1 1 80px; }
+.sbe-cat-row .sbe-ccat-ftype { flex: 1 1 110px; }
+.sbe-cat-row .sbe-ccat-fval { flex: 1 1 110px; }
+.sbe-ccat-sublbl {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+.sbe-cico-del,
+.sbe-ccat-del { color: var(--sbe-text-2); cursor: pointer; flex: none; }
+.sbe-cico-del:hover,
+.sbe-ccat-del:hover { color: var(--sbe-danger, #c0392b); }
+
+/* Colonnes du conteneur, dans le dialogue de l'atelier */
+.sbe-cont-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 90px auto;
+  gap: 4px;
+  align-items: center;
+  margin-bottom: 3px;
+}
+.sbe-cont-col .sbe-ccol-del { color: var(--sbe-text-2); cursor: pointer; }
+.sbe-cont-col .sbe-ccol-del:hover { color: var(--sbe-danger, #c0392b); }
+
+/* Survol pendant un glisser : la cible est évidente. */
+.sbe-slot-drop.sbe-cont:hover { border-color: var(--sbe-accent); }
+
+/* ============================================================
+ * IMPORT / EXPORT de structure
+ * ============================================================ */
+.sbe-tpl-io {
+  display: flex;
+  gap: 6px;
+  margin: 0 0 6px;
+}
+.sbe-tpl-io button {
+  flex: 1;
+  font-size: 0.85em;
+  padding: 3px 8px;
+}
+.sbe-io-report { max-height: 50vh; overflow-y: auto; }
+.sbe-io-report ul { margin: 4px 0 8px 18px; padding: 0; }
+.sbe-io-report li { margin-bottom: 2px; font-size: 0.9em; }
+.sbe-io-warn { color: var(--sbe-danger, #c0392b); }
+
+/* Options fixes du modèle : molette + repère de réglage actif */
+.sbe-tpl-opts-rows label > button {
+  flex: none;
+  width: auto;
+  padding: 1px 6px;
+  font-size: 0.85em;
+  line-height: 1.2;
+}
+.sbe-opt-badge {
+  flex: none;
+  font-size: 0.75em;
+  padding: 0 5px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--sbe-accent) 22%, transparent);
+  color: var(--sbe-text-2);
+}
+
+/* ============================================================
+ * MÉDIAS
+ * ------------------------------------------------------------
+ * Le MODÈLE déclare des noms ; l'OBJET pose les fichiers.
+ * ============================================================ */
+.sbe-mediadefs { display: flex; flex-direction: column; gap: 4px; }
+.sbe-mediadef {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.sbe-mediadef .sbe-mdef-name { flex: 1 1 110px; }
+.sbe-mediadef .sbe-mdef-hint { flex: 2 1 160px; }
+.sbe-mdef-del { flex: none; color: var(--sbe-text-2); cursor: pointer; }
+.sbe-mdef-del:hover { color: var(--sbe-danger, #c0392b); }
+.sbe-mdef-add { width: auto; padding: 2px 10px; margin-top: 2px; }
+
+/* ⚠ La zone de la fiche est une colonne flex à hauteur contrainte
+   (min-height:0) : SANS « flex:none », chaque ligne se fait écraser à
+   quelques pixels et il faut étirer la fenêtre pour voir les champs.
+   C'est la zone qui défile, pas les lignes qui rétrécissent. */
+.sbe-media-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+}
+.sbe-media-tab > .notes { flex: none; }
+.sbe-media-row {
+  flex: none;
+  border: 1px solid var(--sbe-tone-4);
+  border-radius: 6px;
+  background: var(--sbe-surf-2);
+  overflow: hidden;
+}
+.sbe-media-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  background: var(--sbe-surf-3);
+  border-bottom: 1px solid var(--sbe-tone-4);
+}
+.sbe-media-name { font-weight: 600; }
+.sbe-media-hint {
+  flex: 1;
+  font-size: 0.8em;
+  font-style: italic;
+  color: var(--sbe-text-dim);
+}
+.sbe-media-test,
+.sbe-media-pick { flex: none; color: var(--sbe-text-2); cursor: pointer; }
+.sbe-media-test { margin-left: auto; }
+.sbe-media-test:hover,
+.sbe-media-pick:hover { color: var(--sbe-accent); }
+.sbe-media-body { padding: 6px 8px; }
+.sbe-media-volout {
+  flex: none;
+  width: 42px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.sbe-media-unit { flex: none; font-size: 0.8em; color: var(--sbe-text-dim); }
+.sbe-media-body input[disabled] + span { opacity: 0.5; }
+
+/* ============================================================
+ * PROPAGATION — fenêtre de confirmation
+ * ============================================================ */
+.sbe-propag-box {
+  margin: 6px 0;
+  padding: 6px 8px;
+  border-left: 2px solid var(--sbe-accent);
+  background: color-mix(in srgb, var(--sbe-accent) 6%, transparent);
+  border-radius: 0 4px 4px 0;
+}
+.sbe-propag-title {
+  font-size: 0.82em;
+  font-weight: 600;
+  color: var(--sbe-text-2);
+  margin-bottom: 3px;
+}
+.sbe-propag ul { list-style: none; margin: 0; padding: 0; }
+.sbe-propag li { margin: 1px 0; font-size: 0.9em; }
+.sbe-propag-n, .sbe-propag-more { color: var(--sbe-text-dim); font-size: 0.85em; }
+
+/* Objet orphelin : suppression directe depuis l'avertissement */
+.sbe-orphan-del {
+  margin-left: 8px;
+  cursor: pointer;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+.sbe-orphan-del:hover { color: var(--sbe-danger, #c0392b); }
+
+/* ============================================================
+ * MENU CONTEXTUEL (inventaire, et plus tard HUD)
+ * ------------------------------------------------------------
+ * Accroché au <body> : les jetons du thème viennent de :root,
+ * avec des valeurs de repli si le thème général est coupé.
+ * ============================================================ */
+.sbe-ctx {
+  position: fixed;
+  z-index: 10000;
+  min-width: 180px;
+  max-width: 280px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--sbe-surf-2, #2b2b2b);
+  color: var(--sbe-text, #eee);
+  border: 1px solid var(--sbe-tone-3, #555);
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  font-size: 0.9em;
+}
+.sbe-ctx-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  padding: 5px 8px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  line-height: 1.2;
+  cursor: pointer;
+  box-shadow: none;
+}
+.sbe-ctx-item:hover:not(.is-disabled) {
+  background: color-mix(in srgb, var(--sbe-accent, #c96a2c) 22%, transparent);
+}
+/* Grisée, jamais cachée : la raison s'affiche au survol. */
+.sbe-ctx-item.is-disabled { opacity: 0.45; cursor: help; }
+.sbe-ctx-ico {
+  flex: none;
+  width: 18px;
+  display: inline-flex;
+  justify-content: center;
+}
+.sbe-ctx-ico img { width: 16px; height: 16px; object-fit: contain; border: none; }
+.sbe-ctx-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbe-ctx-sep {
+  margin: 3px 4px;
+  border: none;
+  border-top: 1px solid var(--sbe-tone-4, #444);
+}
+.sbe-btnmenu-item[aria-disabled="true"] { opacity: 0.45; cursor: help; }
+/* Bouton à étapes impossible : grisé, la raison au survol de la rangée. */
+.sbe-btn-row.is-blocked { cursor: help; }
+.sbe-btn-row.is-blocked .sbe-btn-face:disabled { pointer-events: none; }
+
+/* Éditeur d'étapes d'un bouton */
+.sbe-steps-list { display: flex; flex-direction: column; gap: 6px; margin: 6px 0; }
+.sbe-step {
+  border: 1px solid var(--sbe-tone-4, #444);
+  border-radius: 4px;
+  padding: 4px 6px;
+}
+.sbe-step-head { display: flex; align-items: center; gap: 6px; }
+.sbe-step-head .sbe-step-type { flex: 1; }
+.sbe-step-tools { display: flex; gap: 8px; flex: none; }
+.sbe-step-tools a { cursor: pointer; opacity: 0.7; }
+.sbe-step-tools a:hover { opacity: 1; }
+.sbe-step-note { margin: 4px 0; }
+.sbe-step-fields { display: flex; flex-wrap: wrap; gap: 4px; }
+.sbe-step-fields > * { flex: 1 1 120px; min-width: 0; }
+.sbe-step-fields .sbe-step-from { flex: 0 0 auto; }
+.sbe-step-fields .sbe-step-setmode { flex: 0 0 auto; }
+/* Attendre : rounds, minutes, interruption — texte au-dessus. */
+.sbe-step-waitbox { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 4px 8px; margin-top: 4px; }
+.sbe-step-waitbox input { width: 100%; }
+.sbe-step-craftbox { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 4px 8px; margin-top: 4px; }
+.sbe-step-craftbox select, .sbe-step-craftbox input { width: 100%; }
+.sbe-step-questbox { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 4px 8px; margin-top: 4px; }
+.sbe-step-questbox select, .sbe-step-questbox input { width: 100%; }
+/* Étapes du calendrier : Temps, Météo, Saison. */
+.sbe-step-timebox, .sbe-step-impbox, .sbe-step-targetbox, .sbe-step-tm-setbox { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 4px 8px; margin-top: 4px; }
+.sbe-step-tm-setbox { grid-column: 1 / -1; margin-top: 0; }
+.sbe-step-tm-setbox .notes, .sbe-step-timebox > .sbe-tc-check { grid-column: 1 / -1; }
+.sbe-step-timebox select, .sbe-step-timebox input[type="text"], .sbe-step-timebox input[type="number"],
+.sbe-step-impbox select, .sbe-step-impbox input, .sbe-step-targetbox select, .sbe-step-targetbox input { width: 100%; }
+.sbe-step-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4px; }
+.sbe-step-landbox { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 4px 8px; margin-top: 4px; }
+.sbe-step-landbox input { width: 100%; }
+
+/* Fenêtre « Choisir un objet ». */
+.sbe-pick-list { display: flex; flex-direction: column; gap: 4px; max-height: 50vh; overflow-y: auto; margin-bottom: 6px; }
+.sbe-pick-row { display: flex; align-items: center; gap: 8px; text-align: left; justify-content: flex-start; padding: 3px 6px; }
+.sbe-pick-row img { width: 28px; height: 28px; object-fit: cover; border: none; flex: none; }
+.sbe-pick-row > span:first-of-type { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbe-pick-qty { flex: none; opacity: .75; font-size: .9em; }
+.sbe-pick-info { flex: none; font-weight: 700; font-size: .88em; }
+.sbe-steps-add { width: auto; }
+
+/* Liste de références vide : l'invite, discrète, dans la boîte. */
+.sbe-cont-empty { margin: 6px 8px; text-align: center; }
+
+/* Slot : texte quand vide (« Glisser une classe ») */
+.sbe-slot-empty-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Jauge en pictos (faim, fatigue…) */
+.sbe-gauge--pips { display: flex; align-items: center; gap: 8px; }
+/* Les pictos passent à la ligne plutôt que de déborder de leur case. */
+.sbe-gauge--pips { min-width: 0; }
+.sbe-pips { display: inline-flex; flex-wrap: wrap; gap: 3px; }
+.sbe-pip { color: var(--sbe-pip-off); opacity: 0.45; }
+.sbe-pip.is-on { color: var(--sbe-pip-on); opacity: 1; }
+.sbe-pip[data-action] { cursor: pointer; }
+.sbe-pip[data-action]:hover { transform: scale(1.15); }
+
+/* Effets actifs */
+.sbe-fxlist { display: flex; flex-direction: column; gap: 3px; }
+.sbe-fxlist-title { font-weight: 700; }
+.sbe-fxlist-row { display: flex; align-items: center; gap: 6px; }
+.sbe-fxlist-row img { width: 26px; height: 26px; border: none; flex: none; object-fit: contain; }
+/* Ligne 1 : nom ; ligne 2 : ce que fait l'effet, puis le temps restant. */
+.sbe-fxlist-text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.sbe-fxlist-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
+.sbe-fxlist-sub { display: flex; flex-wrap: wrap; gap: 2px 8px; font-size: 0.85em; }
+/* Bonus en vert, malus en rouge, contour blanc : lisible sur tout fond. */
+.sbe-fxlist-does { min-width: 0; font-weight: 700;
+  text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff, 0 0 2px #fff; }
+.sbe-fxlist-does.is-up { color: var(--sbe-ok, #2e9e44); }
+.sbe-fxlist-does.is-down { color: var(--sbe-fail, #d23c3c); }
+.sbe-fxlist-left { flex: none; opacity: 0.75; white-space: nowrap; }
+.sbe-fxlist-del { flex: none; align-self: center; cursor: pointer; color: var(--sbe-fail, #d23c3c); padding: 0 4px; opacity: 0.8; }
+.sbe-fxlist-del:hover { opacity: 1; }
+.sbe-fxlist.is-sample .sbe-fxlist-del { pointer-events: none; }
+
+/* Info-bulle : un effet par ligne — icône, nom, montant coloré. */
+.sbe-tt-fx { display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+.sbe-tt-fx img { width: 16px; height: 16px; border: none; flex: none; object-fit: contain; }
+.sbe-tt-fx-val { font-weight: 700; }
+.sbe-tt-fx-val.is-up { color: #5cb85c; }
+.sbe-tt-fx-val.is-down { color: #e57373; }
+/* Graphiques : une valeur modifiée par un effet se colore. */
+.sbe-chart .sbe-chart-value.is-up { fill: var(--sbe-ok, #2e9e44); font-weight: 700; }
+.sbe-chart .sbe-chart-value.is-down { fill: var(--sbe-fail, #d23c3c); font-weight: 700; }
+.sbe-fxlist-none { opacity: 0.6; font-style: italic; }
+.sbe-fxlist.is-sample { opacity: 0.7; }
+
+/* ---------- Sons d'interface (thème du modèle, onglet Média d'un Onglet, coffres) ----------
+   Bloc autonome (pas de .form-group : les règles de Foundry le
+   remettaient sur une seule ligne). Titre au-dessus, puis une ligne
+   fichier + ▶, une ligne volume, puis les aides. */
+.sbe-uisound-block { display: flex; flex-direction: column; gap: 12px; }
+.sbe-uisound-block > .notes { margin: 0; }
+div.sbe-uisound {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  width: 100%;
+}
+div.sbe-uisound > .sbe-uisound-title { font-weight: 600; }
+div.sbe-uisound > .notes { margin: 0; font-size: 0.85em; opacity: 0.8; }
+div.sbe-uisound > .sbe-uisound-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+div.sbe-uisound > .sbe-uisound-row > file-picker,
+div.sbe-uisound > .sbe-uisound-row > range-picker { flex: 1 1 auto; min-width: 0; }
+div.sbe-uisound > .sbe-uisound-row > .sbe-uisound-vlabel { flex: none; min-width: 60px; }
+div.sbe-uisound .sbe-uisound-test { flex: none; width: auto; padding: 2px 12px; }
+.sbe-chest-config > * { flex-shrink: 0; }
+
+/* ---------- Points temporaires d'une jauge ----------
+   Deux thèmes : couleur du créateur (sombre / clair), sinon celle par
+   défaut de chaque thème. */
+:root, .theme-dark { --sbe-temp-default: #5aa9e6; }
+.theme-light { --sbe-temp-default: #2f6fa8; }
+.sbe-gauge-bar i.sbe-gauge-temp {
+  position: absolute; top: 0; bottom: 0;
+  background: var(--sbe-gtemp-d, var(--sbe-temp-default));
+  box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.55);
+}
+.theme-light .sbe-gauge-bar i.sbe-gauge-temp,
+.theme-dark .theme-light .sbe-gauge-bar i.sbe-gauge-temp { background: var(--sbe-gtemp-l, var(--sbe-temp-default)); }
+.theme-light .theme-dark .sbe-gauge-bar i.sbe-gauge-temp { background: var(--sbe-gtemp-d, var(--sbe-temp-default)); }
+.sbe-gauge-temp-box { display: inline-flex; align-items: center; gap: 2px; flex: 0 0 auto; font-weight: 700; color: var(--sbe-temp-default); }
+.sbe-gauge-temp-box .sbe-gauge-temp-input { width: 52px !important; text-align: center; }
+.sbe-gauge-temp-text { font-weight: 700; color: var(--sbe-temp-default); white-space: nowrap; }
+
+/* ============================================================
+ * ALIGNEMENT DES CHAMPS (libellé à côté)
+ * Dans une même colonne, un même cadre ou un même onglet, les champs
+ * à libellé de côté PARTAGENT la colonne des libellés : elle prend la
+ * largeur du plus long (130 px au plus) et toutes les cases s'alignent
+ * dessous. Les autres éléments (graphiques, blocs, libellé au-dessus,
+ * libellé à droite) occupent toute la largeur, comme avant.
+ * ============================================================ */
+:is(.sbe-col, .sbe-frame-body:not(.sbe-frame-body--free), .sbe-navtab-body) {
+  display: grid;
+  grid-template-columns: fit-content(130px) minmax(min-content, 1fr);
+  column-gap: 8px;
+  row-gap: 3px;
+  align-content: start;
+}
+:is(.sbe-col, .sbe-frame-body:not(.sbe-frame-body--free), .sbe-navtab-body) > * {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+:is(.sbe-col, .sbe-frame-body:not(.sbe-frame-body--free), .sbe-navtab-body)
+  > :is(.sbe-obj-el, .sbe-tpl-el):not(.sbe-el--stack):not(.sbe-el--side-right):not(.sbe-el--nolabel):not(.sbe-obj-el--block):not(.sbe-tpl-el--block) {
+  display: grid;
+  grid-template-columns: subgrid;
+}
+
+/* ============================================================
+ * COLONNES « même hauteur » (option de l'élément Colonnes)
+ * Les colonnes prennent la hauteur de la plus haute, et le DERNIER
+ * élément de chaque colonne s'étire jusqu'en bas : deux cadres côte à
+ * côte finissent à la même ligne, sans vide dessous.
+ * ============================================================ */
+.sbe-cols.sbe-cols--equal { align-items: stretch; }
+.sbe-cols--equal > .sbe-col { display: flex; flex-direction: column; }
+.sbe-cols--equal > .sbe-col > :is(details.sbe-frame, .sbe-tpl-el, .sbe-obj-el):not(:has(~ :is(details.sbe-frame, .sbe-tpl-el, .sbe-obj-el))) {
+  flex: 1 1 auto;
+}
+/* Les éléments AVANT le dernier gardent leur hauteur (jamais écrasés,
+   même un cadre à coins arrondis, qui coupe ce qui dépasse). */
+.sbe-cols--equal > .sbe-col > * { flex-shrink: 0; }
+/* Le dernier s'étire : un cadre posé directement grandit par flex (pas
+   de height: 100 %, qui volait la place des cadres du dessus). */
+.sbe-cols--equal > .sbe-col > details.sbe-frame:not(:has(~ :is(details.sbe-frame, .sbe-tpl-el, .sbe-obj-el))) {
+  display: flex; flex-direction: column; box-sizing: border-box;
+}
+.sbe-cols--equal > .sbe-col > .sbe-tpl-el:not(:has(~ :is(details.sbe-frame, .sbe-tpl-el, .sbe-obj-el))) > details.sbe-frame {
+  display: flex; flex-direction: column; height: 100%; box-sizing: border-box;
+}
+.sbe-cols--equal details.sbe-frame::details-content { display: contents; }
+.sbe-cols--equal > .sbe-col > details.sbe-frame > .sbe-frame-body,
+.sbe-cols--equal > .sbe-col > .sbe-tpl-el > details.sbe-frame > .sbe-frame-body { flex: 1 1 auto; }
+
+/* ---------- Atelier d'objet : onglets fixes (Médias, Effets) ---------- */
+.sbe-wtabs .sbe-wtab-fixed { display: inline-flex; align-items: center; gap: 5px; }
+/* « + » d'onglet : au bout de la ligne des onglets du modèle. */
+.sbe-wtabs .sbe-wtab-add { align-self: center; margin: 0 0 3px 4px; }
+/* Onglets Médias / Effets : leur propre barre de défilement. */
+.sbe-tpl-fixedtab {
+  display: flex; flex-direction: column; gap: 6px;
+  flex: 1 1 auto; min-height: 0;
+  overflow-y: auto; scrollbar-gutter: stable; padding-right: 6px;
+}
+.sbe-tpl-fixedtab-title { margin: 0; border: none; font-size: 1em; font-weight: 700; color: var(--sbe-accent-text); }
+
+/* ---------- Objet : onglet Effets (MJ) ---------- */
+.sbe-itemfx { display: flex; flex-direction: column; gap: 6px; }
+.sbe-itemfx-title { margin: 4px 0 0; border: none; font-size: 1em; font-weight: 700; color: var(--sbe-accent-text); }
+.sbe-itemfx-model { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.sbe-itemfx-model li { display: flex; align-items: center; gap: 6px; opacity: 0.85; }
+.sbe-itemfx-when { margin-left: auto; font-size: 0.85em; opacity: 0.7; }
+.sbe-itemfx-rules { display: flex; flex-direction: column; gap: 4px; }
+.sbe-itemfx-rule { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; padding: 4px; border: 1px solid var(--sbe-tone-4); border-radius: 4px; }
+.sbe-itemfx-rule select { flex: 1 1 120px; min-width: 0; width: auto; }
+.sbe-itemfx-rule select[hidden] { display: none; }
+/* « Seulement si » d'une règle « tant que » (formule lue sur l'objet). */
+.sbe-itemfx-onlyif { flex: 1 1 140px; min-width: 0; width: auto; }
+.sbe-itemfx-onlyif[hidden] { display: none; }
+.sbe-itemfx-del { flex: none; cursor: pointer; padding: 0 4px; }
+.sbe-itemfx-add { align-self: flex-start; width: auto; }
+
+/* Étape « Attaquer » : réglages, libellé AU-DESSUS de chaque champ. */
+.sbe-step-atk { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 4px 8px; margin-top: 4px; }
+.sbe-step-atk-field { display: flex; flex-direction: column; gap: 2px; }
+.sbe-step-atk-field > span { font-size: .85em; font-weight: 600; }
+.sbe-step-zone { margin: 6px 0 2px; padding: 2px 8px 6px; border: 1px solid var(--sbe-tone-4, #444); border-radius: 4px; grid-column: 1 / -1; }
+.sbe-step-zone > legend { font-weight: 600; padding: 0 4px; }
+.sbe-step-atk-field > select { width: 100%; }
+
+/* Étiquette colorée par le choix de sa liste (Rareté, État…). */
+.sbe-tag--colored { border-color: var(--sbe-tagc); color: var(--sbe-tagc); }
+.sbe-tag--colored.sbe-tag--hot { background: var(--sbe-tagc); border-color: var(--sbe-tagc); color: #fff; text-shadow: 0 1px 1px rgba(0,0,0,.45); }
+
+/* ---------- Info-bulle d'un objet ----------
+   Contenu SEUL : la bulle (fond, marges, cadre) appartient au manager
+   des info-bulles — rien ici ne la redimensionne ni ne la décale. */
+.sbe-itt-name { font-weight: 700; font-size: 1.05em; }
+.sbe-itt-name small { opacity: .8; font-weight: 400; }
+.sbe-itt-tags { display: flex; flex-wrap: wrap; gap: 3px; margin: 3px 0 4px; }
+.sbe-itt-tag { font-size: .72em; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; padding: 0 5px; border: 1px solid currentColor; border-radius: 3px; opacity: .9; }
+.sbe-itt-tag.is-colored { color: var(--sbe-itt-c); border-color: var(--sbe-itt-c); background: color-mix(in srgb, var(--sbe-itt-c) 18%, transparent); opacity: 1; }
+.sbe-itt-rows { display: grid; grid-template-columns: auto auto; column-gap: 14px; row-gap: 1px; }
+.sbe-itt-l { opacity: .8; }
+.sbe-itt-v { font-weight: 700; text-align: right; }
+.sbe-itt-row { display: contents; }
+/* Liste de références (les compétences d'une classe…) : pleine
+   largeur, une ligne icône + nom par objet désigné. */
+.sbe-itt-refs { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 2px; margin-top: 3px; }
+.sbe-itt-ref { display: flex; align-items: center; gap: 6px; font-weight: 700; }
+.sbe-itt-ref img { width: 20px; height: 20px; border: none; flex: none; object-fit: cover; }
+/* Effets de l'objet (option de son onglet Effets). */
+.sbe-itt-fx { margin-top: 6px; padding-top: 4px; border-top: 1px solid color-mix(in srgb, currentColor 25%, transparent); display: flex; flex-direction: column; gap: 3px; }
+.sbe-itt-fx-title { font-size: .72em; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; opacity: .75; }
+.sbe-itt-fx-row { display: flex; align-items: center; gap: 6px; }
+.sbe-itt-fx-row img { width: 20px; height: 20px; border: none; flex: none; object-fit: contain; }
+.sbe-itt-fx-text { display: flex; flex-direction: column; min-width: 0; }
+.sbe-itt-fx-name { font-weight: 700; }
+.sbe-itt-fx-name small { font-weight: 400; opacity: .75; }
+.sbe-itt-fx-does { font-size: .9em; }
+.sbe-itt-fx-does .is-up { color: var(--sbe-ok, #2e9e44); }
+.sbe-itt-fx-does .is-down { color: var(--sbe-fail, #d23c3c); }
+
+/* Couleurs des choix d'une liste (atelier). */
+.sbe-sel-colors { display: flex; flex-direction: column; gap: 2px; }
+.sbe-selc-row { display: flex; align-items: center; gap: 6px; }
+.sbe-selc-row input[type="color"] { width: 34px; height: 22px; padding: 0; border: none; flex: none; }
+.sbe-selc-name { font-weight: 600; }
+.sbe-step-adv { margin-top: 4px; }
+.sbe-step-adv > summary { cursor: pointer; font-weight: 600; }
+.sbe-step-atkbox .sbe-aopt-row { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr 1.3fr auto; gap: 6px; align-items: end; }
+.sbe-step-atkbox .sbe-aopt-f { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sbe-step-atkbox .sbe-aopt-f > span { font-size: .8em; font-weight: 600; }
+.sbe-step-atkbox .sbe-aopt-defchk { width: auto; align-self: start; margin: 6px 0; }
+.sbe-step-atkbox .sbe-aopt-del { cursor: pointer; opacity: .7; padding-bottom: 6px; }
+.sbe-step-atkbox .sbe-aopt-add { width: auto; }
+/* « Seulement si » d'une étape : libellé au-dessus. */
+.sbe-step-onlyif-box { display: flex; flex-direction: column; gap: 2px; margin-top: 4px; }
+.sbe-step-onlyif-box > span { font-size: .85em; font-weight: 600; }
+
+/* ============================================================
+ * CONTENEUR EN GRILLE : une case carrée par objet (ou pile).
+ * Colonnes fixes ou auto (--sbe-grid-cols), taille des cases
+ * réglée sur le conteneur (--sbe-grid-cell). Mêmes règles dans
+ * l'atelier et sur la fiche.
+ * ============================================================ */
+.sbe-grid {
+  display: grid;
+  grid-template-columns: var(--sbe-grid-cols, repeat(auto-fill, var(--sbe-grid-cell, 56px)));
+  grid-auto-rows: auto;
+  gap: 4px;
+  padding: 6px;
+  justify-content: start;
+  min-width: 0;
+}
+/* Le conteneur en grille ne réclame jamais plus que sa colonne. */
+.sbe-cont--grid { min-width: 0; max-width: 100%; }
+.sbe-grid-cell {
+  position: relative;
+  box-sizing: border-box;
+  /* Carrée, à la largeur de sa colonne de grille (la taille choisie,
+     ou moins si la place manque). */
+  width: 100%;
+  max-width: var(--sbe-grid-cell, 56px);
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--sbe-tone-4);
+  border-radius: 4px;
+  background: var(--sbe-surf-3);
+  overflow: hidden;
+}
+.sbe-grid-cell.is-empty {
+  border-style: dashed;
+  background: color-mix(in srgb, var(--sbe-surf-3) 50%, transparent);
+}
+.sbe-grid-item { cursor: grab; }
+.sbe-grid-item:hover,
+.sbe-grid-cell.is-empty:hover { border-color: var(--sbe-accent); }
+.sbe-grid-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: none;
+}
+.sbe-grid-item.is-ghost { opacity: 0.45; pointer-events: none; }
+.sbe-grid-item.is-ghost img { padding: 18%; box-sizing: border-box; object-fit: contain; }
+.sbe-grid-qty {
+  position: absolute;
+  right: 2px;
+  bottom: 1px;
+  padding: 0 3px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 0.72em;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.sbe-grid-name {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 1px 2px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.65em;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sbe-grid-item:has(.sbe-grid-name) .sbe-grid-qty { bottom: auto; top: 1px; }
+.sbe-cont--grid .sbe-cont-catbody > .sbe-grid { padding-top: 4px; }
+/* Rangement de la grille, choisi par le joueur : A→Z, Z→A, manuel */
+.sbe-grid-bar { display: flex; gap: 2px; padding: 4px 6px 0; }
+.sbe-grid-sort {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 20px; border-radius: 3px;
+  color: var(--sbe-text-dim); cursor: pointer; font-size: 0.8em;
+}
+.sbe-grid-sort:hover { color: var(--sbe-accent); }
+.sbe-grid-sort.is-on { color: var(--sbe-accent); background: color-mix(in srgb, var(--sbe-accent) 15%, transparent); }
+.sbe-grid-bar.is-preview { pointer-events: none; }
+
+/* ============================================================
+ * GRILLE SPATIALE : colonnes × lignes fixes, chaque objet sur son
+ * rectangle (L × H cases), pivotable d'un quart de tour. Les cases de
+ * fond et les objets partagent la même grille CSS : un objet est posé
+ * par grid-column / grid-row (span). Mêmes règles dans l'atelier, sur
+ * la fiche et dans les coffres. Moteur : builder/spatial.mjs.
+ * ============================================================ */
+.sbe-sp-wrap { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+.sbe-sp {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--sbe-sp-cols, 10), var(--sbe-sp-cell, 56px));
+  grid-template-rows: repeat(var(--sbe-sp-rows, 6), var(--sbe-sp-cell, 56px));
+  width: max-content;
+  padding: 6px;
+  box-sizing: content-box;
+}
+.sbe-sp.is-preview { pointer-events: none; }
+.sbe-sp-cell {
+  box-sizing: border-box;
+  border: 1px dashed var(--sbe-tone-5);
+  background: color-mix(in srgb, var(--sbe-surf-3) 50%, transparent);
+}
+.sbe-sp-item {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  margin: 1px;
+  border: 1px solid var(--sbe-tone-4);
+  border-radius: 4px;
+  background: var(--sbe-surf-3);
+  overflow: hidden;
+}
+.sbe-sp-item.sbe-grid-item:hover { border-color: var(--sbe-accent); }
+.sbe-sp-item.is-ghost { opacity: 0.5; }
+/* L'image garde sa taille d'origine (L × H cases) et tourne au centre
+   de son rectangle : pivotée d'un quart de tour, elle le remplit. */
+.sbe-sp-item > .sbe-sp-host { position: absolute; inset: 0; display: block; }
+.sbe-sp-art {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--sp-w, 1) * var(--sbe-sp-cell, 56px) - 6px);
+  height: calc(var(--sp-h, 1) * var(--sbe-sp-cell, 56px) - 6px);
+  transform: translate(-50%, -50%) rotate(var(--sp-rot, 0deg));
+  pointer-events: none;
+}
+.sbe-sp-art img { display: block; width: 100%; height: 100%; border: none; }
+/* Aperçu de la dépose : vert si le rectangle tient, rouge sinon. */
+.sbe-sp-ghost {
+  z-index: 3;
+  margin: 1px;
+  border: 2px solid var(--sbe-ok);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--sbe-ok) 25%, transparent);
+  pointer-events: none;
+}
+.sbe-sp-ghost.is-bad {
+  border-color: var(--sbe-fail);
+  background: color-mix(in srgb, var(--sbe-fail) 25%, transparent);
+}
+/* Zone d'attente (hors de la grille, conteneur plein) : ce qui attend une place. */
+.sbe-wait-band {
+  margin: 4px 6px 6px;
+  padding: 4px 6px 6px;
+  border: 1px solid var(--sbe-warn);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--sbe-warn) 10%, transparent);
+}
+.sbe-wait-head { display: flex; align-items: center; gap: 6px; font-weight: 600; color: var(--sbe-text); }
+.sbe-wait-head > i { color: var(--sbe-warn); }
+.sbe-wait-open { margin-left: auto; font-weight: 400; cursor: pointer; color: var(--sbe-accent-text); }
+.sbe-wait-open:hover { text-decoration: underline; }
+.sbe-wait-band .notes { margin: 2px 0 4px; }
+.sbe-wait-list { display: flex; flex-wrap: wrap; gap: 4px; }
+.sbe-sp-outitem { width: var(--sbe-sp-cell, 56px); flex: none; }
+.sbe-sp-outitem img { object-fit: contain; }
+.sbe-wait-item { width: var(--sbe-grid-cell, 48px); height: var(--sbe-grid-cell, 48px); flex: none; }
+.sbe-wait-item img { object-fit: contain; }
+
+/* Fenêtre des objets en attente d'une place. */
+.sbe-waitwin { display: flex; flex-direction: column; gap: 6px; }
+.sbe-waitwin .notes { margin: 0; }
+.sbe-waitwin-list { display: flex; flex-direction: column; gap: 4px; max-height: 50vh; overflow-y: auto; }
+.sbe-waitwin-row {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 4px 6px; border: 1px solid var(--sbe-tone-4); border-radius: 4px;
+  background: var(--sbe-surf-3); cursor: grab;
+}
+.sbe-waitwin-row img { width: 32px; height: 32px; object-fit: contain; border: none; flex: none; }
+.sbe-waitwin-name { flex: 1 1 120px; min-width: 0; color: var(--sbe-text); }
+.sbe-waitwin-acts { display: flex; flex-wrap: wrap; gap: 4px; }
+.sbe-waitwin-acts button { width: auto; padding: 0 8px; white-space: nowrap; }
+
+/* Réglage de l'objet du monde (onglet Médias). */
+.sbe-spset-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px; }
+.sbe-spset-row .sbe-itemfx-field { display: flex; flex-direction: column; gap: 2px; }
+.sbe-spset-row input[type="number"] { width: 70px; }
+.sbe-spset-img { display: flex; align-items: center; gap: 4px; }
+.sbe-spset-img input { flex: 1 1 auto; min-width: 0; }
+.sbe-spset-prev {
+  display: grid;
+  grid-template-columns: repeat(var(--sp-w, 1), 28px);
+  grid-template-rows: repeat(var(--sp-h, 1), 28px);
+  position: relative;
+  border: 1px solid var(--sbe-tone-4);
+  border-radius: 4px;
+  background: var(--sbe-surf-3);
+  --sbe-sp-cell: 28px;
+  overflow: hidden;
+}
+
+/* ============================================================
+ * REPÈRES SUR L'ICÔNE (option du modèle d'objet)
+ * L'hôte enveloppe l'icône ; les repères se calent dans ses coins
+ * et grandissent avec elle (unités de conteneur).
+ * ============================================================ */
+.sbe-mk-host {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  container-type: inline-size;
+  line-height: 1;
+  border-radius: 3px;
+}
+.sbe-mk-host > img, .sbe-mk-host > i, .sbe-mk-host > .sbe-hud-ic { display: block; }
+/* L'hôte a TOUJOURS une taille explicite : les repères se mesurent
+   sur elle (container-type), sans quoi elle s'effondrerait. */
+.sbe-mk-fill, .sbe-mk-hud { width: 100%; height: 100%; }
+.sbe-mk-fill > img, .sbe-mk-hud > img { width: 100%; height: 100%; object-fit: cover; }
+.sbe-mk-hud > img { object-fit: contain; }
+.sbe-mk-list { width: var(--sbe-cont-icon, 22px); height: var(--sbe-cont-icon, 22px); }
+.sbe-mk-slot { width: 28px; height: 28px; }
+.sbe-mk-list > img, .sbe-mk-slot > img { width: 100%; height: 100%; }
+.sbe-mk-hud > .sbe-hud-ic { width: 100%; height: 100%; }
+.sbe-mk {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  color: var(--mk-c, #fff);
+  font-size: max(7px, 24cqw);
+  text-shadow: 0 0 2px #000, 0 0 2px #000;
+}
+.sbe-mk--tl { top: 2%; left: 3%; }
+.sbe-mk--tr { top: 2%; right: 3%; }
+.sbe-mk--bl { bottom: 2%; left: 3%; }
+.sbe-mk--br { bottom: 2%; right: 3%; }
+.sbe-mk--c  { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.sbe-mk--icon { font-size: max(7px, calc(var(--mk-s, 30) * 0.8cqw)); }
+/* Spécificité renforcée : les règles « img remplit la case » de la
+   grille, du slot et de l'aperçu ne doivent pas l'agrandir. */
+.sbe-mk-host img.sbe-mk--img {
+  width: max(8px, calc(var(--mk-s, 30) * 1cqw));
+  height: max(8px, calc(var(--mk-s, 30) * 1cqw));
+  object-fit: contain;
+  border: none;
+  filter: drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000);
+}
+.sbe-mk--text {
+  font-weight: 700;
+  font-size: max(7px, 21cqw);
+  padding: 0 2px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--mk-bg, #000) 70%, transparent);
+  white-space: nowrap;
+  text-shadow: none;
+}
+.sbe-mk--bar {
+  left: 4%; right: 4%;
+  height: max(2px, 7cqw);
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+.sbe-mk--bar.sbe-mk--bottom { bottom: 3%; }
+.sbe-mk--bar.sbe-mk--top { top: 3%; }
+.sbe-mk--bar > span { display: block; height: 100%; background: var(--mk-c, #fff); }
+.sbe-mk--pips {
+  left: 0; right: 0;
+  display: flex; justify-content: center; gap: max(1px, 3cqw);
+}
+.sbe-mk--pips.sbe-mk--bottom { bottom: 4%; }
+.sbe-mk--pips.sbe-mk--top { top: 4%; }
+.sbe-mk--pips > span {
+  width: max(3px, 9cqw); height: max(3px, 9cqw);
+  border-radius: 50%;
+  border: 1px solid var(--mk-c, #fff);
+  background: rgba(0, 0, 0, 0.5);
+}
+.sbe-mk--pips > span.on { background: var(--mk-c, #fff); }
+/* Halo : à l'intérieur de l'icône (jamais rogné par une case). */
+.sbe-mk-halo::after {
+  content: "";
+  position: absolute; inset: 0; z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.sbe-mk-halo--border::after { box-shadow: inset 0 0 0 2px var(--mk-halo); }
+.sbe-mk-halo--glow::after { box-shadow: inset 0 0 0 1px var(--mk-halo), inset 0 0 max(4px, 18cqw) max(1px, 4cqw) var(--mk-halo); }
+.sbe-mk-halo--pulse::after {
+  box-shadow: inset 0 0 0 1px var(--mk-halo), inset 0 0 max(4px, 18cqw) max(1px, 4cqw) var(--mk-halo);
+  animation: sbe-mk-pulse 1.4s ease-in-out infinite;
+}
+@keyframes sbe-mk-pulse { 50% { opacity: 0.25; } }
+.sbe-mk-dim > img, .sbe-mk-dim > i, .sbe-mk-dim > .sbe-hud-ic { filter: grayscale(1) brightness(0.55); }
+
+/* Fenêtre de réglage des repères */
+.sbe-marks-cfg .window-content { display: flex; flex-direction: column; gap: 8px; padding: 10px; }
+.sbe-marks-top { display: flex; gap: 14px; align-items: flex-start; flex: none; }
+.sbe-marks-prev { flex: none; padding: 10px; border: 1px solid var(--sbe-tone-4); border-radius: 6px; background: var(--sbe-surf-3); }
+.sbe-marks-prev-row { display: flex; gap: 12px; align-items: flex-end; }
+.sbe-marks-prev-cell { width: var(--sbe-grid-cell, 28px); height: var(--sbe-grid-cell, 28px); border: 1px solid var(--sbe-tone-4); border-radius: 4px; overflow: hidden; }
+.sbe-marks-prev-cell .sbe-mk-host, .sbe-marks-prev-cell img { width: 100%; height: 100%; object-fit: cover; border: none; }
+.sbe-marks-side { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.sbe-mk-io { display: flex; gap: 6px; }
+.sbe-marks-scroll { flex: 1; overflow-y: auto; min-height: 0; padding-right: 4px; }
+.sbe-marks-scroll h3 { margin: 10px 0 4px; border-bottom: 1px solid var(--sbe-tone-4); }
+.sbe-mkc-list { display: flex; flex-direction: column; gap: 6px; }
+.sbe-mk-row { border: 1px solid var(--sbe-tone-4); border-radius: 6px; padding: 6px 8px; background: var(--sbe-surf-2); }
+.sbe-mk-row-head { display: flex; justify-content: space-between; align-items: center; font-weight: 700; margin-bottom: 4px; }
+.sbe-mk-row-body { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: flex-end; }
+.sbe-mk-halo-row { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: flex-end; }
+.sbe-mk-n { font-weight: 700; opacity: .7; align-self: center; }
+.sbe-mk-f { display: flex; flex-direction: column; gap: 2px; font-size: .9em; min-width: 110px; }
+.sbe-mk-f > span:first-child { color: var(--sbe-text-2); font-size: .85em; }
+.sbe-mk-f--wide { flex: 1 1 220px; }
+.sbe-mk-f--color { min-width: 0; }
+.sbe-mk-f--color input { width: 44px; height: 26px; padding: 0; }
+.sbe-mk-f--num { min-width: 70px; }
+.sbe-mk-f--num input { width: 70px; }
+.sbe-mk-iconrow { display: flex; gap: 4px; }
+.sbe-mk-moves { display: flex; gap: 8px; margin-left: auto; }
+.sbe-mk-moves a { cursor: pointer; color: var(--sbe-text-2); }
+.sbe-mk-moves a:hover { color: var(--sbe-accent); }
+.sbe-mk-add { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.sbe-mk-add button { width: auto; padding: 2px 10px; }
+.sbe-mk-foot { flex: none; display: flex; justify-content: flex-end; }
+.sbe-mk-foot button { width: auto; padding: 4px 16px; }
+
+/* Slot d'équipement PLEIN : l'icône occupe toute la case (comme une
+   case de grille) ; le nom est dans l'info-bulle. */
+.sbe-slot.sbe-slot--icon {
+  position: relative;
+  display: block;
+  padding: 0;
+  cursor: grab;
+}
+.sbe-slot--icon .sbe-mk-host,
+.sbe-slot--icon .sbe-slot-img { width: 100%; height: 100%; }
+.sbe-slot--icon .sbe-slot-img { object-fit: cover; border: none; }
+.sbe-slot--icon:hover { border-color: var(--sbe-accent); }
+/* Option « nom à droite » : icône carrée à gauche, nom à côté. */
+.sbe-slot.sbe-slot--named {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: auto;
+  min-height: var(--sbe-slot-ic, 64px);
+  padding-right: 22px;
+}
+.sbe-slot--named > .sbe-slot-ic {
+  flex: none;
+  width: var(--sbe-slot-ic, 64px);
+  height: var(--sbe-slot-ic, 64px);
+}
+.sbe-slot--named > .sbe-slot-ic > .sbe-mk-host,
+.sbe-slot--named > .sbe-slot-ic > .sbe-slot-img { width: 100%; height: 100%; }
+.sbe-slot--named > .sbe-slot-name {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ============================================================
+ * COFFRES : onglets du MJ, liste / grille
+ * ============================================================ */
+.sbe-chest-tabs { display: flex; gap: 4px; margin-bottom: 8px; border-bottom: 1px solid var(--sbe-tone-4, rgba(0,0,0,.2)); }
+.sbe-chest-tablink { padding: 4px 12px; cursor: pointer; border-bottom: 2px solid transparent; opacity: 0.75; }
+.sbe-chest-tablink:hover { opacity: 1; }
+.sbe-chest-tablink.active { opacity: 1; font-weight: 700; border-bottom-color: var(--sbe-accent, currentColor); }
+.sbe-chest-tab[hidden] { display: none !important; }
+.sbe-chest-viewbar { display: flex; justify-content: flex-end; gap: 2px; margin-bottom: 4px; }
+.sbe-chest-view { width: 24px; height: 22px; display: inline-flex; align-items: center; justify-content: center; border-radius: 3px; cursor: pointer; opacity: 0.6; }
+.sbe-chest-view:hover { opacity: 1; }
+.sbe-chest-view.is-on { opacity: 1; background: color-mix(in srgb, var(--sbe-accent, #888) 20%, transparent); }
+.sbe-chest-grid { padding: 6px; }
+/* Affichage du coffre : texte au-dessus de chaque champ. */
+.sbe-chest-viewbox { display: flex; flex-direction: column; gap: 6px; }
+.sbe-chest-gridopts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px 8px; }
+.sbe-chest-gridopts[hidden] { display: none; }
+.sbe-chest-gridopts .notes { grid-column: 1 / -1; margin: 0; }
+.sbe-chest-gridf { display: flex; flex-direction: column; gap: 2px; font-size: .9em; }
+.sbe-chest-gridf > span { font-weight: 600; }
+.sbe-chest-gridf input, .sbe-chest-gridf select { width: 100%; }
+.sbe-chest-cell { cursor: default; }
+/* Icônes de la liste d'un coffre et d'un objet au sol : 56 px (lisibles,
+   avec leurs repères : halo, petites icônes en coin). */
+.sbe-chest-icon, .sbe-ground-icon { position: relative; width: 56px; height: 56px; flex: none; display: inline-flex; }
+.sbe-chest-icon img, .sbe-ground-icon img { width: 56px; height: 56px; object-fit: contain; border: none; }
+.sbe-chest-icon > .sbe-mk-host, .sbe-ground-icon > .sbe-mk-host { width: 100%; height: 100%; }
+/* Coffre : argent (prendre / déposer) et fenêtres associées */
+.sbe-chest-money-acts { display: flex; gap: 6px; margin-top: 6px; }
+.sbe-chest-money-acts button { width: auto; padding: 2px 10px; }
+.sbe-chest-money-dlg { display: flex; flex-direction: column; gap: 8px; }
+.sbe-cmd-f { display: flex; flex-direction: column; gap: 2px; }
+.sbe-cmd-f > span { font-weight: 600; font-size: 0.9em; }
+.sbe-cmd-some { display: flex; flex-direction: column; gap: 2px; padding-left: 4px; }
+.sbe-cmd-some[hidden] { display: none; }
+.sbe-cmd-pc { display: flex; align-items: center; gap: 6px; }
+
+/* ============================================================
+ * OBJETS AU SOL — fenêtre (un objet ou un sac)
+ * ============================================================ */
+.sbe-ground-list { display: flex; flex-direction: column; gap: 4px; max-height: 50vh; overflow-y: auto; }
+.sbe-ground-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 4px 6px; border: 1px solid var(--sbe-surf-4); border-radius: 4px; }
+/* Coffre, sol : on saisit un objet par son icône. */
+.sbe-drag-grip { cursor: grab; pointer-events: auto; -webkit-user-drag: element; }
+.sbe-drag-grip:active { cursor: grabbing; }
+.sbe-ground-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbe-ground-qty { flex: none; opacity: .75; }
+.sbe-ground-row button { flex: none; width: auto; padding: 0 8px; line-height: 1.8; }
+.sbe-ground-acts { flex: 1 0 100%; display: flex; flex-wrap: wrap; gap: 4px; padding-left: 64px; }
+.sbe-ground-recip { display: flex; flex-direction: column; gap: 4px; }
+.sbe-ground-recip label { display: flex; align-items: center; gap: 8px; }
+.sbe-ground-recip img { width: 28px; height: 28px; border: none; border-radius: 50%; object-fit: cover; }
+
+/* Effets PROPRES à l'objet : un dépliant par effet (même éditeur que
+   le gestionnaire d'effets, sans nom ni icône : ceux de l'objet). */
+.sbe-itemfx-owns { display: flex; flex-direction: column; gap: 4px; }
+.sbe-itemfx-own { border: 1px solid var(--sbe-tone-3); border-radius: 6px; }
+.sbe-itemfx-own > summary { display: flex; align-items: center; gap: 8px; padding: 4px 8px; cursor: pointer; list-style: none; }
+.sbe-itemfx-own > summary::-webkit-details-marker { display: none; }
+.sbe-itemfx-own > summary::before, .sbe-itemfx-own > summary::marker { content: none; display: none; }
+.sbe-itemfx-own-chev { flex: none; width: 12px; font-size: 0.75em; text-align: center; opacity: 0.7; transition: transform 0.15s; }
+.sbe-itemfx-own[open] > summary > .sbe-itemfx-own-chev { transform: rotate(90deg); }
+.sbe-itemfx-own[open] > summary { border-bottom: 1px solid var(--sbe-tone-3); }
+.sbe-itemfx-own > summary img { width: 24px; height: 24px; border: none; object-fit: contain; flex: none; }
+.sbe-itemfx-own-name { font-weight: 700; flex: none; }
+.sbe-itemfx-own-sum { flex: 1 1 auto; min-width: 0; font-size: 0.85em; opacity: 0.7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbe-itemfx-own-del { flex: none; cursor: pointer; opacity: 0.7; padding: 0 4px; }
+.sbe-itemfx-own-del:hover { opacity: 1; }
+.sbe-itemfx-own .sbe-fx-edit.sbe-itemfx-own-body { flex: none; overflow: visible; min-height: 0; padding: 6px 8px 8px; }
+.sbe-itemfx-local { align-self: flex-start; width: auto; }
+/* Déclenchement d'un effet propre : en tête du dépliant (libellés AU-DESSUS). */
+.sbe-itemfx-own-when { border: 1px solid var(--sbe-tone-3); border-radius: 6px; padding: 4px 8px 8px; margin-bottom: 4px; }
+.sbe-itemfx-field { display: flex; flex-direction: column; gap: 2px; flex: 1 1 160px; min-width: 0; }
+.sbe-itemfx-field[hidden] { display: none; }
+.sbe-itemfx-field > label { font-weight: 600; }
+.sbe-itemfx-field > select, .sbe-itemfx-field > input { width: 100%; }
+/* Effets conférés du modèle : « Seulement si ». */
+.sbe-grant .sbe-grant-if { flex: 1 1 140px; min-width: 0; }
+.sbe-itemfx-inherit { display: flex; flex-wrap: wrap; gap: 6px; }
+.sbe-itemfx-inherit button { width: auto; }
+
+/* ===== Onglet « Zone » de l'objet (zones persistantes) ===== */
+/* Couleurs : variables du thème (clair et sombre), rien d'écrit en dur. */
+.sbe-zonetab { display: flex; flex-direction: column; gap: 6px; }
+.sbe-zonetab .sbe-zt-onrow { font-weight: 600; }
+.sbe-zt-warn { margin: 2px 0 0; color: var(--sbe-warn); font-size: 0.9em; }
+.sbe-zt-fxlist { display: flex; flex-direction: column; gap: 4px; }
+.sbe-zt-fx { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 6px; padding: 4px 6px 6px; border: 1px solid var(--sbe-tone-4); border-radius: 4px; }
+.sbe-zt-fx-del { flex: none; cursor: pointer; padding: 4px; opacity: 0.7; }
+.sbe-zt-fx-del:hover { opacity: 1; color: var(--sbe-danger, #c0392b); }
+.sbe-zt-fx-add { align-self: flex-start; width: auto; }
+.sbe-zonetab [hidden] { display: none !important; }
+.sbe-zonemedia { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+/* Deux cadres bien séparés : pendant la zone / trace au sol. */
+.sbe-zm-box { display: flex; flex-direction: column; gap: 6px; padding: 8px 10px; border: 1px solid var(--sbe-surf-4); border-radius: 6px; background: var(--sbe-overlay); }
+.sbe-zm-chips { display: flex; flex-wrap: wrap; gap: 4px; margin: 2px 0 4px; }
+.sbe-zm-chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px; border: 1px solid var(--sbe-tone-4); border-radius: 4px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbe-zm-del, .sbe-zm-pick { cursor: pointer; opacity: 0.75; flex: none; }
+.sbe-zm-del:hover { opacity: 1; color: var(--sbe-danger, #c0392b); }
+.sbe-zm-pick:hover { opacity: 1; }
+.sbe-zm-add, .sbe-zm-tadd { align-self: flex-start; width: auto; }
+/* En-tête de l'onglet Zone : la case et « Copier depuis… » côte à côte. */
+.sbe-zt-headrow { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.sbe-zt-copy { width: auto; flex: none; }
+.sbe-zone-tipanchor { position: fixed; width: 1px; height: 1px; pointer-events: none; z-index: -1; }
+
+/* ============================================================
+ * Bouton « ⋮ » d'un objet porté (ligne, case, slot) : le même menu
+ * que le clic droit — pour les souris et pavés sans clic droit.
+ * ============================================================ */
+.sbe-inv-menu { cursor: pointer; color: var(--sbe-text-2); }
+.sbe-inv-menu:hover { color: var(--sbe-accent); }
+.sbe-grid-item .sbe-inv-menu,
+.sbe-slot--icon .sbe-inv-menu {
+  position: absolute; top: 1px; right: 2px; z-index: 5;
+  width: 16px; height: 16px; border-radius: 3px; box-sizing: border-box;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0, 0, 0, 0.65); color: #fff; font-size: 10px; line-height: 1;
+  opacity: 0.85; transition: opacity 0.12s, background 0.12s;
+}
+/* Pas de contour blanc (--sbe-halo des zones libres) : sur un glyphe
+   aussi fin, il soudait les trois points en une barre. */
+.sbe-inv-menu, .sbe-inv-menu i { text-shadow: none !important; }
+.sbe-grid-item:hover .sbe-inv-menu,
+.sbe-slot--icon:hover .sbe-inv-menu { opacity: 1; }
+.sbe-grid-item .sbe-inv-menu:hover,
+.sbe-slot--icon .sbe-inv-menu:hover { background: var(--sbe-accent); color: #fff; }
+/* Nom affiché : la quantité monte… à gauche, le bouton garde la droite. */
+.sbe-grid-item:has(.sbe-grid-name) .sbe-grid-qty { right: auto; left: 2px; }
+.sbe-slot--icon .sbe-grid-qty { z-index: 1; }
+
+/* Liste d'effets : le nombre de cumuls SUR l'icône, en bas à droite. */
+.sbe-fxlist-ico { position: relative; flex: none; display: inline-flex; width: 26px; height: 26px; }
+.sbe-fxlist-ico img { width: 100%; height: 100%; }
+.sbe-fxlist-stack {
+  position: absolute; right: -3px; bottom: -3px;
+  min-width: 13px; padding: 0 2px; box-sizing: border-box;
+  border-radius: 3px; background: rgba(0, 0, 0, 0.75); color: #fff;
+  font-size: 10px; font-weight: 700; line-height: 13px; text-align: center;
+}
+
+/* Nombre « valeur / max » (option du champ) : comme le texte d'une jauge. */
+.sbe-num-of { display: inline-flex; align-items: center; gap: 4px; }
+.sbe-num-max { white-space: nowrap; opacity: 0.85; }
+
+/* Onglet Effets d'un objet : option « dans l'info-bulle ». */
+.sbe-itemfx-tipopt { margin-bottom: 8px; }
+
+/* Champ COULEUR (nuancier) et sa pastille dans les info-bulles. */
+.sbe-color-field { width: 48px; height: 26px; padding: 0 2px; flex: none; cursor: pointer; }
+.sbe-color-field:disabled { cursor: default; }
+.sbe-color-swatch { display: inline-block; width: 1em; height: 1em; border-radius: 3px; vertical-align: middle;
+  border: 1px solid var(--sbe-tone-4, #8888); }
+
+/* Visibilité d'un message de jet (atelier, règles de combat) : cases
+   « permises » sur une ou plusieurs lignes. */
+.sbe-vis-allow-list { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.sbe-vis-chk { display: inline-flex; align-items: center; gap: 4px; }
+
+/* Liste de références en CARTES (ingrédients, résultat d'une recette). */
+.sbe-cont--tiles .sbe-cont-body { padding: 6px; }
+.sbe-ref-tiles { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.sbe-ref-tile { position: relative; width: 104px; min-height: 104px; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 8px 6px; border: 1px solid var(--sbe-tone-3); border-radius: var(--sbe-radius, 6px); background: var(--sbe-surf-2); text-align: center; }
+.sbe-ref-tile img { width: 56px; height: 56px; object-fit: contain; border: 0; }
+.sbe-ref-tile-name { font-size: 0.85em; line-height: 1.15; color: var(--sbe-text); word-break: break-word; }
+.sbe-ref-tile-acts { position: absolute; top: 3px; right: 4px; display: flex; gap: 6px; opacity: 0; transition: opacity 0.15s; }
+.sbe-ref-tile:hover .sbe-ref-tile-acts { opacity: 1; }
+.sbe-ref-tile-acts a { color: var(--sbe-text-dim); cursor: pointer; }
+.sbe-ref-tile-acts a:hover { color: var(--sbe-accent); }
+.sbe-ref-tile--empty { justify-content: center; border-style: dashed; color: var(--sbe-text-dim); background: transparent; }
+.sbe-ref-tile--empty i { font-size: 22px; }
+.sbe-ref-tile--empty span { font-size: 0.8em; }
+.sbe-ref-tile--empty.is-locked { opacity: 0.6; }
+.sbe-step-tablebox { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 4px 8px; margin-top: 4px; align-items: end; }
+
+/* ============================================================
+   CONTENEUR EN FICHES (display: "cards") — une fiche par objet
+   porté : tête (icône, nom, pastilles, cadre à droite, coin),
+   bandeau (jauge en points, boutons), texte dépliant.
+   ============================================================ */
+.sbe-cont--cards { border: none; background: none; }
+.sbe-cont--cards > .sbe-cont-body { padding: 0; }
+.sbe-icards { display: flex; flex-direction: column; gap: 12px; padding: 8px; }
+.sbe-icards.is-split { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); align-items: start; }
+.sbe-icards-sec { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.sbe-icards-title {
+  display: flex; align-items: center; gap: 10px; margin: 4px 0 12px; padding: 0; border: none;
+  font-size: 13px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: var(--sbe-text);
+}
+.sbe-icards-title::before, .sbe-icards-title::after {
+  content: ""; flex: 1 1 auto; min-width: 8px; height: 1px;
+  background: color-mix(in srgb, var(--sbe-text-dim) 50%, transparent);
+}
+.sbe-icards-title > i, .sbe-icards-title > img { opacity: 0.7; }
+.sbe-icards-count { font-weight: normal; letter-spacing: normal; opacity: 0.7; font-size: 0.9em; }
+.sbe-icards-list {
+  display: flex; flex-direction: column; gap: 4px; min-height: 60px; padding: 6px;
+  border-radius: 4px; background: var(--sbe-overlay); transition: box-shadow 0.14s;
+}
+.sbe-cont--cards.drop-hover .sbe-icards-list { box-shadow: inset 0 0 0 2px var(--sbe-accent); }
+.sbe-icards-empty {
+  display: flex; align-items: center; justify-content: center; gap: 9px; margin: 10px 0;
+  color: var(--sbe-text-dim); font-size: 15px; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.sbe-icards-ph {
+  width: 30px; height: 30px; flex: none; display: flex; align-items: center; justify-content: center;
+  border-radius: 2px; font-size: 11px;
+  background: repeating-linear-gradient(45deg, var(--sbe-overlay-2) 0 3px, transparent 3px 6px);
+}
+.sbe-icard {
+  display: block; width: 100%; box-sizing: border-box; overflow: hidden;
+  background: var(--sbe-overlay); border: none; border-left: 3px solid var(--sbe-accent);
+  border-radius: 0 4px 4px 0; transition: box-shadow 0.14s;
+}
+.sbe-icard:hover { box-shadow: inset 0 0 0 1px var(--sbe-accent); }
+.sbe-icard.is-bare .sbe-icard-head { padding-bottom: 9px; }
+.sbe-icard-head { display: flex; align-items: flex-start; gap: 11px; padding: 9px 11px 6px; }
+.sbe-icard-img { width: 42px; height: 42px; flex: none; border: none; border-radius: 3px; object-fit: cover; }
+.sbe-icard-info { flex: 1; min-width: 0; }
+.sbe-icard-name {
+  display: flex; align-items: center; gap: 7px; flex-wrap: wrap;
+  font-weight: 600; font-size: 15px; letter-spacing: 0.03em; color: var(--sbe-text-strong);
+}
+.sbe-icard-lock { font-size: 11px; color: var(--sbe-text-dim); }
+.sbe-icard-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.sbe-icard-chip, .sbe-icard-tag {
+  display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 2px;
+  font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap;
+  background: var(--sbe-overlay-2); color: var(--sbe-text-2);
+}
+.sbe-icard-chip.is-cost, .sbe-icard-tag.is-cost { background: rgba(193, 45, 45, 0.12); color: #b23a3a; }
+.sbe-icard-chip.is-up, .sbe-icard-tag.is-up { background: rgba(186, 117, 23, 0.14); color: #a36614; }
+.sbe-icard-chip.is-info, .sbe-icard-tag.is-info { background: rgba(58, 92, 122, 0.16); color: #4a7aa0; }
+.sbe-icard-chip.is-accent, .sbe-icard-tag.is-accent { background: color-mix(in srgb, var(--sbe-accent) 14%, transparent); color: var(--sbe-accent-text); }
+.sbe-icard-side { flex: none; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.sbe-icard-box { text-align: center; }
+.sbe-icard-box-l { display: block; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sbe-text-dim); }
+.sbe-icard-box-v { display: block; font-size: 14px; font-weight: 500; color: var(--sbe-text-strong); }
+.sbe-icard-corner { flex: none; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.sbe-icard-del { color: var(--sbe-fail); font-size: 12px; cursor: pointer; opacity: 0.7; }
+.sbe-icard-del:hover { opacity: 1; }
+.sbe-icard-toggle { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; color: var(--sbe-text-dim); cursor: pointer; transition: transform 0.15s; }
+.sbe-icard-toggle:hover { color: var(--sbe-text-strong); }
+.sbe-icard-toggle.is-open { transform: rotate(180deg); }
+.sbe-icard-band { display: flex; align-items: center; gap: 7px; padding: 6px 11px; background: var(--sbe-overlay); }
+.sbe-icard-spacer { flex: 1; }
+.sbe-icard-glabel { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sbe-text-dim); }
+.sbe-icard-pips { display: flex; align-items: center; gap: 2px; min-width: 0; overflow: hidden; }
+/* Charges en points : pleine = orange, vide = gris (variables pour un thème). */
+.sbe-icard-pip { width: 9px; height: 9px; flex: none; border-radius: 50%; background: var(--sbe-card-pip, #e8892b); box-shadow: 0 0 3px color-mix(in srgb, var(--sbe-card-pip, #e8892b) 60%, transparent); }
+.sbe-icard-pip.is-off { background: var(--sbe-card-pip-off, #9a9a9a); box-shadow: none; }
+.sbe-icard-gcount { font-size: 10px; color: var(--sbe-text-dim); }
+.sbe-icard-btn {
+  flex: none; width: 26px; height: 26px; min-height: 0; padding: 0; border: none; border-radius: 3px;
+  background: transparent; color: var(--sbe-text-2); cursor: pointer;
+}
+.sbe-icard-btn:hover:not(:disabled) { background: var(--sbe-text-strong); color: var(--sbe-surf-1); }
+.sbe-icard-btn.is-main {
+  width: auto; height: auto; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
+  background: var(--sbe-accent); color: #fff; font-weight: 500; font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase;
+}
+.sbe-icard-btn.is-main:hover:not(:disabled) { background: var(--sbe-accent-dark); color: #fff; }
+.sbe-icard-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.sbe-icard.is-depleted .sbe-icard-head { opacity: 0.55; }
+.sbe-icard.is-locked { border-left-color: var(--sbe-text-dim); background: color-mix(in srgb, var(--sbe-text-dim) 30%, transparent); }
+.sbe-icard.is-locked .sbe-icard-img { filter: grayscale(1); }
+.sbe-icard-desc { padding: 8px 12px; margin-top: 2px; border-top: 1px solid var(--sbe-edge-soft); color: var(--sbe-text-2); font-size: 0.9em; line-height: 1.5; }
+
+/* === Fenêtre « Thème du modèle » : une seule colonne, tout aligné à
+   gauche, libellés au-dessus des champs, champs sur toute la largeur.
+   Elle n'est pas rangée « deux par ligne » (data-cf-off sur sa racine) :
+   ses blocs (sons, décorations) ont leur propre mise en page. === */
+.sbe-tpltheme-config .sbe-theme-body { text-align: left !important; }
+.sbe-tpltheme-config .sbe-tplthc-use {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 6px;
+}
+.sbe-tpltheme-config .sbe-tplthc-use > *,
+.sbe-tpltheme-config .sbe-section-rows > *,
+.sbe-tpltheme-config .sbe-deco-row > * { width: 100%; max-width: 100%; margin-left: 0; margin-right: 0; box-sizing: border-box; }
+.sbe-tpltheme-config .sbe-section-rows,
+.sbe-tpltheme-config .sbe-deco-row {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 6px;
+}
+.sbe-tpltheme-config .sbe-tplth-row { justify-content: flex-start !important; text-align: left !important; }
+.sbe-tpltheme-config .form-group {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch !important;
+  gap: 2px;
+  margin: 0;
+}
+.sbe-tpltheme-config .form-group > label {
+  flex: none !important;
+  width: 100%;
+  text-align: left !important;
+  justify-content: flex-start !important;
+}
+.sbe-tpltheme-config .form-group > .form-fields {
+  flex: none !important;
+  width: 100%;
+  justify-content: flex-start !important;
+}
+.sbe-tpltheme-config .form-group > .form-fields > :is(select, file-picker, range-picker, textarea, input:not([type="checkbox"]):not([type="color"]):not([type="range"])) {
+  flex: 1 1 0;
+  min-width: 0;
+  width: 100%;
+}
+.sbe-tpltheme-config .form-group > :is(select, textarea, file-picker) { width: 100%; }
+.sbe-tpltheme-config .sbe-deco-head { justify-content: space-between !important; }
+.sbe-tpltheme-config .sbe-deco-nums { display: flex; align-items: center; gap: 6px; }
+.sbe-tpltheme-config .sbe-deco-nums > input { flex: 1 1 0; min-width: 0; }
+.sbe-tpltheme-config textarea.sbe-deco-code { width: 100%; }
+
+/* ============================================================
+ * Objet « MJ seulement » (option du modèle « Visible des joueurs »
+ * décochée) : un œil barré dans le coin, vu du MJ seul.
+ * ============================================================ */
+[data-sbe-gmonly] { position: relative; }
+[data-sbe-gmonly]::after {
+  content: "\f070";
+  font: var(--fa-font-solid);
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  z-index: 3;
+  padding: 2px 3px;
+  font-size: 9px;
+  line-height: 1;
+  border-radius: 3px;
+  color: var(--sbe-text);
+  background: var(--sbe-surf-3);
+  box-shadow: 0 0 0 1px var(--sbe-tone-3);
+  pointer-events: none;
+}
+/* Ligne d'une liste : l'œil se range après le nom, dans le texte. */
+.sbe-cont-row[data-sbe-gmonly]::after { content: none; }
+.sbe-cont-row[data-sbe-gmonly] .sbe-cont-cell--name::after {
+  content: "\f070";
+  font: var(--fa-font-solid);
+  font-size: 0.75em;
+  margin-left: 6px;
+  color: var(--sbe-text-dim);
+}

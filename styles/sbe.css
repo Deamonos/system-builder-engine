@@ -1,0 +1,62 @@
+/**
+ * SBE — System Builder Engine
+ * Fichier CSS principal : sommaire d'imports uniquement.
+ *
+ * Règles :
+ * - Aucun style ici : chaque domaine a son fichier dans son dossier, importé ci-dessous.
+ * - Seul ce fichier est déclaré dans system.json.
+ * - Les @import doivent rester avant toute autre règle CSS.
+ * - Le thème est toujours importé en premier (variables consommées par le reste).
+ * - Tout le CSS du système consomme exclusivement des variables var(--sbe-…) :
+ *   aucune couleur, fonte ou texture en dur (prérequis du manager de thème).
+ */
+
+/* --- Thème (toujours en premier) --- */
+@import "./theme/base.css";
+@import "./theme/dark.css";
+@import "./theme/light.css";
+@import "./theme/foundry-ui.css";
+@import "./theme/window-fit.css";
+@import "./theme/compact-form.css";
+@import "./theme/journal.css";
+@import "./theme/tooltip-theme.css";
+
+/* --- Acteurs --- */
+@import "./actor/actor.css";
+
+/* --- Objets --- */
+@import "./item/item.css";
+
+/* --- Builder --- */
+@import "./builder/builder.css";
+@import "./builder/talents.css";
+@import "./builder/levels.css";
+
+/* --- Managers --- */
+@import "./managers/managers.css";
+@import "./managers/pause.css";
+@import "./managers/theme.css";
+@import "./managers/locks.css";
+@import "./managers/newday.css";
+@import "./managers/effects.css";
+@import "./managers/chat.css";
+@import "./managers/hud.css";
+@import "./managers/undo.css";
+@import "./managers/checker.css";
+@import "./managers/group.css";
+@import "./managers/help.css";
+@import "./managers/quest.css";
+@import "./managers/traces.css";
+@import "./managers/props.css";
+@import "./managers/bars.css";
+@import "./managers/looks.css";
+@import "./managers/languages.css";
+@import "./managers/calendar.css";
+@import "./managers/vision.css";
+@import "./managers/money.css";
+@import "./managers/shop.css";
+@import "./managers/carousel.css";
+@import "./managers/tours.css";
+@import "./managers/demo.css";
+@import "./managers/docs.css";
+@import "./managers/preview.css";

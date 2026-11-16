@@ -1,0 +1,81 @@
+/**
+ * SBE — Styles du builder
+ * Éditeurs de structures, de règles et de mécaniques.
+ */
+
+/* Atelier : boutons annuler / rétablir de l'en-tête (mêmes boutons que
+   ceux de Foundry ; grisés quand il n'y a rien à faire). */
+.sbe-history { display: contents; }
+.sbe-history .header-control:disabled { opacity: 0.35; cursor: default; }
+
+/* Étape « Demander » : une carte par question. */
+.sbe-step-askbox { display: flex; flex-direction: column; gap: 6px; }
+.sbe-ask-list { display: flex; flex-direction: column; gap: 6px; }
+.sbe-ask-q { position: relative; padding: 6px 26px 6px 8px; border: 1px solid var(--sbe-surf-4); border-left: 3px solid var(--sbe-accent); }
+.sbe-ask-q .sbe-ask-del { position: absolute; top: 6px; right: 6px; }
+.sbe-ask-q textarea { width: 100%; resize: vertical; }
+.sbe-ask-add { align-self: flex-start; cursor: pointer; }
+
+/* Invocation : les valeurs écrites sur la créature, une carte par ligne. */
+.sbe-step-pl-vals { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+.sbe-step-pl-vlist { display: flex; flex-direction: column; gap: 6px; }
+.sbe-step-pl-vrow { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .8fr) minmax(0, 1.4fr); gap: 6px; padding: 6px 26px 6px 8px; border: 1px solid var(--sbe-surf-4); border-left: 3px solid var(--sbe-accent); }
+.sbe-step-pl-vrow .sbe-step-pl-vdel { position: absolute; top: 6px; right: 6px; }
+.sbe-step-pl-vadd { align-self: flex-start; cursor: pointer; }
+
+/* Bouton : volet « Se lance tout seul ». */
+.sbe-btn-auto { margin-top: 8px; border: 1px solid var(--sbe-surf-4); padding: 4px 8px; }
+.sbe-btn-auto > summary { cursor: pointer; font-weight: 600; }
+.sbe-auto-events { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 12px; margin: 6px 0; }
+.sbe-auto-events label { display: flex; align-items: center; gap: 6px; }
+.sbe-auto-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 12px; }
+.sbe-auto-askbox { display: flex; align-items: center; gap: 6px; }
+
+/* Étapes en phrases : chaque étape repliée sur une ligne qui se lit,
+   ses réglages s'ouvrent au clic. */
+.sbe-steps-list { counter-reset: sbe-step; }
+.sbe-steps-list > .sbe-step { counter-increment: sbe-step; }
+.sbe-step-line { display: flex; align-items: center; gap: 8px; cursor: pointer; min-width: 0; }
+.sbe-step-num::before { content: counter(sbe-step); }
+.sbe-step-num { flex: none; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+  font-size: 0.75em; font-weight: 600; background: var(--sbe-surf-3); color: var(--sbe-text-dim); }
+.sbe-step-tag { flex: none; padding: 1px 7px; border-radius: 4px; font-size: 0.72em; font-weight: 700; letter-spacing: 0.05em;
+  text-transform: uppercase; background: var(--sbe-surf-3); color: var(--sbe-text-2); }
+.sbe-step-sum { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sbe-step-sum b { color: var(--sbe-accent-light, var(--sbe-accent)); font-weight: 600; }
+.sbe-step-if { color: var(--sbe-text-dim); }
+.sbe-step-caret { flex: none; opacity: 0.6; transition: transform 0.15s; }
+.sbe-step.is-open .sbe-step-caret { transform: rotate(180deg); }
+.sbe-step-body { display: none; margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--sbe-surf-4); }
+.sbe-step.is-open .sbe-step-body { display: block; }
+.sbe-step-head .sbe-step-help { flex: none; }
+
+/* Blocs « Si… alors… sinon… » / « Selon le résultat » : une branche par
+   issue, ses étapes en retrait. */
+.sbe-step-blockbox { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+.sbe-branch { padding: 4px 0 4px 10px; border-left: 3px solid var(--sbe-accent); }
+.sbe-branch[data-branch="else"], .sbe-branch[data-branch="fail"] { border-left-color: var(--sbe-text-dim); }
+.sbe-branch[data-branch="fumble"] { border-left-color: var(--sbe-danger, #c0392b); }
+.sbe-branch-head { font-size: 0.78em; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--sbe-text-2); margin-bottom: 4px; }
+.sbe-branch > .sbe-steps-list { display: flex; flex-direction: column; gap: 4px; }
+.sbe-branch-add { display: inline-block; margin-top: 4px; cursor: pointer; font-size: 0.85em; }
+
+/* Conditions en phrases : [quoi] [comparaison] [valeur], groupées. */
+[data-sbe-cond][hidden], .sbe-cond[hidden], .sbe-cond-formula[hidden], .sbe-cond-right[hidden] { display: none !important; }
+.sbe-step-fields > .sbe-cond, .sbe-step-fields > .sbe-cond-formula { flex: 1 1 100%; }
+.sbe-cond-group { display: flex; flex-direction: column; gap: 4px; padding: 4px 6px; border: 1px solid var(--sbe-surf-4); }
+.sbe-cond-group .sbe-cond-group { margin-left: 8px; border-style: dashed; }
+.sbe-cond-gh { display: flex; align-items: center; gap: 6px; font-size: 0.85em; }
+.sbe-cond-gh .sbe-cond-del { margin-left: auto; }
+.sbe-cond-items { display: flex; flex-direction: column; gap: 4px; }
+.sbe-cond-row { display: flex; align-items: center; gap: 4px; }
+.sbe-cond-row > input { flex: 1 1 0; min-width: 0; }
+.sbe-cond-row > select { flex: 0 0 auto; width: auto; }
+.sbe-cond-mode, .sbe-cond-not { flex: none; width: auto; padding: 0 8px; line-height: 22px; min-height: 0; }
+.sbe-cond-not:not(.is-on) { opacity: 0.45; }
+.sbe-cond-not.is-on { background: var(--sbe-accent); color: #fff; }
+.sbe-cond-fx { flex: none; font-style: italic; font-weight: 700; width: 18px; text-align: center; }
+.sbe-cond-del, .sbe-cond-add { cursor: pointer; }
+.sbe-cond-adds { display: flex; gap: 12px; font-size: 0.85em; }
+.sbe-cond-formula { font-family: monospace; font-size: 0.8em; word-break: break-all; }
+.sbe-steps-advbox { display: flex; align-items: center; gap: 6px; margin: 4px 0; }

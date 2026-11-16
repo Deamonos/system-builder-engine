@@ -1,0 +1,64 @@
+/**
+ * SBE — Monnaies (pastilles, cases par monnaie) et manager
+ * « Marchands et monnaies ».
+ */
+
+/* ---------- Pastilles ---------- */
+.sbe-money { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.sbe-money-chip { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
+.sbe-money-chip.is-zero { opacity: 0.6; }
+.sbe-money-ico { width: 18px; height: 18px; object-fit: contain; border: 0; flex: 0 0 auto; }
+i.sbe-money-ico { width: auto; height: auto; color: var(--sbe-warn); }
+
+/* ---------- Cases à remplir ---------- */
+.sbe-money-inputs { display: flex; flex-wrap: wrap; gap: 6px; }
+.sbe-money-in { display: flex; flex-direction: column; gap: 2px; flex: 1 1 90px; min-width: 0; }
+.sbe-money-in > span { display: inline-flex; align-items: center; gap: 4px; font-size: 0.85em; font-weight: 600; color: var(--sbe-text-dim); }
+.sbe-money-in > input { width: 100%; }
+.sbe-money-in > small { color: var(--sbe-text-dim); font-size: 0.8em; }
+
+/* ---------- Manager ---------- */
+.sbe-merchant-config .window-content { display: flex; flex-direction: column; gap: 8px; padding: 8px; }
+.sbe-mc-tabs { display: flex; flex: 0 0 auto; gap: 4px; border-bottom: 1px solid var(--sbe-surf-4); }
+/* Fenêtre étroite (petits écrans) : les onglets défilent de côté. */
+.sbe-mc-tabs { overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; padding-bottom: 2px; }
+.sbe-mc-tabs button { flex: 0 0 auto; width: auto; border-radius: 4px 4px 0 0; }
+.sbe-mc-tabs button.on { border-bottom: 2px solid var(--sbe-accent); }
+.sbe-mc-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+.sbe-mc-sec { display: flex; flex-direction: column; gap: 8px; }
+.sbe-mc-sec > button { flex: 0 0 auto; width: auto; align-self: flex-start; }
+.sbe-mc-curs { display: flex; flex-direction: column; gap: 6px; }
+.sbe-mc-cur { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px; padding: 6px; border: 1px solid var(--sbe-surf-4); border-radius: 6px; background: var(--sbe-surf-2); }
+.sbe-mc-f { display: flex; flex-direction: column; gap: 2px; flex: 1 1 130px; min-width: 0; }
+.sbe-mc-f > span { font-size: 0.85em; font-weight: 600; color: var(--sbe-text-dim); }
+.sbe-mc-rate { flex: 0 1 110px; }
+.sbe-mc-ico { flex: 0 0 auto; width: 34px; height: 34px; padding: 0; display: flex; align-items: center; justify-content: center; }
+.sbe-mc-ico .sbe-money-ico { width: 24px; height: 24px; }
+.sbe-mc-del { flex: 0 0 auto; width: 2em; padding: 0; }
+.sbe-mc-foot { display: flex; justify-content: flex-end; }
+.sbe-mc-foot button { flex: 0 0 auto; width: auto; }
+
+/* ---------- Échanges et coffres ---------- */
+.sbe-trade-money { display: flex; flex-direction: column; gap: 4px; }
+.sbe-chest-money-edit { margin-top: 6px; }
+
+/* ---------- Manager : objets et prix ---------- */
+.sbe-mc-sec h3 { margin: 4px 0 0; font-size: 1.05em; border-bottom: 1px solid var(--sbe-surf-4); padding-bottom: 2px; }
+.sbe-mc-lbl { font-size: 0.85em; font-weight: 600; color: var(--sbe-text-dim); }
+.sbe-mc-excdrop { min-height: 34px; padding: 4px; border: 1px dashed var(--sbe-surf-5); border-radius: 6px; }
+.sbe-mc-excdrop a { margin-left: auto; cursor: pointer; }
+
+/* ---------- Réglages d'un marchand ---------- */
+.sbe-merchant-app .window-content { display: flex; flex-direction: column; gap: 8px; padding: 8px; }
+.sbe-ma-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.sbe-ma-sec { display: flex; flex-direction: column; gap: 6px; padding: 8px; border: 1px solid var(--sbe-surf-4); border-radius: 6px; background: var(--sbe-surf-2); }
+.sbe-ma-sec h3 { margin: 0; font-size: 1em; }
+.sbe-ma-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.sbe-ma-check { display: flex; align-items: center; gap: 6px; }
+
+/* ---------- Barre de la fiche : boutique ouverte / fermée ---------- */
+.sbe-merchant-toggle.is-open { color: var(--sbe-ok); }
+.sbe-merchant-toggle.is-closed { color: var(--sbe-text-dim); }
+.sbe-mc-shopbtns { display: flex; flex-wrap: wrap; gap: 6px; }
+.sbe-mc-shopbtns > button { flex: 0 0 auto; width: auto; }
+.sbe-trade-check .sbe-mc-shopdel { margin-left: auto; height: 1.8em; }

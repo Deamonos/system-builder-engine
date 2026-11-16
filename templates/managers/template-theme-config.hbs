@@ -1,0 +1,296 @@
+<div class="sbe-theme-root" data-cf-off>
+  <div class="sbe-theme-body">
+
+    {{!-- ================= THÈME GÉNÉRAL ? ================= --}}
+    {{!-- Mise en page propre (pas de grille condensée) : libellés au-dessus,
+         tout aligné à gauche sur toute la largeur. --}}
+    <div class="sbe-tplthc-use" data-cf-off>
+      <label class="sbe-tplth-row">
+        <input type="checkbox" name="useGlobal" {{checked useGlobal}}>
+        <span>{{localize "SBE.Actor.ThemeUseGlobal"}}</span>
+      </label>
+      <p class="hint">{{localize "SBE.TplTheme.UseGlobalHint"}}</p>
+
+      {{!-- Taille des fiches à l'ouverture — indépendante du thème,
+           toujours visible. 0/vide = taille automatique. --}}
+      <div class="form-group sbe-tplthc-size">
+        <label>{{localize "SBE.TplTheme.SheetSize"}}</label>
+        <div class="form-fields sbe-deco-nums">
+          <span>L</span>
+          <input type="number" name="interface.sheetW" value="{{#if config.interface.sheetW}}{{config.interface.sheetW}}{{/if}}" min="0" step="10" placeholder="auto">
+          <span>H</span>
+          <input type="number" name="interface.sheetH" value="{{#if config.interface.sheetH}}{{config.interface.sheetH}}{{/if}}" min="0" step="10" placeholder="auto">
+        </div>
+        <p class="hint">{{localize "SBE.TplTheme.SheetSizeHint"}}</p>
+      </div>
+
+      {{!-- Titre des fiches — indépendant du thème, toujours visible. --}}
+      <label class="sbe-tplth-row">
+        <input type="checkbox" name="interface.hideTitle" {{checked config.interface.hideTitle}}>
+        <span>{{localize "SBE.TplTheme.HideTitle"}}</span>
+      </label>
+      <p class="hint">{{localize "SBE.TplTheme.HideTitleHint"}}</p>
+
+      {{!-- Mode de la fiche — indépendant du thème, toujours visible. --}}
+      <div class="form-group">
+        <label>{{localize "SBE.TplTheme.Mode"}}</label>
+        <div class="form-fields">
+          <select name="interface.mode">
+            <option value="auto" {{#unless (or (eq config.interface.mode "light") (eq config.interface.mode "dark"))}}selected{{/unless}}>{{localize "SBE.TplTheme.ModeAuto"}}</option>
+            <option value="light" {{#if (eq config.interface.mode "light")}}selected{{/if}}>{{localize "SBE.TplTheme.ModeLight"}}</option>
+            <option value="dark" {{#if (eq config.interface.mode "dark")}}selected{{/if}}>{{localize "SBE.TplTheme.ModeDark"}}</option>
+          </select>
+        </div>
+        <p class="hint">{{localize "SBE.TplTheme.ModeHint"}}</p>
+      </div>
+
+      {{!-- Sons de la fiche — indépendants du thème, toujours visibles. --}}
+      <details class="sbe-section" open>
+        <summary><span class="sbe-section-title">{{localize "SBE.UiSound.Title"}}</span></summary>
+        <div class="sbe-section-rows">{{{soundsHtml}}}</div>
+      </details>
+    </div>
+
+    <div class="sbe-tplthc-rest">
+
+      {{!-- ================= INTERFACE ================= --}}
+      <details class="sbe-section" open data-sync>
+        <summary><span class="sbe-section-title">{{localize "SBE.Theme.Interface.Title"}}</span></summary>
+        <div class="sbe-section-rows">
+          <div class="form-group">
+            <label>{{localize "SBE.Theme.Interface.Titlebar"}}</label>
+            <div class="form-fields">
+              <select name="interface.titlebar">
+                {{selectOptions titlebarChoices selected=config.interface.titlebar localize=true}}
+              </select>
+            </div>
+            <p class="hint">{{localize "SBE.TplTheme.TitlebarHint"}}</p>
+          </div>
+        </div>
+      </details>
+
+      {{!-- ================= HABILLAGE ================= --}}
+      <details class="sbe-section" open data-sync>
+        <summary><span class="sbe-section-title">{{localize "SBE.Theme.Dressing.Title"}}</span></summary>
+        <div class="sbe-section-rows">
+
+          <div class="form-group">
+            <label>{{localize "SBE.Theme.Dressing.TexturePath"}}</label>
+            <div class="form-fields">
+              <file-picker name="dressing.texture.path" type="image" value="{{config.dressing.texture.path}}"></file-picker>
+            </div>
+            <p class="hint">{{localize "SBE.Theme.Dressing.TextureHint"}}</p>
+          </div>
+          <div class="form-group">
+            <label>{{localize "SBE.Theme.Dressing.TextureMode"}}</label>
+            <div class="form-fields">
+              <select name="dressing.texture.mode">
+                {{selectOptions textureModeChoices selected=config.dressing.texture.mode localize=true}}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>{{localize "SBE.Theme.Dressing.TextureOpacity"}}</label>
+            <div class="form-fields">
+              <range-picker name="dressing.texture.opacity" value="{{config.dressing.texture.opacity}}" min="5" max="100" step="5"></range-picker>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>{{localize "SBE.Theme.Dressing.HeaderPath"}}</label>
+            <div class="form-fields">
+              <file-picker name="dressing.header.path" type="image" value="{{config.dressing.header.path}}"></file-picker>
+            </div>
+            <p class="hint">{{localize "SBE.Theme.Dressing.HeaderHint"}}</p>
+          </div>
+          <div class="form-group">
+            <label>{{localize "SBE.Theme.Dressing.HeaderHeight"}}</label>
+            <div class="form-fields">
+              <range-picker name="dressing.header.height" value="{{config.dressing.header.height}}" min="40" max="400" step="10"></range-picker>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>{{localize "SBE.Theme.Dressing.HeaderOpacity"}}</label>
+            <div class="form-fields">
+              <range-picker name="dressing.header.opacity" value="{{config.dressing.header.opacity}}" min="5" max="100" step="5"></range-picker>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>{{localize "SBE.Theme.Dressing.HeaderFade"}}</label>
+            <div class="form-fields">
+              <input type="checkbox" name="dressing.header.fade" {{checked config.dressing.header.fade}}>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>{{localize "SBE.Theme.Dressing.HeaderFadeStart"}}</label>
+            <div class="form-fields">
+              <range-picker name="dressing.header.fadeStart" value="{{config.dressing.header.fadeStart}}" min="0" max="95" step="5"></range-picker>
+            </div>
+            <p class="hint">{{localize "SBE.Theme.Dressing.HeaderFadeStartHint"}}</p>
+          </div>
+
+        </div>
+      </details>
+
+      {{!-- ================= GROUPES DE COULEURS ================= --}}
+      {{#each groups}}
+        <details class="sbe-section" open data-sync>
+          <summary><span class="sbe-section-title">{{this.label}}</span></summary>
+          <div class="sbe-section-rows">
+            <div class="sbe-color-head">
+              <span></span>
+              <span>{{localize "SBE.Theme.ColumnDark"}}</span>
+              <span>{{localize "SBE.Theme.ColumnLight"}}</span>
+            </div>
+            {{#each this.rows}}
+              <div class="sbe-color-row">
+                <label>{{this.label}}</label>
+                <span class="sbe-color-cell">
+                  <input type="color" class="sbe-swatch" data-token="{{this.token}}" data-mode="dark" value="{{this.dark}}">
+                </span>
+                <span class="sbe-color-cell">
+                  <input type="color" class="sbe-swatch" data-token="{{this.token}}" data-mode="light" value="{{this.light}}">
+                </span>
+              </div>
+            {{/each}}
+          </div>
+        </details>
+      {{/each}}
+
+      {{!-- ================= DÉCORATIONS SVG ================= --}}
+      <details class="sbe-section" open data-sync>
+        <summary><span class="sbe-section-title">{{localize "SBE.TplTheme.Deco.Title"}}</span></summary>
+        <div class="sbe-section-rows">
+          <p class="hint">{{localize "SBE.TplTheme.Deco.Hint"}}</p>
+
+          {{#each decorations}}
+            <div class="sbe-deco-row" data-deco-id="{{this.id}}">
+              <div class="sbe-deco-head">
+                <span class="sbe-deco-num"><i class="fa-solid fa-shapes"></i> {{localize "SBE.TplTheme.Deco.One"}} {{this.index}}</span>
+                <a data-action="deleteDeco" title="{{localize "SBE.Common.Delete"}}"><i class="fa-solid fa-trash"></i></a>
+              </div>
+
+              <div class="form-group">
+                <label>{{localize "SBE.TplTheme.Deco.Source"}}</label>
+                <div class="form-fields">
+                  <select class="sbe-deco-source">
+                    {{#each @root.decoSourceChoices}}
+                      <option value="{{@key}}" {{#if (eq @key ../source)}}selected{{/if}}>{{localize this}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+              </div>
+
+              {{#if this.isCode}}
+                <div class="form-group stacked">
+                  <label>{{localize "SBE.TplTheme.Deco.Code"}}</label>
+                  <textarea class="sbe-deco-code" rows="4" placeholder="{{localize 'SBE.TplTheme.Deco.CodePh'}}">{{this.code}}</textarea>
+                  <input type="hidden" class="sbe-deco-path" value="{{this.path}}">
+                </div>
+              {{else}}
+                <div class="form-group">
+                  <label>{{localize "SBE.TplTheme.Deco.Path"}}</label>
+                  <div class="form-fields">
+                    <file-picker class="sbe-deco-path" type="image" value="{{this.path}}"></file-picker>
+                  </div>
+                  <textarea class="sbe-deco-code" hidden>{{this.code}}</textarea>
+                </div>
+              {{/if}}
+
+              <div class="form-group">
+                <label>{{localize "SBE.TplTheme.Deco.Anchor"}}</label>
+                <div class="form-fields">
+                  <select class="sbe-deco-anchor">
+                    {{#each @root.decoAnchorChoices}}
+                      <option value="{{@key}}" {{#if (eq @key ../anchor)}}selected{{/if}}>{{localize this}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>{{localize "SBE.TplTheme.Deco.Offset"}}</label>
+                <div class="form-fields sbe-deco-nums">
+                  <span>X</span>
+                  <input type="number" class="sbe-deco-dx" value="{{this.dx}}" step="1">
+                  <span>Y</span>
+                  <input type="number" class="sbe-deco-dy" value="{{this.dy}}" step="1">
+                </div>
+                <p class="hint">{{localize "SBE.TplTheme.Deco.OffsetHint"}}</p>
+              </div>
+
+              <div class="form-group">
+                <label>{{localize "SBE.TplTheme.Deco.Size"}}</label>
+                <div class="form-fields sbe-deco-nums">
+                  <span>{{localize "SBE.TplTheme.Deco.W"}}</span>
+                  <input type="number" class="sbe-deco-width" value="{{this.width}}" min="4" step="1">
+                  <span>{{localize "SBE.TplTheme.Deco.H"}}</span>
+                  <input type="number" class="sbe-deco-height" value="{{this.height}}" min="4" step="1">
+                </div>
+                <p class="hint">{{localize "SBE.TplTheme.Deco.SizeHint"}}</p>
+              </div>
+
+              <div class="form-group">
+                <label>{{localize "SBE.TplTheme.Deco.Layer"}}</label>
+                <div class="form-fields">
+                  <select class="sbe-deco-layer">
+                    {{#each @root.decoLayerChoices}}
+                      <option value="{{@key}}" {{#if (eq @key ../layer)}}selected{{/if}}>{{localize this}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>{{localize "SBE.TplTheme.Deco.Opacity"}}</label>
+                <div class="form-fields">
+                  <range-picker class="sbe-deco-opacity" value="{{this.opacity}}" min="5" max="100" step="5"></range-picker>
+                </div>
+              </div>
+            </div>
+          {{/each}}
+
+          <button type="button" class="sbe-deco-add" data-action="addDeco">
+            <i class="fa-solid fa-plus"></i> {{localize "SBE.TplTheme.Deco.Add"}}
+          </button>
+        </div>
+      </details>
+
+      {{!-- ================= CSS AVANCÉ ================= --}}
+      <details class="sbe-section" open data-sync>
+        <summary><span class="sbe-section-title">{{localize "SBE.Theme.CustomCss.Title"}}</span></summary>
+        <div class="sbe-section-rows">
+          <div class="form-group stacked">
+            <textarea name="customCss" rows="6" placeholder="{{localize 'SBE.TplTheme.CustomCssPlaceholder'}}">{{config.customCss}}</textarea>
+            <p class="hint">{{localize "SBE.TplTheme.CustomCssHint"}}</p>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </div>
+
+  {{!-- ================= BOUTONS ================= --}}
+  <footer class="form-footer sbe-theme-footer">
+    <button type="button" data-action="exportTheme">
+      <i class="fa-solid fa-file-export"></i>
+      <span>{{localize "SBE.Common.Export"}}</span>
+    </button>
+    <button type="button" data-action="importTheme">
+      <i class="fa-solid fa-file-import"></i>
+      <span>{{localize "SBE.Common.Import"}}</span>
+    </button>
+    <button type="button" data-action="preview">
+      <i class="fa-solid fa-eye"></i>
+      <span>{{localize "SBE.Theme.Buttons.Preview"}}</span>
+    </button>
+    <button type="button" data-action="save">
+      <i class="fa-solid fa-floppy-disk"></i>
+      <span>{{localize "SBE.Theme.Buttons.Save"}}</span>
+    </button>
+    <button type="button" data-action="reset" class="sbe-danger">
+      <i class="fa-solid fa-rotate-left"></i>
+      <span>{{localize "SBE.Theme.Buttons.Reset"}}</span>
+    </button>
+  </footer>
+</div>

@@ -1,0 +1,255 @@
+/**
+ * SBE — Composant Arbre (builder/talents)
+ * L'arbre sur la fiche et dans l'atelier, et son éditeur.
+ * Couleurs : uniquement les variables du thème (Sombre et Clair).
+ */
+
+/* ---------- La vue (fiche, atelier) ---------- */
+.sbe-tal-view {
+  position: relative;
+  overflow: auto;
+  border: 1px solid var(--sbe-surf-4);
+  border-radius: 6px;
+  background: var(--sbe-surf-1);
+}
+.sbe-tal-view.is-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sbe-text-dim);
+  font-style: italic;
+}
+.sbe-tal-title { margin-bottom: 4px; font-weight: 600; }
+.sbe-tal-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+.sbe-tal-head .sbe-tal-editbtn { flex: 0 0 auto; width: auto; }
+
+/* ---------- Couleurs de l'arbre ----------
+   Réglées par le MJ (éditeur, « Apparence ») ; non réglée : la couleur de SBE. */
+.sbe-tal-stage, .sbe-tal-nodecard {
+  --tal-c-locked: var(--tal-locked, var(--sbe-surf-4));
+  --tal-c-open: var(--tal-open, var(--sbe-accent));
+  --tal-c-owned: var(--tal-owned, var(--sbe-ok));
+  --tal-c-max: var(--tal-max, var(--sbe-ok));
+  --tal-c-pending: var(--tal-pending, var(--sbe-warn));
+  --tal-c-link: var(--tal-link, var(--sbe-surf-5));
+  --tal-c-linkLit: var(--tal-linkLit, var(--sbe-ok));
+  --tal-c-name: var(--tal-name, var(--sbe-text));
+  --tal-c-bg: var(--tal-bg, transparent);
+}
+
+/* ---------- Le plan ---------- */
+.sbe-tal-stage {
+  position: relative;
+  transform-origin: 0 0;
+  background-color: var(--tal-c-bg);
+  background-image: var(--tal-bg-img, none);
+  background-size: var(--tal-bg-size, cover);
+  background-repeat: var(--tal-bg-rep, no-repeat);
+  background-position: center;
+}
+.sbe-tal-stage.is-grid {
+  background-image: radial-gradient(circle, var(--sbe-surf-5) 1px, transparent 1.5px), var(--tal-bg-img, none);
+  background-size: var(--tal-grid, 40px) var(--tal-grid, 40px), var(--tal-bg-size, cover);
+  background-repeat: repeat, var(--tal-bg-rep, no-repeat);
+  background-position: calc(var(--tal-grid, 40px) / -2) calc(var(--tal-grid, 40px) / -2), center;
+}
+.sbe-tal-links { position: absolute; inset: 0; overflow: visible; pointer-events: none; }
+.sbe-tal-line { fill: none; stroke: var(--tal-c-link); stroke-width: var(--tal-lw, 3px); stroke-linecap: round; stroke-linejoin: round; }
+.sbe-tal-link.is-lit .sbe-tal-line { stroke: var(--tal-c-linkLit); }
+.sbe-tal-link.is-sel .sbe-tal-line { stroke: var(--sbe-accent); stroke-width: calc(var(--tal-lw, 3px) + 1px); }
+/* Animation des liens débloqués : le flux avance, ou la lueur pulse. */
+.sbe-tal-stage.is-anim-flow .sbe-tal-link.is-lit .sbe-tal-line { stroke-dasharray: 10 8; animation: sbe-tal-flow 1.2s linear infinite; }
+.sbe-tal-stage.is-anim-glow .sbe-tal-link.is-lit .sbe-tal-line { animation: sbe-tal-glow 2s ease-in-out infinite; }
+@keyframes sbe-tal-flow { to { stroke-dashoffset: -18; } }
+@keyframes sbe-tal-glow { 50% { filter: drop-shadow(0 0 4px var(--tal-c-linkLit)); opacity: 0.75; } }
+.sbe-tal-hit { fill: none; stroke: transparent; stroke-width: 14; pointer-events: stroke; cursor: pointer; }
+.sbe-tal-temp { stroke: var(--sbe-accent); stroke-width: 3; stroke-dasharray: 6 4; }
+
+/* ---------- Les nœuds ---------- */
+.sbe-tal-node {
+  --tal-edge: var(--tal-c-open, var(--sbe-accent));
+  position: absolute;
+  width: var(--tal-s, 56px);
+  height: var(--tal-s, 56px);
+  transform: translate(-50%, -50%);
+  user-select: none;
+}
+.sbe-tal-face, .sbe-tal-in { display: flex; align-items: center; justify-content: center; }
+.sbe-tal-face { position: absolute; inset: 0; padding: 3px; background: var(--tal-edge); }
+.sbe-tal-in { width: 100%; height: 100%; overflow: hidden; background: var(--sbe-surf-2); }
+.sbe-tal-in img { width: 100%; height: 100%; object-fit: cover; border: none; pointer-events: none; }
+.sbe-tal-in i { color: var(--sbe-text-dim); font-size: calc(var(--tal-s, 56px) * 0.38); }
+
+.sbe-tal-node.is-circle .sbe-tal-face, .sbe-tal-node.is-circle .sbe-tal-in { border-radius: 50%; }
+.sbe-tal-node.is-square .sbe-tal-face { border-radius: 8px; }
+.sbe-tal-node.is-square .sbe-tal-in { border-radius: 5px; }
+.sbe-tal-node.is-diamond .sbe-tal-face, .sbe-tal-node.is-diamond .sbe-tal-in { clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+.sbe-tal-node.is-diamond .sbe-tal-face { padding: 4px; }
+.sbe-tal-node.is-hexagon .sbe-tal-face, .sbe-tal-node.is-hexagon .sbe-tal-in { clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); }
+.sbe-tal-node.is-hexagon .sbe-tal-face { padding: 4px; }
+
+/* États : verrouillé, disponible, débloqué, rang maximum. */
+.sbe-tal-node.is-locked { --tal-edge: var(--tal-c-locked); }
+.sbe-tal-node.is-locked .sbe-tal-in { filter: grayscale(1); opacity: 0.55; }
+.sbe-tal-node.is-open { --tal-edge: var(--tal-c-open); }
+.sbe-tal-node.is-owned { --tal-edge: var(--tal-c-owned); }
+.sbe-tal-node.is-max { --tal-edge: var(--tal-c-max); filter: drop-shadow(0 0 6px var(--tal-c-max)); }
+
+.sbe-tal-name {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 3px;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8em;
+  color: var(--tal-c-name);
+  text-align: center;
+}
+.sbe-tal-rank {
+  position: absolute;
+  right: -6px;
+  bottom: -4px;
+  padding: 0 4px;
+  border: 1px solid var(--sbe-surf-5);
+  border-radius: 8px;
+  background: var(--sbe-surf-3);
+  color: var(--sbe-text-strong);
+  font-size: 0.7em;
+  line-height: 1.5;
+}
+
+/* ---------- Éditeur ---------- */
+.sbe-tal-editor .window-content { display: flex; flex-direction: column; gap: 8px; padding: 8px; }
+.sbe-tale-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.sbe-tale-bar button { flex: 0 0 auto; width: auto; }
+.sbe-tale-bar .notes { flex: 1 1 200px; margin: 0; text-align: right; }
+.sbe-tale-sep { width: 1px; align-self: stretch; background: var(--sbe-surf-4); }
+.sbe-tale-zoomval { min-width: 48px; text-align: center; color: var(--sbe-text-dim); }
+.sbe-tale-main { flex: 1; min-height: 0; display: flex; gap: 8px; }
+.sbe-tale-view {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  border: 1px solid var(--sbe-surf-4);
+  border-radius: 6px;
+  background: var(--sbe-surf-1);
+  outline: none;
+}
+.sbe-tale-view .sbe-tal-node { cursor: grab; }
+.sbe-tale-view .sbe-tal-node.is-sel { filter: drop-shadow(0 0 4px var(--sbe-accent-light)) drop-shadow(0 0 2px var(--sbe-accent-light)); }
+.sbe-tal-handle {
+  position: absolute;
+  top: 50%;
+  right: -7px;
+  width: 13px;
+  height: 13px;
+  border: 2px solid var(--sbe-surf-1);
+  border-radius: 50%;
+  background: var(--sbe-accent);
+  transform: translateY(-50%);
+  opacity: 0;
+  cursor: crosshair;
+}
+.sbe-tal-node:hover .sbe-tal-handle, .sbe-tal-node.is-sel .sbe-tal-handle { opacity: 1; }
+.sbe-tale-side { flex: 0 0 270px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+.sbe-tale-side h3 { margin: 0; }
+.sbe-tale-side .form-group { margin: 0; }
+.sbe-tale-row { display: flex; align-items: flex-end; gap: 6px; }
+.sbe-tale-row > .form-group, .sbe-tale-row > input { flex: 1 1 0; min-width: 0; }
+.sbe-tale-row > button { flex: 0 0 auto; width: auto; }
+.sbe-tale-check { display: flex; align-items: center; gap: 6px; }
+.sbe-tale-del { color: var(--sbe-fail); }
+
+/* Aperçu de l'atelier : l'arbre entier, réduit (rien ne défile). */
+.sbe-tal-view.is-fit { overflow: hidden; }
+
+/* ---------- À la table ---------- */
+.sbe-tal-view.is-live .sbe-tal-node { cursor: pointer; }
+.sbe-tal-view.is-live .sbe-tal-node:hover { filter: brightness(1.15); }
+.sbe-tal-node.is-pending .sbe-tal-face { background: var(--tal-c-pending); }
+.sbe-tal-openbtn { width: auto; }
+.sbe-tal-window .window-content { padding: 6px; }
+.sbe-tal-view.is-fill { height: 100%; }
+
+/* Fiche d'un nœud */
+.sbe-tal-nodeapp .window-content { padding: 10px; }
+.sbe-tal-nodecard { display: flex; flex-direction: column; gap: 6px; }
+.sbe-tal-nodecard header { display: flex; align-items: center; gap: 12px; }
+.sbe-tal-nodecard header .sbe-tal-node { position: relative; flex: 0 0 auto; transform: none; }
+.sbe-tal-nodecard h3 { margin: 0; border: none; }
+.sbe-tal-nodecard h4 { margin: 4px 0 0; }
+.sbe-tal-desc { margin: 0; }
+.sbe-tal-reqs, .sbe-tal-log { margin: 0; padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 3px; }
+.sbe-tal-reqs .is-ok, .sbe-tal-chip.is-ok { color: var(--sbe-ok); }
+.sbe-tal-reqs .is-no { color: var(--sbe-fail); }
+.sbe-tal-chip { padding: 0 6px; border: 1px solid var(--sbe-surf-4); border-radius: 8px; background: var(--sbe-surf-2); font-size: 0.9em; }
+.sbe-tal-cost { margin: 0; font-weight: 600; }
+.sbe-tal-pending { margin: 0; color: var(--sbe-warn); }
+.sbe-tal-log small { color: var(--sbe-text-dim); }
+
+/* Carte de demande (chat) : la carte commune, plus sa barre de réponse. */
+.sbe-tal-cardbar { display: flex; gap: 6px; margin-top: 6px; }
+.sbe-tal-cardbar button { flex: 1 1 0; }
+.sbe-tal-cardstate { font-weight: 700; }
+.sbe-tal-cardstate.is-ok { color: var(--sbe-ok); }
+.sbe-tal-cardstate.is-no, .sbe-tal-cardstate.is-gone { color: var(--sbe-fail); }
+.sbe-tal-cardstate.is-cancel { color: var(--sbe-text-dim); }
+
+/* Outils au-dessus de l'arbre (réinitialiser) */
+.sbe-tal-tools { display: flex; justify-content: flex-end; margin-bottom: 4px; }
+.sbe-tal-tools button { flex: 0 0 auto; width: auto; }
+.sbe-tal-window .window-content { display: flex; flex-direction: column; }
+.sbe-tal-window .sbe-tal-view.is-fill { flex: 1 1 auto; min-height: 0; height: auto; }
+.sbe-tal-log .is-back { color: var(--sbe-text-dim); }
+
+/* Récompenses (éditeur, fiche du nœud) */
+.sbe-tale-rwbox { display: flex; flex-direction: column; gap: 4px; padding: 6px; border: 1px solid var(--sbe-surf-4); border-radius: 6px; }
+.sbe-tale-rwbox > label { font-weight: 600; }
+.sbe-tale-rwbox > button { width: auto; align-self: flex-start; }
+.sbe-tale-rwbox .notes { margin: 0; }
+.sbe-tale-rw { display: flex; align-items: center; gap: 4px; }
+.sbe-tale-rw > input[type="text"], .sbe-tale-rw > select { flex: 1 1 0; min-width: 0; }
+.sbe-tale-rw > input[type="number"] { flex: 0 0 52px; }
+.sbe-tale-rw > img { width: 24px; height: 24px; flex: 0 0 auto; border: none; object-fit: cover; }
+.sbe-tale-rwname { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbe-tale-rw > a { flex: 0 0 auto; color: var(--sbe-text-dim); }
+.sbe-tale-rw > a:hover { color: var(--sbe-fail); }
+.sbe-tale-drop { padding: 8px; border: 1px dashed var(--sbe-surf-5); border-radius: 6px; color: var(--sbe-text-dim); text-align: center; }
+.sbe-tale-drop.is-over { border-color: var(--sbe-accent); color: var(--sbe-accent); }
+.sbe-tal-gives { margin: 0; padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 3px; }
+.sbe-tal-gives img { width: 20px; height: 20px; border: none; vertical-align: middle; object-fit: cover; }
+.sbe-tal-gives i { width: 20px; text-align: center; color: var(--sbe-accent); }
+
+/* Apparence (éditeur) : une couleur par état */
+.sbe-tale-colors { display: flex; flex-direction: column; gap: 3px; }
+.sbe-tale-color { display: grid; grid-template-columns: 1fr 96px; align-items: center; gap: 4px; }
+.sbe-tale-color.is-head { color: var(--sbe-text-dim); font-weight: 600; }
+.sbe-tale-color color-picker { min-width: 0; }
+
+/* Zoom sur la fiche et dans la fenêtre */
+.sbe-tal-frame { position: relative; }
+.sbe-tal-frame.is-fill { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+.sbe-tal-view.is-live { cursor: grab; }
+.sbe-tal-view.is-live.is-panning { cursor: grabbing; }
+.sbe-tal-zoombar {
+  position: absolute;
+  top: 6px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border: 1px solid var(--sbe-surf-4);
+  border-radius: 12px;
+  background: var(--sbe-surf-2);
+  opacity: 0.85;
+  font-size: 0.85em;
+}
+.sbe-tal-zoombar:hover { opacity: 1; }
+.sbe-tal-zoombar a { color: var(--sbe-text-dim); }
+.sbe-tal-zoombar a:hover { color: var(--sbe-accent); }
+.sbe-tal-zoombar span { min-width: 40px; text-align: center; }

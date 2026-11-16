@@ -1,0 +1,62 @@
+/* ============================================================
+ * SBE — DOCUMENTATION INTÉGRÉE (sommaire, page, recherche)
+ * Variables du thème uniquement (clair et sombre).
+ * ============================================================ */
+
+.sbe-docs .window-content { padding: 0; display: flex; min-height: 0; overflow: hidden; }
+.sbe-docs-body { flex: 1 1 auto; display: grid; grid-template-columns: 250px minmax(0, 1fr); min-height: 0; width: 100%; }
+
+/* Sommaire */
+.sbe-docs-side { display: flex; flex-direction: column; min-height: 0; border-right: 1px solid var(--sbe-tone-3); background: var(--sbe-surf-1); }
+.sbe-docs-search { display: flex; align-items: center; gap: 6px; margin: 8px; padding: 0 8px; border: 1px solid var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); background: var(--sbe-surf-2); color: var(--sbe-text-dim); }
+.sbe-docs-search input { flex: 1; min-width: 0; border: 0 !important; background: none !important; box-shadow: none !important; color: var(--sbe-text); }
+.sbe-docs-nav { flex: 1 1 auto; overflow-y: auto; min-height: 0; padding: 0 6px 10px; }
+.sbe-docs-chap > summary { cursor: pointer; padding: 5px 6px; font-weight: 700; color: var(--sbe-text-strong, var(--sbe-text)); list-style: none; border-radius: 3px; }
+.sbe-docs-chap > summary::-webkit-details-marker { display: none; }
+.sbe-docs-chap > summary::before { content: "\25B8"; display: inline-block; width: 14px; color: var(--sbe-accent); transition: transform .15s; }
+.sbe-docs-chap[open] > summary::before { transform: rotate(90deg); }
+.sbe-docs-chap > summary:hover { background: var(--sbe-surf-2); }
+.sbe-docs-chap ul { list-style: none; margin: 0 0 4px; padding: 0 0 0 14px; }
+.sbe-docs-chap a { display: block; padding: 3px 8px; border-radius: 3px; cursor: pointer; color: var(--sbe-text-2, var(--sbe-text)); border-left: 2px solid transparent; }
+.sbe-docs-chap a:hover { background: var(--sbe-surf-2); color: var(--sbe-text); }
+.sbe-docs-chap a.is-on { border-left-color: var(--sbe-accent); background: var(--sbe-surf-2); color: var(--sbe-text-strong, var(--sbe-text)); font-weight: 600; }
+
+/* Page */
+.sbe-docs-page { overflow-y: auto; min-height: 0; padding: 14px 28px 24px; line-height: 1.55; color: var(--sbe-text); }
+.sbe-docs-page > * { max-width: 760px; }
+.sbe-docs-crumb { margin: 0; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--sbe-text-dim); }
+.sbe-docs-page h1 { margin: 2px 0 12px; font-size: 1.7em; border: 0; color: var(--sbe-text-strong, var(--sbe-text)); }
+.sbe-docs-page h2 { margin: 22px 0 8px; font-size: 1.25em; padding-bottom: 3px; border-bottom: 1px solid var(--sbe-tone-3); color: var(--sbe-text-strong, var(--sbe-text)); }
+.sbe-docs-page h3 { margin: 16px 0 6px; font-size: 1.08em; border: 0; color: var(--sbe-accent); }
+.sbe-docs-page p { margin: 0 0 9px; }
+.sbe-docs-page ul, .sbe-docs-page ol { margin: 0 0 10px; padding-left: 22px; }
+.sbe-docs-page li { margin: 2px 0; }
+.sbe-docs-page code { padding: 1px 5px; border-radius: 3px; background: var(--sbe-surf-1); border: 1px solid var(--sbe-tone-3); font-size: .92em; }
+.sbe-docs-page pre { padding: 8px 10px; border-radius: var(--sbe-radius, 4px); background: var(--sbe-surf-1); border: 1px solid var(--sbe-tone-3); overflow-x: auto; }
+.sbe-docs-page pre code { padding: 0; border: 0; background: none; }
+.sbe-docs-page blockquote { margin: 0 0 10px; padding: 8px 12px; border-left: 3px solid var(--sbe-accent); background: var(--sbe-surf-1); border-radius: 0 var(--sbe-radius, 4px) var(--sbe-radius, 4px) 0; }
+.sbe-docs-page blockquote p:last-child { margin: 0; }
+.sbe-docs-page img { display: block; max-width: 100%; height: auto; margin: 8px 0 12px; border: 1px solid var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); }
+.sbe-docs-page a { color: var(--sbe-accent); }
+.sbe-docs-link { cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.sbe-docs-table { overflow-x: auto; margin: 0 0 12px; }
+.sbe-docs-table table { border-collapse: collapse; width: 100%; }
+.sbe-docs-table th, .sbe-docs-table td { padding: 4px 8px; border: 1px solid var(--sbe-tone-3); text-align: left; vertical-align: top; }
+.sbe-docs-table th { background: var(--sbe-surf-2); }
+/* La première colonne nomme la ligne : assez large pour ne pas couper un nom court. */
+.sbe-docs-table :is(th, td):first-child { min-width: 10em; }
+.sbe-docs-pn { display: flex; justify-content: space-between; gap: 12px; margin-top: 26px; padding-top: 10px; border-top: 1px solid var(--sbe-tone-3); }
+.sbe-docs-pn a { cursor: pointer; text-decoration: none; }
+.sbe-docs-pn a:hover { text-decoration: underline; }
+.sbe-docs-hits { list-style: none; padding: 0; }
+.sbe-docs-hits li { padding: 6px 0; border-bottom: 1px solid var(--sbe-tone-3); }
+.sbe-docs-hits a { cursor: pointer; text-decoration: none; }
+.sbe-docs-hits small { color: var(--sbe-text-dim); margin-left: 6px; }
+.sbe-docs-hits p { margin: 2px 0 0; color: var(--sbe-text-dim); font-size: .92em; }
+.sbe-docs-none { color: var(--sbe-text-dim); }
+
+@media (max-width: 700px) { .sbe-docs-body { grid-template-columns: 1fr; } .sbe-docs-side { max-height: 40%; border-right: 0; border-bottom: 1px solid var(--sbe-tone-3); } }
+
+/* Le texte de la documentation se sélectionne (copier-coller d'un exemple). */
+.sbe-docs .sbe-docs-page, .sbe-docs .sbe-docs-page * { user-select: text; -webkit-user-select: text; cursor: auto; }
+.sbe-docs .sbe-docs-page a, .sbe-docs .sbe-docs-page [data-page] { cursor: pointer; }

@@ -1,0 +1,200 @@
+/* ============================================================
+ * SBE — JOURNAL DE QUÊTES (sheets/journal/quest-journal-sheet.mjs)
+ * Variables du thème uniquement ; libellés au-dessus des champs.
+ * ============================================================ */
+
+.sbe-quest-journal .window-content { display: flex; flex-direction: column; min-height: 0; padding: 0; }
+.sbe-qj { display: flex; flex-direction: column; min-height: 0; flex: 1 1 auto; }
+.sbe-qj .notes { margin: 0; color: var(--sbe-text-dim); }
+
+.sbe-qj-tabs { display: flex; gap: 2px; padding: 4px 8px 0; border-bottom: 1px solid var(--sbe-tone-3); flex: 0 0 auto; }
+.sbe-qj-tabs a { padding: 4px 12px; border: 1px solid transparent; border-bottom: none; border-radius: var(--sbe-radius, 4px) var(--sbe-radius, 4px) 0 0; color: var(--sbe-text-dim); }
+.sbe-qj-tabs a.active { color: var(--sbe-text); border-color: var(--sbe-tone-3); background: var(--sbe-surf-2); }
+
+/* Sous-onglets de l'onglet Quêtes (communautés, guildes, pays…). */
+.sbe-qj-subtabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px 8px; border-bottom: 1px solid var(--sbe-tone-3); flex: 0 0 auto; }
+.sbe-qj-stab { display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px; border: 1px solid var(--sbe-tone-3); border-radius: 999px; color: var(--sbe-text-dim); cursor: pointer; font-size: var(--font-size-13, 13px); }
+.sbe-qj-stab:hover { color: var(--sbe-text); border-color: var(--sbe-accent); }
+.sbe-qj-stab.active { color: var(--sbe-text); border-color: var(--sbe-accent); background: var(--sbe-surf-2); }
+.sbe-qj-stab.is-hidden { opacity: .7; border-style: dashed; }
+.sbe-qj-stab-n { font-size: .8em; opacity: .7; }
+.sbe-qj-stab-img { width: 16px; height: 16px; object-fit: contain; border: none; }
+.sbe-qj-stab-tools { display: none; gap: 6px; margin-left: 2px; }
+.sbe-qj-stab-tools i { font-size: .85em; opacity: .75; }
+.sbe-qj-stab-tools i:hover { opacity: 1; color: var(--sbe-accent); }
+.sbe-qj-stab:hover .sbe-qj-stab-tools { display: inline-flex; }
+.sbe-qj-stab-add { padding: 2px 8px; border-style: dashed; }
+.sbe-qj-stab-form .form-fields { display: flex; gap: 4px; }
+.sbe-qj-stab-form .form-fields button { flex: 0 0 auto; width: auto; }
+.sbe-qj-body { display: flex; min-height: 0; flex: 1 1 auto; }
+.sbe-qj-side { flex: 0 0 240px; min-height: 0; overflow-y: auto; padding: 8px; border-right: 1px solid var(--sbe-tone-3); display: flex; flex-direction: column; gap: 8px; }
+.sbe-qj-main, .sbe-qj-config { flex: 1 1 auto; min-height: 0; min-width: 0; overflow-y: auto; padding: 8px 12px; display: flex; flex-direction: column; gap: 6px; }
+.sbe-qj-main > *, .sbe-qj-config > *, .sbe-qj-side > * { flex-shrink: 0; }
+
+.sbe-qj-section h4 { margin: 0 0 4px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--sbe-tone-3); }
+.sbe-qj-section ul, .sbe-qj-objs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.sbe-qj-qitem { display: flex; align-items: center; gap: 6px; padding: 3px 4px; border-radius: var(--sbe-radius, 4px); cursor: pointer; }
+.sbe-qj-qitem:hover { background: var(--sbe-surf-2); }
+.sbe-qj-qitem.active { background: var(--sbe-surf-2); outline: 1px solid var(--sbe-accent); }
+.sbe-qj-qitem img { width: 24px; height: 24px; object-fit: cover; border-radius: 3px; flex: 0 0 auto; }
+.sbe-qj-qname { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
+
+.sbe-qj-drop { padding: 8px; text-align: center; border: 1px dashed var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); color: var(--sbe-text-dim); }
+.sbe-qj-drop.is-over, .sbe-qj-ref.is-over, .sbe-qj-items.is-over, .sbe-qj-cfgsec.is-over { border-color: var(--sbe-accent); background: var(--sbe-surf-2); }
+.sbe-qj-add { align-self: flex-start; }
+.sbe-qj-empty { color: var(--sbe-text-dim); font-style: italic; }
+
+.sbe-qj-head { display: flex; align-items: center; gap: 10px; }
+.sbe-qj-img { width: 64px; height: 64px; object-fit: cover; border: 1px solid var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); flex: 0 0 auto; }
+.sbe-qj-img[data-action] { cursor: pointer; }
+.sbe-qj-headtxt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.sbe-qj-title { margin: 0; font-size: 1.3em; }
+.sbe-qj-del { color: var(--sbe-text-dim); }
+.sbe-qj-del:hover { color: var(--sbe-fail); }
+.sbe-qj-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.sbe-qj-chip { --c: var(--sbe-tone-3); display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border: 1px solid var(--c); border-radius: 999px; font-size: 0.9em; }
+.sbe-qj-chip i { color: var(--c); }
+
+.sbe-qj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 6px; }
+.sbe-qj-field { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sbe-qj-row { display: flex; align-items: center; gap: 4px; min-width: 0; }
+.sbe-qj-row > input[type="text"] { flex: 1 1 auto; min-width: 0; }
+.sbe-qj-row > .sbe-qj-field { flex: 1 1 0; }
+.sbe-qj-rowdel { align-self: flex-end; padding-bottom: 6px; }
+.sbe-qj-num { width: 5em; flex: 0 0 auto; }
+.sbe-qj-icon { width: 11em; flex: 0 0 auto; }
+.sbe-qj-iconprev { width: 1.2em; text-align: center; }
+.sbe-qj-row input[type="color"] { width: 32px; height: 28px; padding: 0; flex: 0 0 auto; }
+.sbe-qj-icbtn { flex: 0 0 auto; width: var(--input-height, 28px); height: var(--input-height, 28px); padding: 0; display: flex; align-items: center; justify-content: center; }
+.sbe-qj-icbtn i { margin: 0; }
+.sbe-qj-lock { width: 1.2em; color: var(--sbe-text-dim); }
+.sbe-qj-flag { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+
+.sbe-qj-ref { display: flex; align-items: center; gap: 6px; min-height: var(--input-height, 28px); padding: 2px 4px; border: 1px dashed var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); }
+.sbe-qj-ref img { width: 24px; height: 24px; object-fit: cover; border-radius: 3px; }
+.sbe-qj-ref input { flex: 1 1 auto; min-width: 0; border: none; }
+.sbe-qj-x { margin-left: auto; color: var(--sbe-text-dim); }
+.sbe-qj-meta { display: flex; flex-wrap: wrap; gap: 4px 16px; color: var(--sbe-text-dim); }
+
+.sbe-qj-h { margin: 8px 0 0; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--sbe-tone-3); font-size: 1.05em; }
+.sbe-qj-desc { width: 100%; min-height: 80px; }
+.sbe-qj-desctxt { overflow-wrap: anywhere; }
+
+.sbe-qj-obj { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 2px 0; }
+.sbe-qj-obj.is-sub { padding-left: 24px; }
+/* Le nom de l'objectif garde de quoi se lire : une ligne trop chargée
+   (compteur + cible) passe ses boutons à la ligne au lieu de l'écraser. */
+.sbe-qj-obj > input[type="text"] { flex: 1 1 8em; min-width: 8em; }
+.sbe-qj-obj select { width: auto; flex: 0 0 auto; }
+.sbe-qj-obj.is-done .sbe-qj-objlabel, .sbe-qj-obj.is-done > input[type="text"] { text-decoration: line-through; color: var(--sbe-text-dim); }
+.sbe-qj-obj.is-hidden { opacity: 0.55; }
+.sbe-qj-objlabel { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
+.sbe-qj-opt { color: var(--sbe-text-dim); font-size: 0.9em; }
+.sbe-qj-count { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.sbe-qj-check { font-size: 1.1em; }
+
+.sbe-qj-bundle { display: flex; flex-direction: column; gap: 4px; }
+.sbe-qj-val select { flex: 1 1 auto; min-width: 0; }
+.sbe-qj-mode { color: var(--sbe-text-dim); font-size: 0.9em; }
+.sbe-qj-items { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; min-height: 36px; border: 1px dashed var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); align-items: center; }
+.sbe-qj-item { display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px; background: var(--sbe-surf-2); border: 1px solid var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); }
+.sbe-qj-item img { width: 24px; height: 24px; object-fit: cover; }
+.sbe-qj-item.is-missing { color: var(--sbe-fail); font-style: italic; }
+.sbe-qj-item .sbe-qj-num { width: 4em; }
+.sbe-qj-item select { width: auto; }
+
+.sbe-qj-deadline { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px; }
+.sbe-qj-deadline .sbe-qj-field { width: 8em; }
+.sbe-qj-dlshow { color: var(--sbe-text-dim); padding-bottom: 6px; }
+
+.sbe-qj-cfgsec { display: flex; flex-direction: column; gap: 4px; padding: 6px; background: var(--sbe-surf-2); border: 1px solid var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); }
+.sbe-qj-members { display: flex; flex-wrap: wrap; gap: 4px; }
+.sbe-qj-member { display: inline-flex; align-items: center; gap: 4px; padding: 1px 6px; border: 1px solid var(--sbe-tone-3); border-radius: 999px; }
+.sbe-qj-member img { width: 20px; height: 20px; object-fit: cover; border-radius: 50%; }
+.sbe-quest-create { flex: 1 1 100%; }
+
+/* Police du thème SBE partout dans le journal (champs compris) : la
+   fenêtre ne doit jamais retomber sur la police par défaut de Foundry. */
+.sbe-quest-journal .window-content,
+.sbe-quest-journal .window-content :is(input, select, textarea, button, label, a, li, p, span):not([class*="fa-"]) { font-family: var(--sbe-font-primary); }
+.sbe-quest-journal .window-content :is(h1, h2, h3, h4, h5, .sbe-qj-title, .sbe-qj-tabs a) { font-family: var(--sbe-font-heading); }
+
+/* Barre de fin de quête (MJ). */
+.sbe-qj-endbar { display: flex; flex-wrap: wrap; gap: 4px; }
+.sbe-qj-endbar button { flex: 0 0 auto; width: auto; }
+.sbe-qj-endbar .is-success i { color: var(--sbe-ok); }
+.sbe-qj-endbar .is-fail i { color: var(--sbe-fail); }
+
+/* Fenêtre de répartition des récompenses « au total ». */
+.sbe-qsplit-wrap { display: flex; flex-direction: column; gap: 8px; }
+.sbe-qsplit { display: flex; flex-direction: column; gap: 4px; border: 1px solid var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); padding: 6px 8px; }
+.sbe-qsplit-row { display: flex; align-items: center; gap: 8px; }
+.sbe-qsplit-row label { flex: 1 1 auto; min-width: 0; }
+.sbe-qsplit-row input { width: 6em; flex: 0 0 auto; }
+.sbe-qsplit-eq { align-self: flex-start; width: auto; }
+
+/* « Fait si » d'un objectif (MJ). */
+.sbe-qj-autobtn.is-on { color: var(--sbe-accent); }
+.sbe-qj-auto { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px; padding: 4px 6px 6px 24px; border-left: 2px solid var(--sbe-accent); margin-left: 8px; }
+.sbe-qj-auto.is-sub { margin-left: 32px; }
+.sbe-qj-auto .sbe-qj-field { min-width: 150px; }
+.sbe-qj-autof { flex: 1 1 220px; }
+
+/* Quête cachée aux joueurs. */
+.sbe-qj-hiddenico { color: var(--sbe-text-dim); }
+.sbe-qj-endbar .is-hidden { color: var(--sbe-text-dim); font-style: italic; }
+
+/* Épingle du suivi à l'écran. */
+.sbe-qj-pin { color: var(--sbe-text-dim); font-size: 1.1em; }
+.sbe-qj-pin.is-on { color: var(--sbe-accent); }
+
+/* ============ Suivi des quêtes à l'écran ============ */
+.sbe-quest-tracker .window-content { padding: 0; display: flex; flex-direction: column; min-height: 0; }
+.sbe-quest-tracker .window-content :is(a, li, p, span, b):not([class*="fa-"]) { font-family: var(--sbe-font-primary); }
+.sbe-qt { display: flex; flex-direction: column; min-height: 0; flex: 1 1 auto; }
+/* Onglets : une rangée de portraits ronds ; l'actif grandit et s'illumine. */
+.sbe-qt-tabs { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; padding: 8px 8px 2px; flex: 0 0 auto;
+  background: linear-gradient(to bottom, var(--sbe-surf-2), transparent); }
+.sbe-qt-tab { position: relative; display: block; width: 30px; height: 30px; border-radius: 50%; transition: transform 150ms, width 150ms, height 150ms; }
+.sbe-qt-tab img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 2px solid var(--sbe-tone-3); filter: grayscale(0.6) brightness(0.8); transition: filter 150ms, border-color 150ms, box-shadow 150ms; }
+.sbe-qt-tab:hover { transform: translateY(-2px); }
+.sbe-qt-tab:hover img { filter: none; }
+.sbe-qt-tab.active { width: 40px; height: 40px; }
+.sbe-qt-tab.active img { filter: none; border-color: var(--sbe-accent); box-shadow: 0 0 8px var(--sbe-accent); }
+.sbe-qt-tabcount { position: absolute; top: -3px; right: -5px; min-width: 16px; height: 16px; padding: 0 3px; border-radius: 999px; font-size: 10px; line-height: 16px; text-align: center;
+  background: var(--sbe-accent); color: var(--sbe-surf-1, #000); font-family: var(--sbe-font-primary); }
+.sbe-qt-tabstar { position: absolute; bottom: -3px; right: -4px; font-size: 10px; color: var(--sbe-accent); text-shadow: 0 0 3px var(--sbe-surf-1, #000); }
+.sbe-qt-tabtitle { text-align: center; font-family: var(--sbe-font-heading); font-size: 0.8em; letter-spacing: 1px; text-transform: uppercase; color: var(--sbe-accent);
+  padding: 2px 8px 4px; border-bottom: 1px solid var(--sbe-tone-3); flex: 0 0 auto; }
+.sbe-qt-badge { font-size: 0.75em; min-width: 1.4em; padding: 0 4px; text-align: center; border-radius: 999px; background: var(--sbe-tone-3); color: var(--sbe-text); }
+.sbe-qt-tools { display: flex; justify-content: flex-end; padding: 2px 8px 0; font-size: 0.8em; flex: 0 0 auto; }
+.sbe-qt-tools a { color: var(--sbe-text-dim); }
+.sbe-qt-tools a:hover { color: var(--sbe-accent); }
+.sbe-qt-list { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 4px 8px 6px; display: flex; flex-direction: column; gap: 6px; }
+.sbe-qt-list > * { flex-shrink: 0; }
+.sbe-qt-qhead { display: flex; align-items: center; gap: 5px; border-bottom: 1px solid var(--sbe-tone-3); padding-bottom: 1px; }
+.sbe-qt-fold i { transition: transform 150ms; color: var(--sbe-text-dim); }
+.sbe-qt-quest:not(.is-folded) .sbe-qt-fold i { transform: rotate(90deg); }
+.sbe-qt-st { font-size: 1.1em; }
+.sbe-qt-qimg { width: 30px; height: 30px; object-fit: cover; border: 1px solid var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); flex: 0 0 auto; cursor: pointer; }
+.sbe-qt-qname { flex: 1 1 auto; min-width: 0; font-family: var(--sbe-font-heading); font-size: 1.2em; font-weight: 600; overflow-wrap: anywhere; color: var(--sbe-text); }
+.sbe-qt-qname:hover { color: var(--sbe-accent); }
+.sbe-qt-quest ul { list-style: none; margin: 2px 0 0; padding: 0 0 0 4px; display: flex; flex-direction: column; gap: 1px; font-size: 0.92em; }
+.sbe-qt-quest li { display: flex; align-items: baseline; gap: 6px; }
+.sbe-qt-quest li span { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
+.sbe-qt-quest li.is-sub { padding-left: 16px; }
+.sbe-qt-quest li.is-done span { text-decoration: line-through; color: var(--sbe-text-dim); }
+.sbe-qt-quest li.is-hidden { opacity: 0.55; }
+.sbe-qt-empty { color: var(--sbe-text-dim); font-style: italic; margin: 0; }
+
+/* Objectifs : vert = rempli, rouge = échoué, couleur normale = en cours. */
+.sbe-qj-obj.is-done > i, .sbe-qj-obj.is-done .sbe-qj-check i, .sbe-qt-quest li.is-done > i,
+.sbe-qj-obj.is-done .sbe-qj-objlabel, .sbe-qt-quest li.is-done span,
+.sbe-qj-obj.is-done .sbe-qj-count b, .sbe-qj-obj.is-done .sbe-qj-countro, .sbe-qt-quest li.is-done b { color: var(--sbe-ok); }
+.sbe-qj-obj.is-failed > i, .sbe-qj-obj.is-failed .sbe-qj-check i, .sbe-qt-quest li.is-failed > i,
+.sbe-qj-obj.is-failed .sbe-qj-objlabel, .sbe-qt-quest li.is-failed span,
+.sbe-qj-obj.is-failed .sbe-qj-count b, .sbe-qj-obj.is-failed .sbe-qj-countro, .sbe-qt-quest li.is-failed b { color: var(--sbe-fail); }
+.sbe-qj-obj.is-done .sbe-qj-objlabel, .sbe-qj-obj.is-done > input[type="text"], .sbe-qt-quest li.is-done span { text-decoration: none; }
+.sbe-qj-obj.is-done > input[type="text"] { border-left: 3px solid var(--sbe-ok); color: inherit; }
+.sbe-qj-obj.is-failed > input[type="text"] { border-left: 3px solid var(--sbe-fail); }
+.sbe-qj-failbtn.is-on { color: var(--sbe-fail); }

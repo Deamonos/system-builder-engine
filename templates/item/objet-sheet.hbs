@@ -1,0 +1,243 @@
+<div class="sbe-obj-root">
+
+  {{#unless tagsInHeader}}{{{tagsHTML}}}{{/unless}}
+
+  {{!-- En-tête : portrait/icône + nom. Sur un personnage, leur style
+       vient des réglages natifs du modèle. PJ/PNJ est automatique
+       (droits de la fiche), sans badge : règle documentée. --}}
+  {{#unless hideActorHeader}}
+  <header class="sbe-obj-header">
+    {{#unless nativeImgInTree}}
+    <img class="sbe-obj-img {{nativeImgCls}}" src="{{item.img}}" data-action="pickImage"
+         {{#if nativeImgCssId}}data-sbe-el="{{nativeImgCssId}}"{{/if}} style="{{nativeImgCss}}" alt="" title="{{localize "SBE.Common.Image"}}">
+    {{/unless}}
+    {{#unless nativeNameInTree}}
+    <span class="sbe-native-namebox">
+      {{#if tagsInHeader}}{{{tagsHTML}}}{{/if}}
+      <input type="text" name="name" value="{{item.name}}" {{#if nativeNameCssId}}data-sbe-el="{{nativeNameCssId}}"{{/if}} style="{{nativeNameCss}}">
+      {{#if nativeNameSub}}<span class="sbe-native-sub">{{nativeNameSub}}</span>{{/if}}
+    </span>
+    {{/unless}}
+  </header>
+  {{/unless}}
+
+  {{#if hasTemplate}}
+    {{#if templateFound}}
+      {{!-- Personnage : pas de ligne « Construit sur le modèle » (épuré).
+           La synchro avec le modèle est AUTOMATIQUE à chaque rendu. --}}
+      {{#unless isActorDoc}}
+      <p class="sbe-obj-tplinfo">
+        <i class="fa-solid fa-compass-drafting"></i>
+        {{localize "SBE.Objet.FromTemplate"}} <b>{{templateName}}</b>
+      </p>
+      {{/unless}}
+    {{else}}
+      <p class="sbe-obj-tplinfo sbe-obj-tplinfo--warn">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        {{localize "SBE.Objet.TemplateMissing"}}
+        {{#if canDeleteOrphan}}
+        <span class="sbe-orphan-del" data-action="deleteOrphan"
+              title="{{localize "SBE.Orphan.DeleteThis"}}"><i class="fa-solid fa-trash"></i> {{localize "SBE.Orphan.DeleteThis"}}</span>
+        {{/if}}
+      </p>
+    {{/if}}
+  {{else}}
+    <p class="sbe-obj-tplinfo sbe-obj-tplinfo--warn">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      {{localize "SBE.Objet.NoTemplateHint"}}
+    </p>
+  {{/if}}
+
+  {{#unless isActorDoc}}
+  {{!-- Onglets en DOSSIERS : 1re ligne = onglets natifs du système,
+       2e ligne = onglets ajoutés par le modèle. --}}
+  <nav class="sbe-obj-tabs sbe-folder-tabs">
+    <div class="sbe-ftab-row sbe-ftab-native">
+      <a class="{{#if isDescription}}active{{/if}}" data-action="switchTab" data-tab="description">
+        <i class="fa-solid fa-book-open"></i> {{localize "SBE.Objet.TabDescription"}}
+      </a>
+      {{#if templateFound}}
+      {{!-- Onglets fixes réservés au MJ. --}}
+      {{#if hasMedia}}
+        <a class="{{#if isMedia}}active{{/if}}" data-action="switchTab" data-tab="media">
+          <i class="fa-solid fa-eye-slash sbe-tpl-hidden-badge"></i>
+          <i class="fa-solid fa-volume-high"></i> {{localize "SBE.Media.Tab"}}
+        </a>
+      {{/if}}
+      {{#if hasEffectsTab}}
+        <a class="{{#if isEffectsTab}}active{{/if}}" data-action="switchTab" data-tab="effects">
+          <i class="fa-solid fa-eye-slash sbe-tpl-hidden-badge"></i>
+          <i class="fa-solid fa-wand-sparkles"></i> {{localize "SBE.Grants.Tab"}}
+        </a>
+      {{/if}}
+      {{#if hasLightTab}}
+        <a class="{{#if isLightTab}}active{{/if}}" data-action="switchTab" data-tab="light">
+          <i class="fa-solid fa-eye-slash sbe-tpl-hidden-badge"></i>
+          <i class="fa-solid fa-lightbulb"></i> {{localize "SBE.Light.Tab"}}
+        </a>
+      {{/if}}
+      {{#if hasZoneTab}}
+        <a class="{{#if isZoneTab}}active{{/if}}" data-action="switchTab" data-tab="zone">
+          <i class="fa-solid fa-eye-slash sbe-tpl-hidden-badge"></i>
+          <i class="fa-solid fa-fire"></i> {{localize "SBE.PZone.Tab"}}
+        </a>
+      {{/if}}
+      {{#if hasSceneTab}}
+        <a class="{{#if isSceneTab}}active{{/if}}" data-action="switchTab" data-tab="scene">
+          <i class="fa-solid fa-eye-slash sbe-tpl-hidden-badge"></i>
+          <i class="fa-solid fa-cube"></i> {{localize "SBE.Prop.Tab"}}
+        </a>
+      {{/if}}
+      {{/if}}
+    </div>
+    {{#if templateFound}}{{#if extraTabs.length}}
+    <div class="sbe-ftab-row sbe-ftab-extra">
+      {{#each extraTabs}}
+        <a class="{{#if this.active}}active{{/if}}" data-action="switchTab" data-tab="{{this.id}}">
+          {{#if this.hidden}}<i class="fa-solid fa-eye-slash sbe-tpl-hidden-badge"></i>{{/if}}{{this.label}}
+        </a>
+      {{/each}}
+    </div>
+    {{/if}}{{/if}}
+  </nav>
+  {{/unless}}
+
+  {{#if isDescription}}
+    <section class="sbe-obj-desc">
+      <prose-mirror name="system.description" value="{{sys.description}}" toggled>
+        {{{descriptionHTML}}}
+      </prose-mirror>
+      {{#if descSheetHTML}}
+        <div class="sbe-obj-descextra">
+          {{{descSheetHTML}}}
+        </div>
+      {{/if}}
+    </section>
+  {{/if}}
+
+  {{!-- PERSONNAGE : page unique, sans barre d'onglets — c'est ici que
+       tout se rend. Les OBJETS passent par la Description ci-dessus. --}}
+  {{#if isActorDoc}}
+    <section class="sbe-obj-fields">
+      {{#unless hasFields}}
+        <p class="sbe-tpl-empty">{{localize "SBE.Objet.NoFields"}}</p>
+      {{/unless}}
+
+      {{{sheetHTML}}}
+    </section>
+  {{/if}}
+
+  {{#if isMedia}}
+    <section class="sbe-obj-fields sbe-obj-tabscroll sbe-media-tab">
+      {{{spatialMediaHTML}}}
+      {{#if mediaFromModel}}
+      <p class="notes">{{localize "SBE.Media.FromModel"}}</p>
+      <button type="button" data-action="openMediaModel"><i class="fa-solid fa-arrow-up-right-from-square"></i> {{mediaModelName}}</button>
+      {{/if}}
+      {{#if mediaRows.length}}<p class="notes">{{localize "SBE.Media.TabHint"}}</p>{{/if}}
+      {{#each mediaRows}}
+      <div class="sbe-media-row" data-def-id="{{this.id}}">
+        <div class="sbe-media-head">
+          <span class="sbe-media-name">{{this.name}}</span>
+          {{#if this.hint}}<span class="sbe-media-hint">{{this.hint}}</span>{{/if}}
+          <span class="sbe-media-test" data-action="testMedia" data-def-id="{{this.id}}"
+                title="{{localize "SBE.Media.Test"}}"><i class="fa-solid fa-play"></i></span>
+        </div>
+        {{!-- Grille à 2 colonnes (helpers/compact-form) : aide en bulle. --}}
+        <div class="sbe-media-body sbe-cf-grid">
+          <div class="sbe-cf-cell">
+            <label>{{localize "SBE.Media.Sound"}} {{sbeTip (sbeAudioFormats)}}</label>
+            <div class="sbe-cf-inline">
+              <input type="text" class="sbe-media-sound" value="{{this.sound}}" placeholder="sounds/…">
+              <span class="sbe-media-pick" data-action="pickMedia" data-def-id="{{this.id}}"
+                    title="{{localize "SBE.Common.Browse"}}"><i class="fa-solid fa-folder-open"></i></span>
+            </div>
+          </div>
+          <div class="sbe-cf-cell">
+            <label>{{localize "SBE.Media.Volume"}}</label>
+            <div class="sbe-cf-inline">
+              <input type="range" class="sbe-media-volume" min="0" max="100" step="1" value="{{this.volume}}">
+              <output class="sbe-media-volout">{{this.volume}}%</output>
+            </div>
+          </div>
+          <div class="sbe-cf-cell">
+            <label>{{localize "SBE.Media.Audience"}}</label>
+            <select class="sbe-media-audience">
+              <option value="all" {{#if this.isAll}}selected{{/if}}>{{localize "SBE.Media.AudAll"}}</option>
+              <option value="owner" {{#if this.isOwner}}selected{{/if}}>{{localize "SBE.Media.AudOwner"}}</option>
+              <option value="gm" {{#if this.isGm}}selected{{/if}}>{{localize "SBE.Media.AudGm"}}</option>
+            </select>
+          </div>
+          <div class="sbe-cf-cell">
+            <label>{{localize "SBE.Media.Range"}}</label>
+            <div class="sbe-cf-inline">
+              <input type="number" class="sbe-media-rangeval" min="0" step="1" value="{{this.range}}"
+                     placeholder="{{localize "SBE.Media.RangeAll"}}">
+              <span class="sbe-media-unit">{{sceneUnits}}</span>
+            </div>
+          </div>
+          <label class="sbe-cf-cell is-check">
+            <input type="checkbox" class="sbe-media-falloffchk" {{#if this.falloff}}checked{{/if}}
+                   {{#unless this.range}}disabled{{/unless}}>
+            <span>{{localize "SBE.Media.Falloff"}}</span> {{sbeTip "SBE.Media.FalloffHint"}}
+          </label>
+          <div class="sbe-cf-cell">
+            <label>{{localize "SBE.Media.Next"}} {{sbeTip "SBE.Media.NextHint"}}</label>
+            <input type="number" class="sbe-media-next" min="0" step="10" value="{{this.next}}" placeholder="{{localize "SBE.Media.NextPh"}}">
+          </div>
+
+          {{!-- ANIMATION : même public et même portée que le son. --}}
+          <div class="sbe-cf-cell is-wide">
+            <label>{{localize "SBE.Media.Anim"}} {{sbeTip "SBE.Media.AnimHint"}}</label>
+            <div class="sbe-cf-inline">
+              <input type="text" class="sbe-media-anim" value="{{this.anim}}" placeholder="{{localize "SBE.Media.AnimPh"}}">
+              <span class="sbe-media-pick" data-action="pickMediaAnim" data-def-id="{{this.id}}"
+                    title="{{localize "SBE.Common.Browse"}}"><i class="fa-solid fa-folder-open"></i></span>
+            </div>
+          </div>
+          {{#if this.anim}}
+          <div class="sbe-cf-cell">
+            <label>{{localize "SBE.Media.AnimPlace"}} {{sbeTip "SBE.Media.AnimPlaceHint"}}</label>
+            <select class="sbe-media-animplace">
+              {{#each this.places}}<option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>{{/each}}
+            </select>
+          </div>
+          <div class="sbe-cf-cell">
+            <label>{{localize "SBE.Media.AnimSize"}}</label>
+            <input type="number" class="sbe-media-animsize" min="0.1" step="0.1" value="{{this.animSize}}">
+          </div>
+          <div class="sbe-cf-cell">
+            <label>{{localize "SBE.Media.AnimDuration"}}</label>
+            <input type="number" class="sbe-media-animdur" min="0.1" step="0.1" value="{{this.animDuration}}" {{#if this.animIsVideo}}disabled{{/if}}>
+          </div>
+          <label class="sbe-cf-cell is-check">
+            <input type="checkbox" class="sbe-media-animscreen" {{#if this.animScreen}}checked{{/if}}>
+            <span>{{localize "SBE.Media.AnimScreen"}}</span> {{sbeTip "SBE.Media.AnimScreenHint"}}
+          </label>
+          <label class="sbe-cf-cell is-check">
+            <input type="checkbox" class="sbe-media-animrandom" {{#if this.animRandom}}checked{{/if}}>
+            <span>{{localize "SBE.Media.AnimRandom"}}</span> {{sbeTip "SBE.Media.AnimRandomHint"}}
+          </label>
+          {{/if}}
+        </div>
+      </div>
+      {{/each}}
+      {{{zoneMediaHTML}}}
+    </section>
+  {{/if}}
+
+  {{#if isEffectsTab}}{{{effectsTabHTML}}}{{/if}}
+
+  {{#if isLightTab}}{{{lightTabHTML}}}{{/if}}
+
+  {{#if isZoneTab}}{{{zoneTabHTML}}}{{/if}}
+
+  {{#if isSceneTab}}{{{sceneTabHTML}}}{{/if}}
+
+  {{#if isExtra}}
+    <section class="sbe-obj-fields">
+      {{{extraSheetHTML}}}
+    </section>
+  {{/if}}
+
+</div>

@@ -1,0 +1,146 @@
+<div class="sbe-nd-root">
+
+  {{!-- Onglets : le repos (chaque fois), les réglages (une fois pour toutes) --}}
+  <nav class="sbe-nd-tabs">
+    <a class="sbe-nd-tab {{#if (eq tab "rest")}}is-on{{/if}}" data-action="ndTab" data-nd-tab="rest"><i class="fa-solid fa-moon"></i> {{localize "SBE.NewDay.TabRest"}}</a>
+    <a class="sbe-nd-tab {{#if (eq tab "settings")}}is-on{{/if}}" data-action="ndTab" data-nd-tab="settings"><i class="fa-solid fa-gear"></i> {{localize "SBE.NewDay.TabSettings"}}</a>
+  </nav>
+
+  {{#if (eq tab "rest")}}
+  {{!-- ===== REPOS ===== --}}
+  <div class="sbe-nd-scroll">
+    <h3 class="sbe-nd-h">{{localize "SBE.NewDay.Actors"}}{{sbeTip actorsHint}}</h3>
+    {{#if actors.length}}
+    <div class="sbe-nd-actors">
+      {{#each actors}}
+      <div class="sbe-nd-actor" data-actor-row="{{id}}">
+        <input type="checkbox" class="sbe-nd-on" {{#if on}}checked{{/if}}>
+        <img src="{{img}}" alt="">
+        <div class="sbe-nd-actor-main">
+          <div class="sbe-nd-actor-name">{{name}}</div>
+          {{#if stats.length}}
+          <div class="sbe-nd-stats">{{#each stats}}<span>{{label}} <b>{{text}}</b></span>{{/each}}</div>
+          {{/if}}
+        </div>
+        {{#if ../timeMode}}
+        <div class="sbe-nd-dur">
+          <input type="number" class="sbe-nd-rest-h" value="{{rest.h}}" min="0" step="1"><span>{{localize "SBE.NewDay.H"}}</span>
+          <input type="number" class="sbe-nd-rest-m" value="{{rest.m}}" min="0" max="59" step="1"><span>{{localize "SBE.NewDay.M"}}</span>
+        </div>
+        {{else}}
+        <select class="sbe-nd-tier">
+          <option value="">{{localize "SBE.NewDay.NoTier"}}</option>
+          {{#each ../tierChoices}}
+          <option value="{{id}}" {{#if (eq id ../tierId)}}selected{{/if}}>{{name}}</option>
+          {{/each}}
+        </select>
+        {{/if}}
+      </div>
+      {{/each}}
+    </div>
+    {{else}}
+    <p class="sbe-nd-empty">{{localize "SBE.NewDay.NoActors"}}</p>
+    {{/if}}
+  </div>
+
+  <footer class="sbe-nd-footer">
+    {{#if timeMode}}
+    <span class="sbe-nd-adv-l">{{localize "SBE.NewDay.Advance"}} <b class="sbe-nd-advance"></b></span>
+    {{else}}
+    <div class="sbe-nd-night sbe-nd-dur">
+      <span class="sbe-nd-adv-l">{{localize "SBE.NewDay.Night"}}</span>
+      <input type="number" class="sbe-nd-night-h" value="{{night.h}}" min="0" step="1"><span>{{localize "SBE.NewDay.H"}}</span>
+      <input type="number" class="sbe-nd-night-m" value="{{night.m}}" min="0" max="59" step="1"><span>{{localize "SBE.NewDay.M"}}</span>
+    </div>
+    {{/if}}
+    <button type="button" class="sbe-nd-main" data-action="apply"><i class="fa-solid fa-moon"></i> {{localize "SBE.NewDay.Apply"}}</button>
+  </footer>
+
+  {{else}}
+  {{!-- ===== RÉGLAGES ===== --}}
+  <div class="sbe-nd-scroll sbe-nd-settingsbox">
+    <datalist id="sbe-nd-keys">
+      {{#each keys}}<option value="{{key}}">{{label}}</option>{{/each}}
+    </datalist>
+
+    <section class="sbe-nd-sec">
+      <h3 class="sbe-nd-h">{{localize "SBE.NewDay.Mode"}}{{sbeTip "SBE.NewDay.ModeHint"}}</h3>
+      <select class="sbe-nd-mode">
+        <option value="tiers" {{#unless timeMode}}selected{{/unless}}>{{localize "SBE.NewDay.ModeTiers"}}</option>
+        <option value="time" {{#if timeMode}}selected{{/if}}>{{localize "SBE.NewDay.ModeTime"}}</option>
+      </select>
+      <label class="sbe-nd-sub">{{#if timeMode}}{{localize "SBE.NewDay.RestDefault"}}{{else}}{{localize "SBE.NewDay.NightDefault"}}{{/if}}{{sbeTip durHint}}</label>
+      <div class="sbe-nd-dur">
+        <input type="number" class="sbe-nd-def-h" value="{{nightDefault.h}}" min="0" step="1"><span>{{localize "SBE.NewDay.H"}}</span>
+        <input type="number" class="sbe-nd-def-m" value="{{nightDefault.m}}" min="0" max="59" step="1"><span>{{localize "SBE.NewDay.M"}}</span>
+      </div>
+    </section>
+
+    <section class="sbe-nd-sec">
+      <h3 class="sbe-nd-h">{{localize "SBE.NewDay.Common"}}{{sbeTip "SBE.NewDay.CommonHint"}}</h3>
+      <div class="sbe-nd-common">
+        {{#each cfg.common}}
+        <div class="sbe-nd-line">
+          <input type="text" class="sbe-nd-key" list="sbe-nd-keys" value="{{key}}" placeholder="{{localize "SBE.NewDay.KeyPh"}}">
+          <input type="text" class="sbe-nd-amount" value="{{amount}}" placeholder="{{localize "SBE.NewDay.AmountPh"}}">
+          <select class="sbe-nd-unit">{{#each ../unitChoices}}<option value="{{value}}" {{#if (eq value ../unit)}}selected{{/if}}>{{label}}</option>{{/each}}</select>
+          <a data-action="delLine" data-tooltip-text="{{localize "SBE.NewDay.DelLine"}}"><i class="fa-solid fa-trash"></i></a>
+        </div>
+        {{/each}}
+      </div>
+      <button type="button" class="sbe-nd-add" data-action="addCommon"><i class="fa-solid fa-plus"></i> {{localize "SBE.NewDay.AddLine"}}</button>
+    </section>
+
+    {{#if timeMode}}
+    <section class="sbe-nd-sec">
+      <h3 class="sbe-nd-h">{{localize "SBE.NewDay.Rate"}}{{sbeTip "SBE.NewDay.RateHint"}}</h3>
+      <div class="sbe-nd-rate">
+        {{#each rate}}
+        <div class="sbe-nd-line sbe-nd-rateline">
+          <input type="text" class="sbe-nd-key" list="sbe-nd-keys" value="{{key}}" placeholder="{{localize "SBE.NewDay.KeyPh"}}">
+          <input type="text" class="sbe-nd-amount" value="{{amount}}" placeholder="{{localize "SBE.NewDay.RateAmountPh"}}">
+          <select class="sbe-nd-unit">{{#each ../unitChoices}}<option value="{{value}}" {{#if (eq value ../unit)}}selected{{/if}}>{{label}}</option>{{/each}}</select>
+          <span class="sbe-nd-every-l">{{localize "SBE.NewDay.Every"}}</span>
+          <input type="number" class="sbe-nd-every" value="{{n}}" min="1" step="1">
+          <select class="sbe-nd-per">
+            <option value="min" {{#if (eq per "min")}}selected{{/if}}>{{localize "SBE.NewDay.UnitMin"}}</option>
+            <option value="h" {{#if (eq per "h")}}selected{{/if}}>{{localize "SBE.NewDay.UnitHour"}}</option>
+          </select>
+          <a data-action="delLine" data-tooltip-text="{{localize "SBE.NewDay.DelLine"}}"><i class="fa-solid fa-trash"></i></a>
+        </div>
+        {{/each}}
+      </div>
+      <button type="button" class="sbe-nd-add" data-action="addRate"><i class="fa-solid fa-plus"></i> {{localize "SBE.NewDay.AddLine"}}</button>
+    </section>
+    {{else}}
+    <section class="sbe-nd-sec sbe-nd-tiers-block">
+      <h3 class="sbe-nd-h">{{localize "SBE.NewDay.Tiers"}}{{sbeTip "SBE.NewDay.TiersHint"}}</h3>
+      {{#each cfg.tiers}}
+      <div class="sbe-nd-tierbox" data-tier-id="{{id}}">
+        <div class="sbe-nd-tierhead">
+          <input type="text" class="sbe-nd-tiername" value="{{name}}" placeholder="{{localize "SBE.NewDay.TierNamePh"}}">
+          <a data-action="delTier" data-tooltip-text="{{localize "SBE.NewDay.DelTier"}}"><i class="fa-solid fa-trash"></i></a>
+        </div>
+        <div class="sbe-nd-lines">
+          {{#each lines}}
+          <div class="sbe-nd-line">
+            <input type="text" class="sbe-nd-key" list="sbe-nd-keys" value="{{key}}" placeholder="{{localize "SBE.NewDay.KeyPh"}}">
+            <input type="text" class="sbe-nd-amount" value="{{amount}}" placeholder="{{localize "SBE.NewDay.TierAmountPh"}}">
+            <select class="sbe-nd-unit">{{#each ../../unitChoices}}<option value="{{value}}" {{#if (eq value ../unit)}}selected{{/if}}>{{label}}</option>{{/each}}</select>
+            <a data-action="delLine" data-tooltip-text="{{localize "SBE.NewDay.DelLine"}}"><i class="fa-solid fa-trash"></i></a>
+          </div>
+          {{/each}}
+        </div>
+        <button type="button" class="sbe-nd-add" data-action="addTierLine" data-tier-id="{{id}}"><i class="fa-solid fa-plus"></i> {{localize "SBE.NewDay.AddLine"}}</button>
+      </div>
+      {{/each}}
+      <button type="button" class="sbe-nd-add" data-action="addTier"><i class="fa-solid fa-plus"></i> {{localize "SBE.NewDay.AddTier"}}</button>
+    </section>
+    {{/if}}
+  </div>
+
+  <footer class="sbe-nd-footer">
+    <button type="button" class="sbe-nd-main" data-action="save"><i class="fa-solid fa-floppy-disk"></i> {{localize "SBE.NewDay.Save"}}</button>
+  </footer>
+  {{/if}}
+</div>

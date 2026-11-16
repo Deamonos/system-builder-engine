@@ -1,0 +1,43 @@
+/* ============================================================
+ * SBE — VÉRIFICATEUR DE MODÈLES (rapport, renommage d'une clé)
+ * Variables du thème uniquement (clair et sombre).
+ * ============================================================ */
+
+.sbe-checker .window-content { display: flex; flex-direction: column; min-height: 0; }
+.sbe-chk { display: flex; flex-direction: column; gap: 8px; min-height: 0; flex: 1 1 auto; }
+.sbe-chk .notes { margin: 0; color: var(--sbe-text-dim); }
+.sbe-chk-intro { margin: 0; color: var(--sbe-text-dim); }
+.sbe-chk-sum { margin: 0; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.sbe-chk-sum .sbe-help { margin-left: 2px; }
+.sbe-chk-sum .is-error { color: var(--sbe-fail); }
+.sbe-chk-sum .is-warn { color: var(--sbe-warn); }
+.sbe-chk-sum.is-ok { color: var(--sbe-ok); }
+.sbe-chk-sum .is-zero { color: var(--sbe-text-dim); font-weight: normal; }
+
+.sbe-chk-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 2px; }
+.sbe-chk-group { border: 1px solid var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); background: var(--sbe-surf-2); }
+.sbe-chk-ghead { display: flex; align-items: center; gap: 6px; padding: 4px 6px; border-bottom: 1px solid var(--sbe-tone-3); background: var(--sbe-surf-3); }
+.sbe-chk-gname { flex: 1 1 auto; min-width: 0; font-weight: 600; color: var(--sbe-text-strong, var(--sbe-text)); overflow-wrap: anywhere; }
+.sbe-chk-open { flex: 0 0 auto; width: 26px; height: 26px; min-width: 26px; padding: 0; display: flex; align-items: center; justify-content: center; }
+.sbe-chk-open i { margin: 0; }
+.sbe-chk-group ul { list-style: none; margin: 0; padding: 4px 6px; display: flex; flex-direction: column; gap: 4px; }
+.sbe-chk-row { display: flex; align-items: flex-start; gap: 6px; }
+.sbe-chk-row > i { margin-top: 3px; flex: 0 0 auto; }
+.sbe-chk-row.is-error > i { color: var(--sbe-fail); }
+.sbe-chk-row.is-warn > i { color: var(--sbe-warn); }
+.sbe-chk-row.is-ignored { opacity: 0.55; }
+.sbe-chk-text { display: flex; flex-direction: column; min-width: 0; }
+.sbe-chk-where { font-size: 0.85em; color: var(--sbe-text-dim); overflow-wrap: anywhere; }
+.sbe-chk-msg { color: var(--sbe-text); overflow-wrap: anywhere; }
+.sbe-chk-ign { font-size: 0.8em; color: var(--sbe-text-dim); font-style: italic; }
+
+.sbe-chk-foot { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.sbe-chk-foot button { flex: 0 0 auto; }
+.sbe-chk-ignbox { flex: 1 1 auto; display: flex; align-items: center; gap: 4px; }
+
+.sbe-chk-rename h4 { margin: 4px 0 0; }
+.sbe-chk-hitbox { max-height: 220px; overflow-y: auto; border: 1px solid var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); padding: 4px 6px; background: var(--sbe-surf-2); }
+.sbe-chk-hits { margin: 0; padding-left: 16px; }
+.sbe-chk-hits li { overflow-wrap: anywhere; }
+.sbe-chk-others { display: flex; flex-direction: column; gap: 2px; }
+.sbe-chk-others label { display: flex; align-items: center; gap: 4px; }

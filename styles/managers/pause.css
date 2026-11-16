@@ -1,0 +1,253 @@
+/**
+ * SBE — Manager de bannière de pause
+ * 1) Fenêtre de configuration (mise en page uniquement : les couleurs
+ *    viennent des variables natives de Foundry, donc la fenêtre suit
+ *    le thème clair/sombre de l'utilisateur et restera surchargeable
+ *    par le futur manager de thème sans retouche).
+ * 2) Overlay de pause en jeu + toutes les keyframes d'animation.
+ */
+
+/* ============================================================ */
+/* 1. FENÊTRE DE CONFIGURATION                                  */
+/* ============================================================ */
+
+/* La fenêtre est redimensionnable : le corps occupe tout l'espace
+   disponible et scrolle, le footer de boutons reste toujours visible. */
+.sbe-pause-config .sbe-pause-config-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.sbe-pause-config .sbe-pause-config-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sbe-space-sm, 0.5rem);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  padding-right: var(--sbe-space-xs, 0.25rem);
+}
+
+.sbe-pause-config .sbe-section {
+  border: 1px solid var(--color-border, var(--color-border-light-2, #7a7971));
+  border-radius: var(--sbe-radius, 6px);
+  overflow: hidden;
+  /* Interdit la compression par le flex parent : sans ça, les sections
+     se font écraser pour tenir dans la hauteur max au lieu de déclencher
+     la scrollbar, et leur contenu est rogné. */
+  flex-shrink: 0;
+}
+
+.sbe-pause-config .sbe-section > summary {
+  display: flex;
+  align-items: center;
+  gap: var(--sbe-space-sm, 0.5rem);
+  padding: var(--sbe-space-sm, 0.5rem) var(--sbe-space-md, 1rem);
+  cursor: pointer;
+  font-weight: 600;
+  list-style: none;
+}
+
+.sbe-pause-config .sbe-section > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Flèche de pliage : indique clairement que la section est repliable. */
+.sbe-pause-config .sbe-section > summary::before {
+  content: "\f0da"; /* fa-caret-right */
+  font-family: var(--font-awesome, "Font Awesome 6 Pro"), "Font Awesome 6 Free";
+  font-weight: 900;
+  width: 1em;
+  text-align: center;
+  transition: transform 150ms ease;
+}
+
+.sbe-pause-config .sbe-section[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.sbe-pause-config .sbe-section > summary .sbe-section-title {
+  flex: 1;
+}
+
+.sbe-pause-config .sbe-section-toggle {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.sbe-pause-config .sbe-section-rows {
+  padding: var(--sbe-space-xs, 0.25rem) var(--sbe-space-md, 1rem) var(--sbe-space-sm, 0.5rem);
+  border-top: 1px solid var(--color-border, var(--color-border-light-2, #7a7971));
+}
+
+.sbe-pause-config .form-group {
+  margin: var(--sbe-space-xs, 0.25rem) 0;
+}
+
+.sbe-pause-config .sbe-pause-config-footer {
+  display: flex;
+  gap: var(--sbe-space-sm, 0.5rem);
+  margin-top: var(--sbe-space-sm, 0.5rem);
+}
+
+.sbe-pause-config .sbe-pause-config-footer button {
+  flex: 1;
+}
+
+/* ============================================================ */
+/* 2. OVERLAY DE PAUSE EN JEU                                   */
+/* ============================================================ */
+
+#sbe-pause {
+  position: fixed;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+  z-index: 80;
+}
+
+#sbe-pause .sbe-pause-darken {
+  position: absolute;
+  inset: 0;
+  display: none;
+}
+
+#sbe-pause .sbe-pause-band {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#sbe-pause .sbe-pause-content {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 90vw;
+  text-align: center;
+}
+
+#sbe-pause .sbe-pause-idle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+#sbe-pause .sbe-pause-media {
+  width: auto;
+  max-width: 90vw;
+  background: transparent;
+}
+
+#sbe-pause .sbe-pause-text {
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 0 16px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9), 0 0 12px rgba(0, 0, 0, 0.8);
+}
+
+/* ============================================================ */
+/* 3. ANIMATIONS D'APPARITION                                   */
+/* ============================================================ */
+
+@keyframes sbePauseFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes sbePauseFadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes sbePauseSlideDown {
+  from { transform: translateY(-60vh); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+
+@keyframes sbePauseSlideUp {
+  from { transform: translateY(60vh); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+@keyframes sbePauseSlideRight {
+  from { transform: translateX(-60vw); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+
+@keyframes sbePauseSlideLeft {
+  from { transform: translateX(60vw); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes sbePauseZoomIn {
+  from { transform: scale(0.2); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+@keyframes sbePauseZoomOut {
+  from { transform: scale(2.2); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+@keyframes sbePauseBounce {
+  0%   { transform: translateY(-60vh); opacity: 0; }
+  55%  { transform: translateY(3vh);   opacity: 1; }
+  75%  { transform: translateY(-1.5vh); }
+  90%  { transform: translateY(0.5vh); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes sbePauseTilt {
+  from { transform: rotate(-8deg) scale(0.9); opacity: 0; }
+  to   { transform: rotate(0)     scale(1);   opacity: 1; }
+}
+
+@keyframes sbePauseBlurIn {
+  from { filter: blur(18px); opacity: 0; }
+  to   { filter: blur(0);    opacity: 1; }
+}
+
+/* ============================================================ */
+/* 4. ANIMATIONS CONTINUES                                      */
+/* ============================================================ */
+
+@keyframes sbePausePulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.04); }
+}
+
+@keyframes sbePauseFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+@keyframes sbePauseSway {
+  0%, 100% { transform: rotate(-1.5deg); }
+  50%      { transform: rotate(1.5deg); }
+}
+
+@keyframes sbePauseNeon {
+  0%, 100% { opacity: 1; }
+  8%       { opacity: 0.6; }
+  10%      { opacity: 1; }
+  38%      { opacity: 1; }
+  40%      { opacity: 0.4; }
+  42%      { opacity: 1; }
+  70%      { opacity: 1; }
+  72%      { opacity: 0.75; }
+  74%      { opacity: 1; }
+}
+
+@keyframes sbePauseHeartbeat {
+  0%, 100% { transform: scale(1); }
+  14%      { transform: scale(1.06); }
+  28%      { transform: scale(1); }
+  42%      { transform: scale(1.06); }
+  56%      { transform: scale(1); }
+}

@@ -1,0 +1,49 @@
+{{!-- SBE — Suivi des quêtes à l'écran. --}}
+<div class="sbe-qt">
+  {{#if isGM}}{{#if tabs.length}}
+  <nav class="sbe-qt-tabs">
+    {{#each tabs}}
+    <a class="sbe-qt-tab {{#if active}}active{{/if}} {{#if isGroup}}is-group{{/if}}" data-action="qtTab" data-tab="{{id}}" data-tooltip-text="{{label}}">
+      <img src="{{img}}" alt="">
+      {{#if count}}<b class="sbe-qt-tabcount">{{count}}</b>{{/if}}
+      {{#if isGroup}}<i class="fa-solid fa-star sbe-qt-tabstar"></i>{{/if}}
+    </a>
+    {{/each}}
+  </nav>
+  {{#each tabs}}{{#if active}}<div class="sbe-qt-tabtitle">{{label}}</div>{{/if}}{{/each}}
+  {{/if}}{{/if}}
+  {{#if quests.length}}
+  <div class="sbe-qt-tools">
+    <a data-action="qtFoldAll" data-fold="{{#if anyOpen}}1{{else}}0{{/if}}">
+      <i class="fa-solid {{#if anyOpen}}fa-angles-up{{else}}fa-angles-down{{/if}}"></i> {{#if anyOpen}}{{localize "SBE.Quest.FoldAll"}}{{else}}{{localize "SBE.Quest.UnfoldAll"}}{{/if}}
+    </a>
+  </div>
+  {{/if}}
+  <div class="sbe-qt-list">
+    {{#each quests}}
+    <section class="sbe-qt-quest {{#if folded}}is-folded{{/if}}" data-uuid="{{uuid}}">
+      <header class="sbe-qt-qhead">
+        <a class="sbe-qt-fold" data-action="qtFold" data-uuid="{{uuid}}"><i class="fa-solid fa-caret-right"></i></a>
+        <img class="sbe-qt-qimg" src="{{img}}" alt="" data-action="qtOpen" data-uuid="{{uuid}}">
+        <a class="sbe-qt-qname" data-action="qtOpen" data-uuid="{{uuid}}">{{name}}</a>
+        {{#if hidden}}<i class="fa-solid fa-eye-slash sbe-qj-hiddenico"></i>{{/if}}
+        <i class="{{stIcon}} sbe-qt-st" style="color:{{stColor}}"></i>
+        {{#if folded}}{{#if left}}<b class="sbe-qt-badge">{{left}}</b>{{/if}}{{/if}}
+      </header>
+      {{#unless folded}}
+      <ul>
+        {{#each objectives}}
+        <li class="{{#if sub}}is-sub{{/if}} {{#if done}}is-done{{/if}} {{#if failed}}is-failed{{/if}} {{#if hidden}}is-hidden{{/if}}">
+          <i class="fa-regular {{#if done}}fa-square-check{{else if failed}}fa-rectangle-xmark{{else}}fa-square{{/if}}"></i>
+          <span>{{label}}</span>
+          {{#if count}}<b>{{count}}</b>{{/if}}
+        </li>
+        {{/each}}
+      </ul>
+      {{/unless}}
+    </section>
+    {{else}}
+    <p class="sbe-qt-empty">{{localize emptyKey}}</p>
+    {{/each}}
+  </div>
+</div>

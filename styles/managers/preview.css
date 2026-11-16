@@ -1,0 +1,15 @@
+/* ============================================================
+ * SBE — APERÇU D'UN OBJET (lien d'un journal, lecture seule)
+ * Variables du thème uniquement (clair et sombre).
+ * ============================================================ */
+
+.sbe-item-preview .window-content { padding: 10px 12px; overflow-y: auto; max-height: 75vh; }
+.sbe-ipv { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.sbe-ipv-head { display: flex; align-items: center; gap: 10px; }
+.sbe-ipv-head > img { flex: 0 0 auto; width: 56px; height: 56px; object-fit: contain; border: 1px solid var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); background: var(--sbe-surf-2); }
+.sbe-ipv-titles { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.sbe-ipv-titles h2 { margin: 0; border: none; font-size: 1.25em; color: var(--sbe-text-strong, var(--sbe-text)); overflow-wrap: anywhere; }
+.sbe-ipv-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.sbe-ipv-desc { min-width: 0; overflow-wrap: anywhere; line-height: 1.45; color: var(--sbe-text); user-select: text; }
+.sbe-ipv-desc img { max-width: 100%; height: auto; }
+.sbe-ipv-none { margin: 0; font-style: italic; color: var(--sbe-text-dim); }

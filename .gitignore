@@ -1,0 +1,16 @@
+# Fichiers système
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Compendiums : fichiers de verrou et journaux de LevelDB (recréés par Foundry)
+packs/*/LOCK
+packs/*/LOG
+packs/*/LOG.old
+
+# Bancs d'essai locaux (jamais publiés)
+tools/zt-*.js
+
+# Dossiers de travail
+Claude outputs/
+node_modules/

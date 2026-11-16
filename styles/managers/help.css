@@ -1,0 +1,21 @@
+/* ============================================================
+ * SBE — Explications repliées en « ? » (toutes les fenêtres SBE)
+ * Voir module/managers/help/help-tips.mjs. Le « ? » pulse doucement ;
+ * l'animation est forcée (elle doit se voir même si le système coupe
+ * les animations) et s'arrête au survol pour lire l'info-bulle.
+ * ============================================================ */
+
+.sbe-help-folded { display: none !important; }
+.sbe-help {
+  display: inline-block;
+  font-size: max(0.9em, var(--font-size-14, 14px));  /* jamais minuscule, même dans un petit libellé */
+  color: var(--sbe-accent);
+  cursor: help;
+  animation: sbe-help-pulse 2.4s ease-in-out infinite !important;
+}
+.sbe-help[hidden] { display: none !important; }
+.sbe-help:hover { animation: none !important; opacity: 1; }
+@keyframes sbe-help-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.25); opacity: 0.6; }
+}

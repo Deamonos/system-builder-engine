@@ -1,0 +1,427 @@
+{{!-- SBE — Journal de quêtes : onglets Quêtes / Configuration (MJ). --}}
+<div class="sbe-qj">
+  {{#*inline "sbe-qj-bundle"}}
+  <div class="sbe-qj-bundle">
+    {{#each b.values}}
+    <div class="sbe-qj-row sbe-qj-val">
+      {{#if ../isGM}}
+      <select data-qf="{{../list}}.values.{{idx}}.key">
+        {{#each ../stats}}<option value="{{key}}" {{#if (eq key ../key)}}selected{{/if}}>{{#if label}}{{label}}{{else}}{{key}}{{/if}}</option>{{/each}}
+      </select>
+      <input class="sbe-qj-num" type="number" value="{{amount}}" data-qf="{{../list}}.values.{{idx}}.amount">
+      <select data-qf="{{../list}}.values.{{idx}}.mode">
+        <option value="each" {{#if each}}selected{{/if}}>{{localize "SBE.Quest.PerPerson"}}</option>
+        <option value="total" {{#unless each}}selected{{/unless}}>{{localize "SBE.Quest.Total"}}</option>
+      </select>
+      <a data-action="qjDelValue" data-list="{{../list}}" data-idx="{{idx}}"><i class="fa-solid fa-trash"></i></a>
+      {{else}}
+      <i class="{{icon}}"></i> <b>{{amount}}</b> {{label}} <span class="sbe-qj-mode">({{#if each}}{{localize "SBE.Quest.PerPerson"}}{{else}}{{localize "SBE.Quest.Total"}}{{/if}})</span>
+      {{/if}}
+    </div>
+    {{/each}}
+    {{#if isGM}}<button type="button" class="sbe-qj-add" data-action="qjAddValue" data-list="{{list}}"><i class="fa-solid fa-plus"></i> {{localize "SBE.Quest.AddValue"}}</button>{{/if}}
+    <div class="sbe-qj-items" {{#if isGM}}data-drop="items" data-list="{{list}}"{{/if}}>
+      {{#each b.items}}
+      <span class="sbe-qj-item {{#if missing}}is-missing{{/if}}">
+        <img src="{{img}}" alt=""> {{name}}
+        {{#if ../isGM}}
+        <input class="sbe-qj-num" type="number" min="1" value="{{qty}}" data-qf="{{../list}}.items.{{idx}}.qty">
+        <select data-qf="{{../list}}.items.{{idx}}.mode">
+          <option value="each" {{#if each}}selected{{/if}}>{{localize "SBE.Quest.PerPerson"}}</option>
+          <option value="total" {{#unless each}}selected{{/unless}}>{{localize "SBE.Quest.Total"}}</option>
+        </select>
+        <a data-action="qjDelItem" data-list="{{../list}}" data-idx="{{idx}}"><i class="fa-solid fa-xmark"></i></a>
+        {{else}}<b>×{{qty}}</b> <span class="sbe-qj-mode">({{#if each}}{{localize "SBE.Quest.PerPerson"}}{{else}}{{localize "SBE.Quest.Total"}}{{/if}})</span>{{/if}}
+      </span>
+      {{else}}
+      {{#if isGM}}<span class="notes">{{localize "SBE.Quest.DropItems"}}</span>{{/if}}
+      {{/each}}
+    </div>
+  </div>
+  {{/inline}}
+
+  {{#*inline "sbe-qj-stats"}}
+  <datalist id="sbe-qj-keys-{{list}}">{{#each keys}}<option value="{{this}}"></option>{{/each}}</datalist>
+  {{#each rows}}
+  <div class="sbe-qj-row">
+    <div class="sbe-qj-field"><label>{{localize "SBE.Quest.StatKey"}}</label><input type="text" list="sbe-qj-keys-{{../list}}" value="{{key}}" data-cf="{{../list}}.{{@index}}.key"></div>
+    <div class="sbe-qj-field"><label>{{localize "SBE.Quest.StatLabel"}}</label><input type="text" value="{{label}}" data-cf="{{../list}}.{{@index}}.label"></div>
+    <div class="sbe-qj-field"><label>{{localize "SBE.Quest.StatIcon"}}</label><span class="sbe-qj-row"><input type="text" class="sbe-qj-icon" value="{{icon}}" data-cf="{{../list}}.{{@index}}.icon"><i class="{{icon}} sbe-qj-iconprev"></i></span></div>
+    <div class="sbe-qj-field"><label>{{localize "SBE.Quest.StatOp"}}</label>
+      <select data-cf="{{../list}}.{{@index}}.op">{{#each ../ops}}<option value="{{id}}" {{#if (eq id ../op)}}selected{{/if}}>{{label}}</option>{{/each}}</select></div>
+    <a class="sbe-qj-rowdel" data-action="qjCfgDel" data-list="{{../list}}" data-idx="{{@index}}"><i class="fa-solid fa-trash"></i></a>
+  </div>
+  {{/each}}
+  <button type="button" class="sbe-qj-add" data-action="qjCfgAdd" data-list="{{list}}"><i class="fa-solid fa-plus"></i> {{localize "SBE.Quest.AddStat"}}</button>
+  {{/inline}}
+  {{#if isGM}}
+  <nav class="sbe-qj-tabs">
+    <a class="{{#if (eq tab "quests")}}active{{/if}}" data-action="qjTab" data-tab="quests"><i class="fa-solid fa-scroll"></i> {{localize "SBE.Quest.TabQuests"}}</a>
+    <a class="{{#if (eq tab "config")}}active{{/if}}" data-action="qjTab" data-tab="config"><i class="fa-solid fa-gears"></i> {{localize "SBE.Quest.TabConfig"}}</a>
+  </nav>
+  {{/if}}
+
+  {{#if (eq tab "quests")}}
+  {{#if showSubTabs}}
+  <nav class="sbe-qj-subtabs">
+    <a class="sbe-qj-stab {{#if allActive}}active{{/if}}" data-action="qjSubTab" data-id=""><i class="fa-solid fa-layer-group"></i> {{localize "SBE.Quest.SubTabAll"}} <span class="sbe-qj-stab-n">{{allCount}}</span></a>
+    {{#each subTabs}}
+    <a class="sbe-qj-stab {{#if active}}active{{/if}} {{#if hidden}}is-hidden{{/if}}" data-action="qjSubTab" data-id="{{id}}">
+      {{{iconHtml}}} {{name}} <span class="sbe-qj-stab-n">{{count}}</span>
+      {{#if hidden}}<i class="fa-solid fa-eye-slash sbe-qj-hiddenico" data-tooltip-text="{{localize "SBE.Quest.SubTabHidden"}}"></i>{{/if}}
+      {{#if ../isGM}}<span class="sbe-qj-stab-tools"><i class="fa-solid fa-pen" data-action="qjEditSubTab" data-id="{{id}}" data-tooltip-text="{{localize "SBE.Quest.SubTabEdit"}}"></i><i class="fa-solid fa-trash" data-action="qjDelSubTab" data-id="{{id}}" data-tooltip-text="{{localize "SBE.Quest.SubTabDelete"}}"></i></span>{{/if}}
+    </a>
+    {{/each}}
+    {{#if isGM}}<a class="sbe-qj-stab sbe-qj-stab-add" data-action="qjAddSubTab" data-tooltip-text="{{localize "SBE.Quest.SubTabAdd"}}"><i class="fa-solid fa-plus"></i></a>{{/if}}
+  </nav>
+  {{/if}}
+  <div class="sbe-qj-body">
+    {{!-- Colonne de gauche : sections et quêtes --}}
+    <aside class="sbe-qj-side">
+      {{#each sections}}
+      <section class="sbe-qj-section">
+        <h4><i class="fa-solid {{#if linked}}fa-users{{else}}fa-user-group{{/if}}"></i> {{name}}</h4>
+        <ul>
+          {{#each quests}}
+          <li class="sbe-qj-qitem {{#if active}}active{{/if}}" data-action="qjSelect" data-id="{{id}}">
+            <img src="{{img}}" alt="">
+            <span class="sbe-qj-qname">{{name}}</span>
+            {{#if hidden}}<i class="fa-solid fa-eye-slash sbe-qj-hiddenico" data-tooltip-text="{{localize "SBE.Quest.HiddenQuest"}}"></i>{{/if}}
+            <i class="{{stIcon}}" style="color:{{stColor}}" data-tooltip-text="{{stLabel}}"></i>
+          </li>
+          {{else}}
+          <li class="sbe-qj-none notes">{{localize "SBE.Quest.NoQuest"}}</li>
+          {{/each}}
+        </ul>
+        {{#if ../isGM}}<button type="button" class="sbe-qj-add" data-action="qjAddQuest" data-section="{{id}}"><i class="fa-solid fa-plus"></i> {{localize "SBE.Quest.AddQuest"}}</button>{{/if}}
+      </section>
+      {{/each}}
+      {{#if orphans.length}}
+      <section class="sbe-qj-section">
+        <h4><i class="fa-solid fa-circle-question"></i> {{localize "SBE.Quest.NoSection"}}</h4>
+        <ul>
+          {{#each orphans}}
+          <li class="sbe-qj-qitem {{#if active}}active{{/if}}" data-action="qjSelect" data-id="{{id}}">
+            <img src="{{img}}" alt=""><span class="sbe-qj-qname">{{name}}</span>
+          </li>
+          {{/each}}
+        </ul>
+      </section>
+      {{/if}}
+      {{#if isGM}}
+      <div class="sbe-qj-drop" data-drop="section-new">
+        <i class="fa-solid fa-arrow-down-to-bracket"></i> {{localize "SBE.Quest.DropSection"}}
+      </div>
+      {{else}}
+        {{#unless sections.length}}<p class="sbe-qj-empty">{{localize "SBE.Quest.NothingForYou"}}</p>{{/unless}}
+      {{/if}}
+    </aside>
+
+    {{!-- Colonne de droite : la quête --}}
+    <div class="sbe-qj-main">
+      {{#with quest}}
+      <header class="sbe-qj-head">
+        <img class="sbe-qj-img" src="{{img}}" alt="" {{#if ../isGM}}data-action="qjQuestImg"{{/if}}>
+        <div class="sbe-qj-headtxt">
+          {{#if ../isGM}}
+          <input class="sbe-qj-title" type="text" value="{{name}}" data-qf="name">
+          {{else}}
+          <h2 class="sbe-qj-title">{{name}}</h2>
+          {{/if}}
+          <div class="sbe-qj-chips">
+            {{#if category}}<span class="sbe-qj-chip" style="--c:{{category.color}}"><i class="{{category.icon}}"></i> {{category.label}}</span>{{/if}}
+            <span class="sbe-qj-chip" style="--c:{{status.color}}"><i class="{{status.icon}}"></i> {{status.label}}</span>
+            {{#if deadline}}<span class="sbe-qj-chip"><i class="fa-solid fa-calendar-xmark"></i> {{deadline}}</span>{{/if}}
+          </div>
+        </div>
+        {{#if canPin}}<a class="sbe-qj-pin {{#if pinned}}is-on{{/if}}" data-action="qjPin" data-tooltip-text="{{#if pinned}}{{localize "SBE.Quest.Unpin"}}{{else}}{{localize "SBE.Quest.Pin"}}{{/if}}"><i class="fa-solid fa-thumbtack"></i></a>{{/if}}
+        {{#if ../isGM}}<a class="sbe-qj-del" data-action="qjDelQuest" data-tooltip-text="{{localize "SBE.Quest.DeleteTitle"}}"><i class="fa-solid fa-trash"></i></a>{{/if}}
+      </header>
+      {{#if ../isGM}}
+      <div class="sbe-qj-endbar">
+        <button type="button" class="{{#if system.hidden}}is-hidden{{/if}}" data-action="qjToggleHidden"><i class="fa-solid {{#if system.hidden}}fa-eye-slash{{else}}fa-eye{{/if}}"></i> {{#if system.hidden}}{{localize "SBE.Quest.HiddenQuest"}}{{else}}{{localize "SBE.Quest.VisibleQuest"}}{{/if}}</button>
+        <button type="button" data-action="qjAnnounce"><i class="fa-solid fa-bullhorn"></i> {{localize "SBE.Quest.Announce"}}</button>
+        {{#if isOpen}}
+        <button type="button" class="is-success" data-action="qjComplete" data-kind="success"><i class="fa-solid fa-trophy"></i> {{localize "SBE.Quest.Kind.success"}}</button>
+        <button type="button" class="is-fail" data-action="qjComplete" data-kind="fail"><i class="fa-solid fa-skull"></i> {{localize "SBE.Quest.Kind.fail"}}</button>
+        <button type="button" data-action="qjComplete" data-kind="cancel"><i class="fa-solid fa-ban"></i> {{localize "SBE.Quest.Kind.cancel"}}</button>
+        {{else}}
+        <button type="button" data-action="qjReopen"><i class="fa-solid fa-rotate-left"></i> {{localize "SBE.Quest.Reopen"}}</button>
+        {{/if}}
+      </div>
+      {{/if}}
+
+      {{#if ../isGM}}
+      <div class="sbe-qj-grid">
+        <div class="sbe-qj-field">
+          <label>{{localize "SBE.Quest.Section"}}</label>
+          <select data-qf="sectionId">
+            <option value="">—</option>
+            {{#each ../cfg.sections}}<option value="{{id}}" {{#if (eq id ../system.sectionId)}}selected{{/if}}>{{name}}</option>{{/each}}
+          </select>
+        </div>
+        {{#if ../cfg.tabs.length}}
+        <div class="sbe-qj-field">
+          <label>{{localize "SBE.Quest.SubTab"}}</label>
+          <select data-qf="tabId">
+            <option value="">—</option>
+            {{#each ../cfg.tabs}}<option value="{{id}}" {{#if (eq id ../system.tabId)}}selected{{/if}}>{{name}}</option>{{/each}}
+          </select>
+        </div>
+        {{/if}}
+        <div class="sbe-qj-field">
+          <label>{{localize "SBE.Quest.Category"}}</label>
+          <select data-qf="category">
+            <option value="">—</option>
+            {{#each ../cfg.categories}}<option value="{{id}}" {{#if (eq id ../system.category)}}selected{{/if}}>{{label}}</option>{{/each}}
+          </select>
+        </div>
+        <div class="sbe-qj-field">
+          <label>{{localize "SBE.Quest.StatusLabel"}}</label>
+          <select data-qf="status">
+            {{#each ../cfg.statuses}}<option value="{{id}}" {{#if (eq id ../system.status)}}selected{{/if}}>{{label}}</option>{{/each}}
+          </select>
+        </div>
+      </div>
+
+      <div class="sbe-qj-grid">
+        <div class="sbe-qj-field">
+          <label>{{localize "SBE.Quest.Giver"}}</label>
+          <select data-qf="giver.mode">
+            <option value="anon" {{#if (eq system.giver.mode "anon")}}selected{{/if}}>{{localize "SBE.Quest.Anonymous"}}</option>
+            <option value="name" {{#if (eq system.giver.mode "name")}}selected{{/if}}>{{localize "SBE.Quest.GiverName"}}</option>
+            <option value="actor" {{#if (eq system.giver.mode "actor")}}selected{{/if}}>{{localize "SBE.Quest.GiverActor"}}</option>
+          </select>
+          {{#if giverNamed}}<input type="text" value="{{system.giver.name}}" data-qf="giver.name">{{/if}}
+          {{#if giverActor}}
+          <div class="sbe-qj-ref" data-drop="giver">
+            {{#if giverUuid}}<img src="{{giverImg}}" alt=""><a data-action="qjOpen" data-uuid="{{giverUuid}}">{{giverName}}</a>
+            <a class="sbe-qj-x" data-action="qjClearRef" data-ref="giver"><i class="fa-solid fa-xmark"></i></a>
+            {{else}}<span class="notes">{{localize "SBE.Quest.DropGiver"}}</span>{{/if}}
+          </div>
+          {{/if}}
+        </div>
+        <div class="sbe-qj-field">
+          <label>{{localize "SBE.Quest.Place"}}</label>
+          <div class="sbe-qj-ref" data-drop="place">
+            {{#if placeUuid}}<i class="fa-solid fa-map-location-dot"></i><a data-action="qjOpen" data-uuid="{{placeUuid}}">{{placeName}}</a>
+            <a class="sbe-qj-x" data-action="qjClearRef" data-ref="place"><i class="fa-solid fa-xmark"></i></a>
+            {{else}}<input type="text" value="{{system.place.text}}" data-qf="place.text" placeholder="{{localize "SBE.Quest.PlacePh"}}">{{/if}}
+          </div>
+        </div>
+      </div>
+      {{#if system.hidden}}
+      <div class="sbe-qj-field">
+        <label>{{localize "SBE.Quest.RevealIf"}}</label>
+        <input type="text" value="{{system.revealIf}}" data-qf="revealIf" placeholder="{{localize "SBE.Quest.RevealIfPh"}}">
+        <p class="notes">{{localize "SBE.Quest.RevealIfHint"}}</p>
+      </div>
+      {{/if}}
+      {{else}}
+      <div class="sbe-qj-meta">
+        <span><i class="fa-solid fa-user"></i> {{giverName}}</span>
+        {{#if placeName}}<span><i class="fa-solid fa-map-location-dot"></i> {{#if placeUuid}}<a data-action="qjOpen" data-uuid="{{placeUuid}}">{{placeName}}</a>{{else}}{{placeName}}{{/if}}</span>{{/if}}
+      </div>
+      {{/if}}
+
+      <h3 class="sbe-qj-h"><i class="fa-solid fa-align-left"></i> {{localize "SBE.Quest.Description"}}</h3>
+      {{#if ../isGM}}
+      <textarea class="sbe-qj-desc" data-qf="description" rows="5">{{system.description}}</textarea>
+      {{else}}
+      <div class="sbe-qj-desctxt">{{{descriptionHTML}}}</div>
+      {{/if}}
+
+      <h3 class="sbe-qj-h"><i class="fa-solid fa-list-check"></i> {{localize "SBE.Quest.Objectives"}}</h3>
+      <ul class="sbe-qj-objs">
+        {{#each objectives}}
+        <li class="sbe-qj-obj {{#if isSub}}is-sub{{/if}} {{#if isDone}}is-done{{/if}} {{#if isFailed}}is-failed{{/if}} {{#if hidden}}is-hidden{{/if}} {{#if optional}}is-optional{{/if}}">
+          {{#if ../../isGM}}
+            {{#if isCount}}
+            <span class="sbe-qj-count">
+              <a data-action="qjStepObj" data-idx="{{idx}}" data-step="-1"><i class="fa-solid fa-minus"></i></a>
+              <b>{{count}} / {{target}}</b>
+              <a data-action="qjStepObj" data-idx="{{idx}}" data-step="1"><i class="fa-solid fa-plus"></i></a>
+            </span>
+            {{else}}
+            <a class="sbe-qj-check" data-action="qjToggleObj" data-idx="{{idx}}"><i class="fa-regular {{#if done}}fa-square-check{{else}}fa-square{{/if}}"></i></a>
+            {{/if}}
+            <input type="text" value="{{label}}" data-qf="objectives.{{idx}}.label" placeholder="{{localize "SBE.Quest.ObjectivePh"}}">
+            <select data-qf="objectives.{{idx}}.kind" data-tooltip-text="{{localize "SBE.Quest.ObjKind"}}">
+              <option value="check" {{#unless isCount}}selected{{/unless}}>{{localize "SBE.Quest.KindCheck"}}</option>
+              <option value="count" {{#if isCount}}selected{{/if}}>{{localize "SBE.Quest.KindCount"}}</option>
+            </select>
+            {{#if isCount}}<input class="sbe-qj-num" type="number" min="1" value="{{target}}" data-qf="objectives.{{idx}}.target" data-tooltip-text="{{localize "SBE.Quest.Target"}}">{{/if}}
+            <label class="sbe-qj-flag" data-tooltip-text="{{localize "SBE.Quest.OptionalHint"}}"><input type="checkbox" {{#if optional}}checked{{/if}} data-qf="objectives.{{idx}}.optional"> {{localize "SBE.Quest.Optional"}}</label>
+            <a class="sbe-qj-failbtn {{#if isFailed}}is-on{{/if}}" data-action="qjFailObj" data-idx="{{idx}}" data-tooltip-text="{{localize "SBE.Quest.FailObj"}}"><i class="fa-solid fa-xmark"></i></a>
+            <a class="sbe-qj-autobtn {{#if autoOn}}is-on{{/if}}" data-action="qjAutoObj" data-idx="{{idx}}" data-tooltip-text="{{localize "SBE.Quest.AutoObj"}}"><i class="fa-solid fa-bolt"></i></a>
+            <a data-action="qjRevealObj" data-idx="{{idx}}" data-tooltip-text="{{#if hidden}}{{localize "SBE.Quest.Reveal"}}{{else}}{{localize "SBE.Quest.Hide"}}{{/if}}"><i class="fa-solid {{#if hidden}}fa-eye-slash{{else}}fa-eye{{/if}}"></i></a>
+            {{#unless isSub}}<a data-action="qjAddObj" data-parent="{{id}}" data-tooltip-text="{{localize "SBE.Quest.AddSub"}}"><i class="fa-solid fa-diagram-subtask"></i></a>{{/unless}}
+            <a data-action="qjDelObj" data-idx="{{idx}}" data-tooltip-text="{{localize "SBE.Quest.DelObjective"}}"><i class="fa-solid fa-trash"></i></a>
+          {{else}}
+            <i class="fa-regular {{#if isDone}}fa-square-check{{else if isFailed}}fa-rectangle-xmark{{else}}fa-square{{/if}}"></i>
+            <span class="sbe-qj-objlabel">{{label}}</span>
+            {{#if isCount}}<b class="sbe-qj-countro">{{count}} / {{target}}</b>{{/if}}
+            {{#if optional}}<em class="sbe-qj-opt">{{localize "SBE.Quest.Optional"}}</em>{{/if}}
+          {{/if}}
+        </li>
+        {{#if ../../isGM}}{{#if autoOn}}
+        <li class="sbe-qj-auto {{#if isSub}}is-sub{{/if}}">
+          <div class="sbe-qj-field">
+            <label>{{localize "SBE.Quest.AutoWho"}}</label>
+            <select data-qf="objectives.{{idx}}.auto.who">
+              <option value="members" {{#unless autoTarget}}selected{{/unless}}>{{localize "SBE.Quest.AutoMembers"}}</option>
+              <option value="target" {{#if autoTarget}}selected{{/if}}>{{localize "SBE.Quest.AutoTarget"}}</option>
+            </select>
+          </div>
+          {{#if autoTarget}}
+          <div class="sbe-qj-field">
+            <label>{{localize "SBE.Quest.AutoTargetActor"}}</label>
+            <div class="sbe-qj-ref" data-drop="objtarget" data-idx="{{idx}}">
+              {{#if tgUuid}}<img src="{{tgImg}}" alt=""><a data-action="qjOpen" data-uuid="{{tgUuid}}">{{tgName}}</a>
+              {{else}}<span class="notes">{{localize "SBE.Quest.DropGiver"}}</span>{{/if}}
+            </div>
+          </div>
+          {{/if}}
+          <div class="sbe-qj-field sbe-qj-autof">
+            <label>{{localize "SBE.Quest.AutoFormula"}}</label>
+            <input type="text" value="{{auto.formula}}" data-qf="objectives.{{idx}}.auto.formula" placeholder="{{#if autoTarget}}{{localize "SBE.Quest.AutoTargetPh"}}{{else}}{{localize "SBE.Quest.AutoMembersPh"}}{{/if}}">
+            <p class="notes">{{#if isCount}}{{localize "SBE.Quest.AutoCountHint"}}{{else}}{{localize "SBE.Quest.AutoCheckHint"}}{{/if}}</p>
+          </div>
+        </li>
+        {{/if}}{{/if}}
+        {{else}}
+        <li class="notes">{{localize "SBE.Quest.NoObjective"}}</li>
+        {{/each}}
+      </ul>
+      {{#if ../isGM}}<button type="button" class="sbe-qj-add" data-action="qjAddObj"><i class="fa-solid fa-plus"></i> {{localize "SBE.Quest.AddObjective"}}</button>{{/if}}
+
+      {{#if (or ../isGM hasRewards)}}
+      <h3 class="sbe-qj-h"><i class="fa-solid fa-gift"></i> {{localize "SBE.Quest.Rewards"}}</h3>
+      {{> "sbe-qj-bundle" b=rewards list="rewards" isGM=../isGM stats=../cfg.stats}}
+      {{/if}}
+
+      {{#if showPenalties}}{{#if (or ../isGM hasPenalties)}}
+      <h3 class="sbe-qj-h"><i class="fa-solid fa-skull"></i> {{localize "SBE.Quest.Penalties"}}</h3>
+      {{> "sbe-qj-bundle" b=penalties list="penalties" isGM=../isGM stats=../cfg.penalties.stats}}
+      {{/if}}{{/if}}
+
+      {{#if ../isGM}}
+      <h3 class="sbe-qj-h"><i class="fa-solid fa-calendar-xmark"></i> {{localize "SBE.Quest.Deadline"}}</h3>
+      <div class="sbe-qj-deadline">
+        <label class="sbe-qj-flag"><input type="checkbox" {{#if system.deadline.on}}checked{{/if}} data-qf="deadline.on"> {{localize "SBE.Quest.DeadlineOn"}}</label>
+        {{#if system.deadline.on}}
+        <div class="sbe-qj-field"><label>{{localize "SBE.Quest.DeadlineDay"}}</label><input type="number" min="0" value="{{deadlineInput.d}}" data-qf="deadline.day"></div>
+        <div class="sbe-qj-field"><label>{{localize "SBE.Quest.DeadlineHour"}}</label><input type="number" min="0" max="23.99" step="0.25" value="{{deadlineInput.h}}" data-qf="deadline.hour"></div>
+        <span class="sbe-qj-dlshow">{{deadline}}</span>
+        {{/if}}
+      </div>
+      {{/if}}
+      {{else}}
+      <p class="sbe-qj-empty">{{#if isGM}}{{localize "SBE.Quest.StartHint"}}{{else}}{{localize "SBE.Quest.NothingForYou"}}{{/if}}</p>
+      {{/with}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{#if (eq tab "config")}}
+  <div class="sbe-qj-config">
+    <div class="sbe-qj-field">
+      <label>{{localize "SBE.Quest.JournalTitle"}}</label>
+      <input type="text" name="name" value="{{document.name}}">
+    </div>
+
+    <h3 class="sbe-qj-h"><i class="fa-solid fa-users"></i> {{localize "SBE.Quest.Sections"}}</h3>
+    <p class="notes">{{localize "SBE.Quest.SectionsHint"}}</p>
+    {{#each sections}}
+    <div class="sbe-qj-cfgsec" data-drop="section" data-idx="{{idx}}">
+      <div class="sbe-qj-row">
+        <input type="text" value="{{name}}" data-cf="sections.{{idx}}.name">
+        <a data-action="qjDelSection" data-idx="{{idx}}" data-tooltip-text="{{localize "SBE.Quest.DelSectionTitle"}}"><i class="fa-solid fa-trash"></i></a>
+      </div>
+      <div class="sbe-qj-members">
+        {{#if linked}}
+        <span class="sbe-qj-member"><i class="fa-solid fa-users"></i> {{groupName}}
+          <a data-action="qjDelMember" data-idx="{{idx}}" data-tooltip-text="{{localize "SBE.Quest.Unlink"}}"><i class="fa-solid fa-link-slash"></i></a></span>
+        {{/if}}
+        {{#each actors}}
+        <span class="sbe-qj-member"><img src="{{img}}" alt=""> {{name}}
+          {{#unless ../linked}}<a data-action="qjDelMember" data-idx="{{../idx}}" data-uuid="{{uuid}}"><i class="fa-solid fa-xmark"></i></a>{{/unless}}</span>
+        {{/each}}
+      </div>
+    </div>
+    {{/each}}
+    <div class="sbe-qj-drop" data-drop="section-new"><i class="fa-solid fa-arrow-down-to-bracket"></i> {{localize "SBE.Quest.DropSection"}}</div>
+
+    <h3 class="sbe-qj-h"><i class="fa-solid fa-gift"></i> {{localize "SBE.Quest.RewardStats"}}</h3>
+    <p class="notes">{{localize "SBE.Quest.RewardStatsHint"}}</p>
+    {{> "sbe-qj-stats" rows=cfg.stats list="stats" keys=keys ops=statOps}}
+
+    <h3 class="sbe-qj-h"><i class="fa-solid fa-skull"></i> {{localize "SBE.Quest.Penalties"}}</h3>
+    <label class="sbe-qj-flag"><input type="checkbox" {{#if cfg.penalties.enabled}}checked{{/if}} data-cf="penalties.enabled"> {{localize "SBE.Quest.PenaltiesOn"}}</label>
+    {{#if cfg.penalties.enabled}}
+    {{> "sbe-qj-stats" rows=cfg.penalties.stats list="penalties.stats" keys=keys ops=statOps}}
+    {{/if}}
+
+    <h3 class="sbe-qj-h"><i class="fa-solid fa-tags"></i> {{localize "SBE.Quest.Categories"}}</h3>
+    {{#each cfg.categories}}
+    <div class="sbe-qj-row">
+      <input type="color" value="{{color}}" data-cf="categories.{{@index}}.color">
+      <input type="text" class="sbe-qj-icon" value="{{icon}}" data-cf="categories.{{@index}}.icon" data-tooltip-text="{{localize "SBE.Quest.IconHint"}}">
+      <i class="{{icon}} sbe-qj-iconprev"></i>
+      <input type="text" value="{{label}}" data-cf="categories.{{@index}}.label">
+      <a data-action="qjCfgDel" data-list="categories" data-idx="{{@index}}"><i class="fa-solid fa-trash"></i></a>
+    </div>
+    {{/each}}
+    <button type="button" class="sbe-qj-add" data-action="qjCfgAdd" data-list="categories"><i class="fa-solid fa-plus"></i> {{localize "SBE.Quest.AddCategory"}}</button>
+
+    <h3 class="sbe-qj-h"><i class="fa-solid fa-flag"></i> {{localize "SBE.Quest.Statuses"}}</h3>
+    <p class="notes">{{localize "SBE.Quest.StatusesHint"}}</p>
+    {{#each cfg.statuses}}
+    <div class="sbe-qj-row">
+      <input type="color" value="{{color}}" data-cf="statuses.{{@index}}.color">
+      <input type="text" class="sbe-qj-icon" value="{{icon}}" data-cf="statuses.{{@index}}.icon" data-tooltip-text="{{localize "SBE.Quest.IconHint"}}">
+      <i class="{{icon}} sbe-qj-iconprev"></i>
+      <input type="text" value="{{label}}" data-cf="statuses.{{@index}}.label">
+      <select data-cf="statuses.{{@index}}.kind" {{#if (eq id kind)}}disabled{{/if}}>
+        {{#each ../statusKinds}}<option value="{{id}}" {{#if (eq id ../kind)}}selected{{/if}}>{{label}}</option>{{/each}}
+      </select>
+      {{#if (eq id kind)}}<span class="sbe-qj-lock"><i class="fa-solid fa-lock"></i></span>{{else}}<a data-action="qjCfgDel" data-list="statuses" data-idx="{{@index}}"><i class="fa-solid fa-trash"></i></a>{{/if}}
+    </div>
+    {{/each}}
+    <button type="button" class="sbe-qj-add" data-action="qjCfgAdd" data-list="statuses"><i class="fa-solid fa-plus"></i> {{localize "SBE.Quest.AddStatus"}}</button>
+    <label class="sbe-qj-flag"><input type="checkbox" {{#if cfg.autoComplete}}checked{{/if}} data-cf="autoComplete"> {{localize "SBE.Quest.AutoComplete"}}</label>
+    <p class="notes">{{localize "SBE.Quest.AutoCompleteHint"}}</p>
+
+    <h3 class="sbe-qj-h"><i class="fa-solid fa-volume-high"></i> {{localize "SBE.Quest.MediaTitle"}}</h3>
+    {{#each mediaRows}}
+    <div class="sbe-qj-field">
+      <label>{{label}}</label>
+      <div class="sbe-qj-row">
+        <input type="text" value="{{sound}}" data-cf="media.{{id}}.sound" placeholder="sounds/…">
+        <button type="button" class="sbe-qj-icbtn" data-action="qjPickSound" data-media="{{id}}" data-tooltip-text="{{localize "SBE.Common.Browse"}}"><i class="fa-solid fa-folder-open"></i></button>
+        <button type="button" class="sbe-qj-icbtn" data-action="qjTestSound" data-media="{{id}}" data-tooltip-text="{{localize "SBE.Media.Test"}}"><i class="fa-solid fa-play"></i></button>
+        <input class="sbe-qj-num" type="number" min="0" max="100" value="{{volume}}" data-cf="media.{{id}}.volume" data-tooltip-text="{{localize "SBE.Media.Volume"}}">
+      </div>
+    </div>
+    {{/each}}
+    <p class="notes">{{audioFormats}}</p>
+    <div class="sbe-qj-field">
+      <label>{{localize "SBE.Media.Audience"}}</label>
+      <select data-cf="audience">
+        <option value="all" {{#if (eq cfg.audience "all")}}selected{{/if}}>{{localize "SBE.Media.AudAll"}}</option>
+        <option value="gm" {{#if (eq cfg.audience "gm")}}selected{{/if}}>{{localize "SBE.Media.AudGm"}}</option>
+      </select>
+    </div>
+
+    <h3 class="sbe-qj-h"><i class="fa-solid fa-thumbtack"></i> {{localize "SBE.Quest.Widget"}}</h3>
+    <div class="sbe-qj-field">
+      <label>{{localize "SBE.Quest.WidgetMode"}}</label>
+      <select data-cf="widget.mode">
+        <option value="players" {{#if (eq cfg.widget.mode "players")}}selected{{/if}}>{{localize "SBE.Quest.WidgetPlayers"}}</option>
+        <option value="gm" {{#if (eq cfg.widget.mode "gm")}}selected{{/if}}>{{localize "SBE.Quest.WidgetGm"}}</option>
+      </select>
+      <p class="notes">{{localize "SBE.Quest.WidgetHint"}}</p>
+    </div>
+  </div>
+  {{/if}}
+</div>

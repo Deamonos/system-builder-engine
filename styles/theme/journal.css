@@ -1,0 +1,376 @@
+/**
+ * SBE — Thème du journal
+ * Étend le thème SBE aux entrées de journal natives (TOC, pages,
+ * titres, listes, liens, tables). Repris du premier système, remappé
+ * sur les jetons --sbe-* et ciblant directement .journal-entry
+ * (aucun hook de classe nécessaire).
+ */
+
+/* ---------- CORPS & ZONES ---------- */
+
+.application.journal-entry .window-content {
+  background: var(--sbe-surf-2);
+  color: var(--sbe-text);
+}
+
+.application.journal-entry .journal-entry-content {
+  background: var(--sbe-surf-2);
+  color: var(--sbe-text);
+}
+
+/* ---------- BARRE LATÉRALE / TABLE DES MATIÈRES ---------- */
+
+.application.journal-entry .journal-sidebar {
+  background: var(--sbe-surf-3);
+  border-right: 1px solid var(--sbe-surf-4);
+}
+
+/* champ de recherche + barre d'outils de la TOC */
+.application.journal-entry .journal-sidebar input[type="text"],
+.application.journal-entry .journal-sidebar input[type="search"] {
+  background: var(--sbe-surf-1);
+  color: var(--sbe-text);
+  border: 1px solid var(--sbe-surf-4);
+  border-radius: 3px;
+}
+.application.journal-entry .journal-sidebar input::placeholder {
+  color: var(--sbe-text-dim);
+}
+
+/* liste des pages */
+.application.journal-entry .pages-list,
+.application.journal-entry .journal-sidebar .directory-list,
+.application.journal-entry .journal-sidebar ol {
+  background: transparent;
+}
+
+.application.journal-entry .pages-list .directory-item,
+.application.journal-entry .pages-list li,
+.application.journal-entry .journal-sidebar .directory-item {
+  color: var(--sbe-text);
+  border-bottom: 1px solid var(--sbe-edge-soft);
+}
+
+.application.journal-entry .pages-list .directory-item:hover,
+.application.journal-entry .pages-list li:hover {
+  background: var(--sbe-raised);
+  color: var(--sbe-text);
+}
+
+/* page active / sélectionnée : accent rouille */
+.application.journal-entry .pages-list .directory-item.active,
+.application.journal-entry .pages-list li.active,
+.application.journal-entry .pages-list .directory-item.selected {
+  background: var(--sbe-overlay-2);
+  border-left: 3px solid var(--sbe-accent);
+  color: var(--sbe-text);
+}
+
+/* numéros de page / sous-niveaux atténués */
+.application.journal-entry .pages-list .page-number,
+.application.journal-entry .pages-list .page-level {
+  color: var(--sbe-text-dim);
+}
+
+/* pied de la TOC (Ajouter une page) */
+.application.journal-entry .journal-sidebar footer,
+.application.journal-entry .journal-sidebar .action-buttons {
+  border-top: 1px solid var(--sbe-surf-4);
+}
+
+/* ---------- ZONE DE CONTENU (pages) ---------- */
+
+.application.journal-entry .journal-entry-pages,
+.application.journal-entry .journal-entry-pages.scrollable {
+  background: var(--sbe-surf-2);
+}
+
+/* la page elle-même : on retire le parchemin Foundry */
+.application.journal-entry .journal-entry-page {
+  background: var(--sbe-surf-2) !important;
+  color: var(--sbe-text);
+}
+
+.application.journal-entry .journal-page-content,
+.application.journal-entry .journal-page-content .editor-content,
+.application.journal-entry .journal-entry-page .journal-page-content {
+  background: none !important;
+  color: var(--sbe-text);
+}
+
+/* texte courant */
+.application.journal-entry .journal-page-content p,
+.application.journal-entry .journal-page-content li,
+.application.journal-entry .journal-page-content span,
+.application.journal-entry .journal-page-content td,
+.application.journal-entry .journal-page-content th {
+  color: var(--sbe-text);
+}
+
+.application.journal-entry .journal-page-content strong,
+.application.journal-entry .journal-page-content b {
+  color: var(--sbe-text);
+}
+
+/* ---------- EN-TÊTE DE PAGE (bannière titre) ---------- */
+
+.application.journal-entry .journal-page-header {
+  background: var(--sbe-header-grad);
+  border: 1px solid var(--sbe-surf-4);
+  border-bottom: 2px solid var(--sbe-accent);
+  border-radius: 3px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+}
+
+.application.journal-entry .journal-page-header h1,
+.application.journal-entry .journal-page-header .journal-page-title {
+  color: var(--sbe-text);
+  border: none;
+  margin: 0;
+}
+
+/* ---------- TITRES DANS LE CONTENU ---------- */
+
+.application.journal-entry .journal-page-content h1,
+.application.journal-entry .journal-page-content h2,
+.application.journal-entry .journal-page-content h3,
+.application.journal-entry .journal-page-content h4 {
+  color: var(--sbe-text);
+  border-bottom: 2px solid var(--sbe-accent);
+  padding-bottom: 3px;
+  margin-top: 16px;
+}
+
+.application.journal-entry .journal-page-content h3,
+.application.journal-entry .journal-page-content h4 {
+  border-bottom-width: 1px;
+  border-bottom-color: var(--sbe-surf-4);
+}
+
+/* ---------- LIENS ---------- */
+
+.application.journal-entry .journal-page-content a,
+.application.journal-entry .journal-page-content a.content-link,
+.application.journal-entry .journal-page-content a.entity-link {
+  color: var(--sbe-accent-light);
+  background: var(--sbe-overlay);
+  border: 1px solid var(--sbe-edge-soft);
+  border-radius: 3px;
+  padding: 0 3px;
+}
+.application.journal-entry .journal-page-content a:hover {
+  color: var(--sbe-accent);
+  text-shadow: 0 0 6px rgba(181, 71, 31, 0.4);
+}
+
+/* ---------- SÉPARATEURS / CITATIONS / LISTES ---------- */
+
+.application.journal-entry .journal-page-content hr {
+  border: none;
+  border-top: 1px solid var(--sbe-surf-4);
+  margin: 14px 0;
+}
+
+.application.journal-entry .journal-page-content blockquote {
+  background: var(--sbe-overlay);
+  border-left: 3px solid var(--sbe-accent);
+  color: var(--sbe-text-dim);
+  margin: 10px 0;
+  padding: 6px 12px;
+  border-radius: 0 3px 3px 0;
+}
+
+.application.journal-entry .journal-page-content ul li::marker,
+.application.journal-entry .journal-page-content ol li::marker {
+  color: var(--sbe-accent);
+}
+
+/* ---------- TABLES ---------- */
+
+.application.journal-entry .journal-page-content table {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid var(--sbe-surf-4);
+}
+
+.application.journal-entry .journal-page-content th {
+  background: var(--sbe-raised);
+  color: var(--sbe-text);
+  border: 1px solid var(--sbe-surf-4);
+  padding: 5px 8px;
+}
+
+.application.journal-entry .journal-page-content td {
+  background: var(--sbe-surf-3);
+  color: var(--sbe-text);
+  border: 1px solid var(--sbe-surf-4);
+  padding: 4px 8px;
+}
+
+.application.journal-entry .journal-page-content tr:nth-child(even) td {
+  background: var(--sbe-raised);
+}
+
+/* ---------- BARRE DE DÉFILEMENT ---------- */
+
+.application.journal-entry .scrollable::-webkit-scrollbar,
+.application.journal-entry .journal-entry-pages::-webkit-scrollbar {
+  width: 10px;
+}
+.application.journal-entry .scrollable::-webkit-scrollbar-thumb,
+.application.journal-entry .journal-entry-pages::-webkit-scrollbar-thumb {
+  background: var(--sbe-surf-4);
+  border-radius: 5px;
+}
+.application.journal-entry .scrollable::-webkit-scrollbar-thumb:hover,
+.application.journal-entry .journal-entry-pages::-webkit-scrollbar-thumb:hover {
+  background: var(--sbe-scroll-hover);
+}
+.application.journal-entry .scrollable::-webkit-scrollbar-track,
+.application.journal-entry .journal-entry-pages::-webkit-scrollbar-track {
+  background: var(--sbe-surf-2);
+}
+
+
+/* ================================================================== */
+/* ÉDITEUR PROSEMIRROR DU JOURNAL                                     */
+/* L'éditeur n'est PAS sous .application.journal-entry → on cible directement       */
+/* prose-mirror.journal-page-content (le tchat .chat-input est exclu). */
+/* Jetons --pmw-* redéclarés ici pour fonctionner hors des fenêtres SBE.    */
+/* ================================================================== */
+
+/* jetons — THÈME SOMBRE (défaut) */
+prose-mirror.journal-page-content.editor {
+  --pmw-bg:      #1c1d20;
+  --pmw-panel:   #25272b;
+  --pmw-panel-2: #2c2f34;
+  --pmw-field:   #141519;
+  --pmw-edge:    #3b3f45;
+  --pmw-text:    #e7e4dd;
+  --pmw-rust:    #b5471f;
+}
+/* jetons — THÈME CLAIR */
+.theme-light prose-mirror.journal-page-content.editor,
+prose-mirror.journal-page-content.editor.theme-light {
+  --pmw-bg:      #ced1d5;
+  --pmw-panel:   #bdc1c6;
+  --pmw-panel-2: #aeb3b9;
+  --pmw-field:   #e9ebee;
+  --pmw-edge:    #8c9197;
+  --pmw-text:    #1e2024;
+  --pmw-rust:    #b5471f;
+}
+
+/* conteneur + sous-conteneurs */
+prose-mirror.journal-page-content.editor,
+prose-mirror.journal-page-content .editor-container,
+prose-mirror.journal-page-content .menu-container {
+  background: var(--pmw-bg) !important;
+  color: var(--pmw-text) !important;
+}
+
+/* zone éditable */
+prose-mirror.journal-page-content .editor-content,
+prose-mirror.journal-page-content .editor-content.ProseMirror {
+  background: var(--pmw-field) !important;
+  color: var(--pmw-text) !important;
+  border: 1px solid var(--pmw-edge) !important;
+  border-radius: 3px;
+}
+prose-mirror.journal-page-content .ProseMirror p,
+prose-mirror.journal-page-content .ProseMirror li,
+prose-mirror.journal-page-content .ProseMirror span,
+prose-mirror.journal-page-content .ProseMirror h1,
+prose-mirror.journal-page-content .ProseMirror h2,
+prose-mirror.journal-page-content .ProseMirror h3 {
+  color: var(--pmw-text) !important;
+}
+
+/* barre d'outils : menu.editor-menu */
+prose-mirror.journal-page-content menu.editor-menu {
+  background: var(--pmw-panel) !important;
+  border: 1px solid var(--pmw-edge) !important;
+  border-radius: 3px;
+  color: var(--pmw-text) !important;
+}
+
+/* boutons généraux de l'éditeur (dont "Sauvegarder la saisie") */
+prose-mirror.journal-page-content button {
+  background: var(--pmw-panel-2) !important;
+  color: var(--pmw-text) !important;
+  border: 1px solid var(--pmw-edge) !important;
+}
+prose-mirror.journal-page-content button:hover {
+  background: var(--pmw-rust) !important;
+  color: #fff !important;
+}
+
+/* entrées de la barre : li.text + boutons/dropdowns (fond transparent) */
+prose-mirror.journal-page-content menu.editor-menu li,
+prose-mirror.journal-page-content menu.editor-menu button,
+prose-mirror.journal-page-content menu.editor-menu .pm-dropdown {
+  background: transparent !important;
+  color: var(--pmw-text) !important;
+  border-color: var(--pmw-edge) !important;
+}
+prose-mirror.journal-page-content menu.editor-menu li:hover,
+prose-mirror.journal-page-content menu.editor-menu button:hover,
+prose-mirror.journal-page-content menu.editor-menu .pm-dropdown:hover {
+  background: var(--pmw-rust) !important;
+  color: #fff !important;
+}
+
+/* menus déroulants ouverts de la barre */
+prose-mirror.journal-page-content menu.editor-menu .pm-dropdown ul,
+prose-mirror.journal-page-content menu.editor-menu ul.dropdown,
+prose-mirror.journal-page-content menu.editor-menu .dropdown {
+  background: var(--pmw-panel) !important;
+  border: 1px solid var(--pmw-edge) !important;
+  color: var(--pmw-text) !important;
+}
+prose-mirror.journal-page-content menu.editor-menu .pm-dropdown ul li:hover,
+prose-mirror.journal-page-content menu.editor-menu .dropdown li:hover {
+  background: var(--pmw-panel-2) !important;
+  color: var(--pmw-text) !important;
+}
+
+/* En thème clair, Foundry force une couleur de texte claire sur la   */
+/* liste des pages (titres blancs sur fond clair = illisible). On      */
+/* re-force le texte foncé, avec une spécificité suffisante.          */
+/* ================================================================== */
+
+.theme-light.application.journal-entry .pages-list,
+.theme-light .application.journal-entry .pages-list,
+.theme-light.application.journal-entry .journal-sidebar,
+.theme-light .application.journal-entry .journal-sidebar {
+  color: var(--sbe-text);
+}
+
+.theme-light.application.journal-entry .pages-list a,
+.theme-light.application.journal-entry .pages-list .directory-item,
+.theme-light.application.journal-entry .pages-list li,
+.theme-light.application.journal-entry .pages-list .page-title,
+.theme-light.application.journal-entry .pages-list .page-heading,
+.theme-light .application.journal-entry .pages-list a,
+.theme-light .application.journal-entry .pages-list .directory-item,
+.theme-light .application.journal-entry .pages-list li,
+.theme-light .application.journal-entry .pages-list .page-title,
+.theme-light .application.journal-entry .pages-list .page-heading {
+  color: var(--sbe-text) !important;
+  text-shadow: none !important;
+  font-weight: 700;
+}
+
+/* sous-niveaux / numéros : texte secondaire foncé */
+.theme-light.application.journal-entry .pages-list .page-number,
+.theme-light.application.journal-entry .pages-list .page-level,
+.theme-light .application.journal-entry .pages-list .page-number,
+.theme-light .application.journal-entry .pages-list .page-level {
+  color: var(--sbe-text-dim) !important;
+}
+
+/* champ de recherche de la TOC en clair */
+.theme-light .application.journal-entry .journal-sidebar input {
+  color: var(--sbe-text) !important;
+}

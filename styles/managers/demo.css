@@ -1,0 +1,16 @@
+/* ============================================================
+ * SBE — DÉMO (installer / retirer)
+ * Variables du thème uniquement (clair et sombre).
+ * ============================================================ */
+
+.sbe-demo-body { display: flex; flex-direction: column; gap: 8px; }
+.sbe-demo-body p { margin: 0; }
+.sbe-demo-body .notes { color: var(--sbe-text-dim); }
+.sbe-demo-img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: var(--sbe-radius, 4px); border: 1px solid var(--sbe-tone-3); }
+.sbe-demo-state { display: flex; align-items: center; gap: 6px; color: var(--sbe-text-dim); }
+.sbe-demo-state.is-on { color: var(--sbe-ok); }
+.sbe-demo-btns { display: flex; gap: 6px; }
+.sbe-demo-btns button { flex: 1 1 0; }
+.sbe-demo-sets { display: flex; flex-direction: column; gap: 4px; padding: 6px 8px; margin: 6px 0; border: 1px solid var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); background: var(--sbe-surf-2); }
+.sbe-demo-set { display: flex; align-items: center; gap: 6px; }
+.sbe-demo-btns button:disabled { opacity: 0.45; cursor: not-allowed; }

@@ -1,0 +1,605 @@
+/**
+ * SBE — HUD (barre d'actions) et son manager
+ * Les couleurs et mesures viennent des variables --hud-* posées par le
+ * manager (une feuille par modèle de personnage, clair et sombre).
+ */
+
+/* ------------------------------------------------------------ */
+/*  La barre                                                     */
+/* ------------------------------------------------------------ */
+
+.sbe-hud {
+  /* Bases (sombre) : remplacées par la feuille du manager. */
+  --hud-bg: #2d2d3099;
+  --hud-bgEnd: #23232699;
+  --hud-border: #8c8c9173;
+  --hud-borderHover: #b4b4b9b3;
+  --hud-btn: #37373a8c;
+  --hud-btnHover: #8282878c;
+  --hud-item: #414144a6;
+  --hud-itemHover: #82828799;
+  --hud-text: #e8e8e8;
+  --hud-textDim: #c8c8c8;
+  --hud-value: #ffffff;
+  --hud-accent: #b5471f;
+  --hud-blur: 3px;
+  --hud-size: 52px;
+  --hud-gap: 4px;
+  --hud-radius: 8px;
+  --hud-icon: 18px;
+  --hud-item-size: 44px;
+  --hud-font: 12px;
+  --hud-panel-w: 220px;
+  z-index: 70;
+  color: var(--hud-text);
+  font-family: var(--sbe-font-primary, sans-serif);
+  font-size: var(--hud-font);
+  pointer-events: auto;
+}
+#sbe-hud { position: fixed; }
+.sbe-hud--preview { position: relative; display: inline-block; }
+
+.sbe-hud-frame {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: var(--hud-gap);
+  padding: var(--hud-gap);
+  background: linear-gradient(180deg, var(--hud-bg) 0%, var(--hud-bgEnd) 100%);
+  backdrop-filter: blur(var(--hud-blur));
+  -webkit-backdrop-filter: blur(var(--hud-blur));
+  border: 1px solid var(--hud-border);
+  border-radius: var(--hud-radius);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+.sbe-hud-who { cursor: grab; }
+.sbe-hud.is-locked .sbe-hud-who { cursor: default; }
+/* ZONES autour de la barre (haut, bas, gauche, droite) : l'en-tête
+   et les petits boutons s'y placent au choix du MJ. */
+.sbe-hud-frame {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas: "top top top" "left bar right" "bottom bottom bottom";
+  gap: 0;
+}
+.sbe-hud-bar { grid-area: bar; }
+.sbe-hud-zone { position: relative; z-index: 2; display: flex; gap: 6px; min-width: 0; }
+.sbe-hud-zone--top    { grid-area: top;    flex-direction: row; align-items: center; margin-bottom: var(--hud-gap); padding-bottom: 6px; border-bottom: 1px solid var(--hud-border); }
+.sbe-hud-zone--bottom { grid-area: bottom; flex-direction: row; align-items: center; margin-top: var(--hud-gap);    padding-top: 6px;    border-top: 1px solid var(--hud-border); }
+.sbe-hud-zone--left   { grid-area: left;   flex-direction: column; align-items: center; margin-right: var(--hud-gap); padding-right: 6px; border-right: 1px solid var(--hud-border); }
+.sbe-hud-zone--right  { grid-area: right;  flex-direction: column; align-items: center; margin-left: var(--hud-gap);  padding-left: 6px;  border-left: 1px solid var(--hud-border); }
+/* Petits boutons seuls (sans en-tête) : pas de filet. */
+.sbe-hud-zone:not(:has(.sbe-hud-head)) { border: none; padding: 0; }
+.sbe-hud-zone--top > .sbe-hud-chrome:only-child, .sbe-hud-zone--bottom > .sbe-hud-chrome:only-child { margin-left: auto; }
+
+.sbe-hud-head {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 auto;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 3px 4px;
+}
+.sbe-hud-who {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.sbe-hud-zone--top .sbe-hud-chrome, .sbe-hud-zone--bottom .sbe-hud-chrome { flex-direction: row; gap: 4px; }
+.sbe-hud-zone--left .sbe-hud-chrome, .sbe-hud-zone--right .sbe-hud-chrome { flex-direction: column; gap: 4px; }
+/* En-tête sur le CÔTÉ : portrait, nom écrit de haut en bas, boutons empilés. */
+.sbe-hud-zone--left .sbe-hud-head, .sbe-hud-zone--right .sbe-hud-head { flex-direction: column; justify-content: flex-start; gap: 8px; padding: 4px 2px; }
+.sbe-hud-zone--left .sbe-hud-who, .sbe-hud-zone--right .sbe-hud-who { flex-direction: column; gap: 8px; }
+.sbe-hud-zone--left .sbe-hud-who > span, .sbe-hud-zone--right .sbe-hud-who > span {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+.sbe-hud-head .sbe-hud-chr {
+  width: 26px;
+  height: 26px;
+  background: var(--hud-btn);
+  border: 1px solid var(--hud-border);
+  border-radius: 4px;
+  font-size: 12px;
+}
+.sbe-hud-head .sbe-hud-chr:hover { background: var(--hud-btnHover); border-color: var(--hud-borderHover); }
+.sbe-hud-head img {
+  width: var(--hud-portrait, 30px);
+  height: var(--hud-portrait, 30px);
+  flex: 0 0 auto;
+  border-radius: 50%;
+  border: 1px solid var(--hud-border);
+  object-fit: cover;
+  pointer-events: none;
+}
+.sbe-hud-who > span {
+  font-weight: 600;
+  font-size: var(--hud-name, 14px);
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+
+.sbe-hud-deco {
+  position: absolute;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+/* Poignée, verrou, barre de macros, fiche */
+.sbe-hud-chrome {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+}
+.sbe-hud-chr {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 16px;
+  color: var(--hud-textDim);
+  font-size: 11px;
+  cursor: pointer;
+}
+.sbe-hud-chr:hover, .sbe-hud-chr.is-on { color: var(--hud-accent); }
+.sbe-hud-chr[data-chrome="grip"] { cursor: grab; }
+.sbe-hud.is-locked .sbe-hud-chr[data-chrome="grip"] { cursor: default; opacity: 0.35; }
+
+.sbe-hud-bar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: stretch;
+  gap: var(--hud-gap);
+}
+.sbe-hud--column .sbe-hud-bar { flex-direction: column; }
+
+/* ------------------------------------------------------------ */
+/*  Les boutons                                                  */
+/* ------------------------------------------------------------ */
+
+.sbe-hud .sbe-hud-btn {
+  all: unset;
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--hud-size);
+  padding: 4px 8px;
+  background: var(--hud-btn);
+  border: 1px solid var(--hud-border);
+  border-left: 3px solid var(--hud-node, var(--hud-border));
+  border-radius: calc(var(--hud-radius) * 0.75);
+  color: var(--hud-text);
+  font-size: var(--hud-font);
+  line-height: 1.15;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+.sbe-hud .sbe-hud-btn:hover {
+  background: var(--hud-btnHover);
+  border-color: var(--hud-borderHover);
+  border-left-color: var(--hud-node, var(--hud-borderHover));
+}
+.sbe-hud .sbe-hud-btn.is-open {
+  background: var(--hud-btnHover);
+  border-color: var(--hud-accent);
+  border-left-color: var(--hud-node, var(--hud-accent));
+}
+/* Boutons DANS les menus : leurs propres couleurs. */
+.sbe-hud .sbe-hud-panel .sbe-hud-btn { background: var(--hud-item); }
+.sbe-hud .sbe-hud-panel .sbe-hud-btn:hover,
+.sbe-hud .sbe-hud-panel .sbe-hud-btn.is-open { background: var(--hud-itemHover); }
+/* Sous-menu coloré (choix d'une liste) : son libellé prend la couleur du
+   choix ; au survol ou ouvert, le fond s'éclaircit et la couleur ne se lit
+   plus. Le libellé repasse alors au texte normal, le liseré garde la couleur. */
+.sbe-hud .sbe-hud-btn:is(:hover, .is-open) .sbe-hud-lbl[style] { color: var(--hud-text) !important; }
+
+/* Icône AU-DESSUS du libellé (barre seulement). */
+.sbe-hud--icontop .sbe-hud-bar > .sbe-hud-btn {
+  flex: 1 1 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  min-width: calc(var(--hud-size) * 1.7);
+  text-align: center;
+}
+.sbe-hud--icontop .sbe-hud-bar > .sbe-hud-btn .sbe-hud-txt { align-items: center; }
+.sbe-hud--icontop .sbe-hud-bar > .sbe-hud-btn > .sbe-hud-caret { display: none; }
+.sbe-hud .sbe-hud-btn.is-disabled { opacity: 0.45; cursor: not-allowed; }
+.sbe-hud .sbe-hud-btn.is-empty { opacity: 0.5; border-style: dashed; }
+.sbe-hud .sbe-hud-btn.is-warn { border-color: var(--sbe-warn, #c9a227); }
+.sbe-hud .sbe-hud-btn--value:not(.is-roll) { cursor: default; }
+
+.sbe-hud-icbox {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--hud-icon);
+  height: var(--hud-icon);
+  font-size: calc(var(--hud-icon) * 0.9);
+  line-height: 1;
+}
+/* Image d'un OBJET : sa propre taille (menus), bornée à la hauteur
+   du bouton dans la barre. */
+.sbe-hud .sbe-hud-btn--item .sbe-hud-icbox {
+  width: var(--hud-item-size);
+  height: var(--hud-item-size);
+}
+.sbe-hud .sbe-hud-bar > .sbe-hud-btn--item .sbe-hud-icbox {
+  width: min(var(--hud-item-size), calc(var(--hud-size) - 10px));
+  height: min(var(--hud-item-size), calc(var(--hud-size) - 10px));
+}
+.sbe-hud .sbe-hud-icbox > * { max-width: 100%; max-height: 100%; }
+.sbe-hud .sbe-hud-ic--img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border: none;
+  background: transparent;
+}
+.sbe-hud-txt {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.sbe-hud-lbl {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sbe-hud-val {
+  color: var(--hud-value);
+  font-weight: 700;
+}
+.sbe-hud-cnt { display: flex; flex-wrap: wrap; gap: 6px; color: var(--hud-textDim); font-size: 0.9em; }
+.sbe-hud-cnt-i { display: inline-flex; align-items: center; gap: 2px; }
+.sbe-hud-qty {
+  position: absolute;
+  right: 3px;
+  bottom: 1px;
+  font-size: 0.85em;
+  font-weight: 700;
+  color: var(--hud-value);
+}
+.sbe-hud-caret { margin-left: auto; color: var(--hud-textDim); font-size: 0.9em; }
+
+/* Barre en icônes seules : le libellé passe dans l'info-bulle */
+/* Barre en icônes seules : le libellé passe dans l'info-bulle ; une
+   valeur garde son chiffre, une entrée sans icône garde son libellé. */
+.sbe-hud--lbl-icon .sbe-hud-bar > .sbe-hud-btn:not(.no-ic) {
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+  min-width: var(--hud-size);
+  padding: 2px 4px;
+}
+.sbe-hud--lbl-icon .sbe-hud-bar > .sbe-hud-btn:not(.no-ic) .sbe-hud-lbl,
+.sbe-hud--lbl-icon .sbe-hud-bar > .sbe-hud-btn:not(.no-ic) > .sbe-hud-caret { display: none; }
+.sbe-hud--lbl-icon .sbe-hud-bar > .sbe-hud-btn:not(.no-ic) .sbe-hud-txt { align-items: center; }
+.sbe-hud--lbl-label .sbe-hud-bar > .sbe-hud-btn > .sbe-hud-icbox { display: none; }
+
+.sbe-hud-sep {
+  flex: 0 0 auto;
+  align-self: stretch;
+  width: 1px;
+  margin: 4px 2px;
+  background: var(--hud-border);
+}
+.sbe-hud--column .sbe-hud-bar > .sbe-hud-sep { width: auto; height: 1px; }
+.sbe-hud-pbody > .sbe-hud-sep { width: auto; height: 1px; margin: 3px 0; }
+/* Corps d'un panneau : c'est LUI qui défile (le cadre reste fixe). */
+.sbe-hud-pbody { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; gap: 3px; }
+.sbe-hud-pbody > * { flex-shrink: 0; }
+.sbe-hud-empty { padding: 6px 10px; color: var(--hud-textDim); font-style: italic; }
+
+/* ------------------------------------------------------------ */
+/*  Panneaux (menus, sous-menus, actions d'un objet)             */
+/* ------------------------------------------------------------ */
+
+.sbe-hud-panel {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: var(--hud-panel-w);
+  max-height: 70vh;
+  overflow: hidden;   /* le contenu défile dans .sbe-hud-pbody */
+  padding: 5px;
+  background: linear-gradient(180deg, var(--hud-bg) 0%, var(--hud-bgEnd) 100%);
+  backdrop-filter: blur(var(--hud-blur));
+  -webkit-backdrop-filter: blur(var(--hud-blur));
+  border: 1px solid var(--hud-border);
+  border-radius: var(--hud-radius);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+}
+.sbe-hud-panel .sbe-hud-btn { min-height: calc(var(--hud-size) * 0.7); }
+.sbe-hud-panel .sbe-hud-txt { flex: 1 1 auto; flex-direction: row; justify-content: space-between; align-items: center; gap: 6px; flex-wrap: wrap; }
+.sbe-hud-ptitle {
+  flex: none;
+  padding: 2px 4px 4px;
+  border-bottom: 1px solid var(--hud-border);
+  color: var(--hud-textDim);
+  font-size: 0.9em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Barre de macros masquée à la demande du joueur */
+body.sbe-hud-nohotbar #hotbar { display: none !important; }
+
+/* ------------------------------------------------------------ */
+/*  Manager                                                      */
+/* ------------------------------------------------------------ */
+
+.sbe-hud-config .window-content { padding: 0; display: flex; flex-direction: column; }
+.sbe-hudc-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 6px 8px 0;
+  border-bottom: 1px solid var(--sbe-surf-4);
+}
+.sbe-hudc-tabs a {
+  padding: 6px 14px;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  color: var(--sbe-text-2);
+  cursor: pointer;
+}
+.sbe-hudc-tabs a.is-on {
+  background: var(--sbe-surf-3);
+  border-color: var(--sbe-surf-4);
+  color: var(--sbe-text-strong);
+}
+.sbe-hudc-main {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-height: 0;
+}
+.sbe-hudc-body {
+  overflow-y: auto;
+  padding: 8px 10px;
+  min-height: 0;
+}
+/* Les menus de l'aperçu s'ouvrent PAR-DESSUS les réglages, comme à
+   l'écran : la zone ne les coupe pas. */
+.sbe-hudc-preview {
+  position: relative;
+  z-index: 5;
+  padding: 8px 10px 10px;
+  overflow: visible;
+  border-top: 1px solid var(--sbe-surf-4);
+  background:
+    repeating-linear-gradient(45deg, var(--sbe-overlay, rgba(255,255,255,.04)) 0 10px, transparent 10px 20px),
+    var(--sbe-surf-1);
+}
+.sbe-hudc-previewbar {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.sbe-hudc-previewbar label { display: flex; flex-direction: column; gap: 2px; font-size: 0.9em; }
+.sbe-hudc-stage { padding: 10px; text-align: center; }
+/* Aperçu replié : la barre reste, le HUD d'essai disparaît. */
+.sbe-hudc-pfold { margin-left: auto; flex: 0 0 auto; width: auto; padding: 2px 10px; }
+.sbe-hudc-pfold i { transition: transform .15s; }
+.sbe-hudc-preview.is-folded .sbe-hudc-pfold i { transform: rotate(180deg); }
+.sbe-hudc-preview.is-folded .sbe-hudc-stage { display: none; }
+.sbe-hudc-preview.is-folded .sbe-hudc-previewbar { margin-bottom: 0; }
+
+.sbe-hudc-cols {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+}
+/* Configuration : sources et arbre défilent chacun de leur côté, les
+   deux restent visibles pendant qu'on glisse. */
+.sbe-hudc-body--config { display: flex; flex-direction: column; overflow: hidden; }
+.sbe-hudc-body--config > .sbe-hudc-cols { flex: 1 1 auto; min-height: 0; align-items: stretch; }
+/* Réglages généraux : hauteur naturelle (jamais écrasés par l'arbre),
+   leur contenu défile s'il dépasse la moitié de la fenêtre. */
+.sbe-hudc-body--config > .sbe-hudc-sec { flex: 0 0 auto; }
+.sbe-hudc-body--config > .sbe-hudc-sec > .sbe-hudc-sec-body { max-height: 45vh; overflow-y: auto; }
+.sbe-hudc-body--config .sbe-hudc-src,
+.sbe-hudc-body--config .sbe-hudc-tree { overflow-y: auto; min-height: 0; }
+.sbe-hudc-src {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sbe-hudc-src h4 {
+  margin: 6px 0 2px;
+  font-size: 0.85em;
+  text-transform: uppercase;
+  color: var(--sbe-text-dim);
+  border: none;
+}
+.sbe-hudc-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 7px;
+  background: var(--sbe-surf-3);
+  border: 1px solid var(--sbe-surf-4);
+  border-radius: 5px;
+  cursor: grab;
+  font-size: 0.92em;
+}
+.sbe-hudc-chip:hover { border-color: var(--sbe-accent); }
+.sbe-hudc-chip small { margin-left: auto; color: var(--sbe-text-dim); }
+.sbe-hudc-chips { display: flex; flex-direction: column; gap: 3px; }
+
+.sbe-hudc-tree { min-height: 120px; padding: 6px; border: 1px dashed var(--sbe-surf-4); border-radius: 6px; }
+.sbe-hudc-kids { margin-left: 18px; padding-left: 6px; border-left: 1px dashed var(--sbe-surf-4); min-height: 10px; }
+.sbe-hudc-node { margin: 2px 0; }
+.sbe-hudc-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  background: var(--sbe-surf-3);
+  border: 1px solid var(--sbe-surf-4);
+  border-left: 3px solid var(--hud-node, var(--sbe-surf-4));
+  border-radius: 5px;
+}
+.sbe-hudc-row .sbe-hudc-grab { cursor: grab; color: var(--sbe-text-dim); }
+.sbe-hudc-row .sbe-hudc-type { margin-left: auto; font-size: 0.8em; color: var(--sbe-text-dim); white-space: nowrap; }
+.sbe-hudc-row a { color: var(--sbe-text-2); cursor: pointer; }
+.sbe-hudc-row a:hover { color: var(--sbe-accent-text); }
+.sbe-hudc-row .sbe-hudc-ic { width: 18px; text-align: center; }
+.sbe-hudc-row .sbe-hudc-ic img { width: 18px; height: 18px; border: none; object-fit: contain; }
+.sbe-hudc-node.drop-before > .sbe-hudc-row { box-shadow: 0 -2px 0 var(--sbe-accent); }
+.sbe-hudc-node.drop-after > .sbe-hudc-row { box-shadow: 0 2px 0 var(--sbe-accent); }
+.sbe-hudc-node.drop-into > .sbe-hudc-row { outline: 2px solid var(--sbe-accent); }
+.sbe-hudc-tree.drop-end { outline: 2px dashed var(--sbe-accent); }
+.sbe-hudc-hint { color: var(--sbe-text-dim); font-style: italic; padding: 8px; }
+
+.sbe-hudc-edit {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 6px 10px;
+  margin: 4px 0 6px 18px;
+  padding: 8px;
+  background: var(--sbe-surf-2);
+  border: 1px solid var(--sbe-surf-4);
+  border-radius: 5px;
+}
+.sbe-hudc-f { display: flex; flex-direction: column; gap: 2px; }
+.sbe-hudc-f > span { font-size: 0.88em; color: var(--sbe-text-2); }
+.sbe-hudc-f .sbe-hudc-icrow { display: flex; gap: 4px; }
+.sbe-hudc-f .sbe-hudc-icrow input { flex: 1 1 auto; min-width: 0; }
+.sbe-hudc-check { display: flex; align-items: center; gap: 6px; }
+
+.sbe-hudc-grid {
+  display: grid;
+  align-items: end;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 6px 12px;
+}
+.sbe-hudc-pal {
+  display: grid;
+  grid-template-columns: minmax(110px, auto) 1fr 1fr;
+  gap: 4px 10px;
+  align-items: center;
+}
+.sbe-hudc-pal .sbe-hudc-palhead { font-weight: 700; color: var(--sbe-text-2); }
+.sbe-hudc-pal input[type="color"] { width: 46px; height: 24px; padding: 0; border: none; background: none; }
+.sbe-hudc-palcell { display: flex; align-items: center; gap: 4px; }
+.sbe-hudc-palcell input[type="number"] { width: 56px; }
+/* ---- Sections repliables de l'onglet Apparence ---- */
+.sbe-hudc-sec {
+  margin: 0 0 10px;
+  border: 1px solid var(--sbe-surf-4);
+  border-radius: 8px;
+  background: var(--sbe-surf-2);
+  overflow: hidden;
+}
+.sbe-hudc-sec > summary {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer; list-style: none;
+  font-weight: 700; font-size: 1.02em; letter-spacing: .02em;
+  background: var(--sbe-surf-3);
+  border-bottom: 1px solid transparent;
+  user-select: none;
+}
+.sbe-hudc-sec > summary::-webkit-details-marker { display: none; }
+.sbe-hudc-sec > summary::marker { content: ""; }
+.sbe-hudc-sec > summary:hover { background: var(--sbe-surf-4); }
+.sbe-hudc-sec[open] > summary { border-bottom-color: var(--sbe-surf-4); }
+.sbe-hudc-sec-ic { width: 18px; text-align: center; color: var(--sbe-accent-text, var(--sbe-accent)); }
+.sbe-hudc-sec-t { flex: 1 1 auto; }
+.sbe-hudc-sec-car { font-size: .8em; opacity: .7; transition: transform .15s; transform: rotate(-90deg); }
+.sbe-hudc-sec[open] > summary .sbe-hudc-sec-car { transform: none; }
+.sbe-hudc-sec-body { padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+.sbe-hudc-sec-body > .notes { margin: 0; }
+.sbe-hudc-sec-body > button { align-self: flex-start; width: auto; padding: 2px 12px; }
+
+/* Groupes à l'intérieur d'une section (Barre, Tailles, Aspect…). */
+.sbe-hudc-grp {
+  margin: 0; padding: 8px 10px 10px;
+  border: 1px solid var(--sbe-surf-4); border-radius: 6px;
+  min-width: 0;
+}
+.sbe-hudc-grp > legend { padding: 0 6px; font-weight: 700; font-size: .92em; color: var(--sbe-text-2); }
+.sbe-hudc-grp > legend i { margin-right: 4px; opacity: .8; }
+.sbe-hudc-grp > .notes { margin: 6px 0 0; }
+
+/* Position de départ : petit écran 16/9 cliquable. */
+.sbe-hudc-pos { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+.sbe-hudc-screen {
+  position: relative; flex: none;
+  width: 240px; aspect-ratio: 16 / 9;
+  border: 2px solid var(--sbe-surf-4); border-radius: 6px;
+  background:
+    linear-gradient(var(--sbe-surf-4) 1px, transparent 1px) 0 0 / 25% 25%,
+    linear-gradient(90deg, var(--sbe-surf-4) 1px, transparent 1px) 0 0 / 12.5% 25%,
+    var(--sbe-surf-1, var(--sbe-surf-2));
+  cursor: crosshair; touch-action: none;
+}
+.sbe-hudc-screen-bar {
+  position: absolute; width: 34%; height: 12%;
+  transform: translate(-50%, -50%);
+  border-radius: 3px;
+  background: var(--sbe-accent); opacity: .85;
+  box-shadow: 0 0 0 2px rgba(0,0,0,.35);
+  pointer-events: none;
+}
+.sbe-hudc-screen-bar.is-col { width: 7%; height: 46%; }
+.sbe-hudc-posf { flex: 1 1 200px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.sbe-hudc-posxy { display: grid; grid-template-columns: repeat(2, minmax(0, 160px)); gap: 6px 12px; }
+.sbe-hudc-presets { display: flex; flex-wrap: wrap; gap: 4px; }
+.sbe-hudc-presets button { width: auto; flex: 0 0 auto; padding: 1px 8px; font-size: .88em; line-height: 1.6; }
+
+/* Décorations : une carte par décoration. */
+.sbe-hudc-deco { margin: 0; border: 1px solid var(--sbe-surf-4); border-radius: 6px; overflow: hidden; }
+.sbe-hudc-deco > .sbe-hudc-grid, .sbe-hudc-deco > .sbe-hudc-f { padding: 6px 10px; }
+.sbe-hudc-deco > .sbe-hudc-f { padding-top: 0; padding-bottom: 8px; }
+.sbe-hudc-deco-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 4px 6px 4px 10px; background: var(--sbe-surf-3);
+  font-weight: 700; font-size: .92em;
+}
+.sbe-hudc-deco-del { width: auto; flex: none; padding: 0 8px; line-height: 1.6; color: var(--sbe-bad, #c0392b); }
+.sbe-hudc-deco textarea, .sbe-hudc-css { width: 100%; min-height: 90px; font-family: monospace; }
+.sbe-hudc-foot { display: flex; gap: 6px; padding: 6px 10px; border-top: 1px solid var(--sbe-surf-4); }
+.sbe-hudc-foot button { flex: 1 1 auto; }
+.sbe-hudc-grid > .sbe-hudc-full { grid-column: 1 / -1; margin: 0; }
+
+
+
+/* ---------- Petits boutons libres (à côté du cadenas) ---------- */
+.sbe-hud-chr.is-off { opacity: 0.45; cursor: not-allowed; }
+/* Configuration : une ligne par petit bouton, libellés au-dessus. */
+.sbe-hudc-minis { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.sbe-hudc-mini { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px; padding: 4px 6px;
+  border: 1px solid var(--sbe-tone-3, #8884); border-radius: 6px; }
+.sbe-hudc-mini [hidden] { display: none !important; }
+.sbe-hudc-mini .sbe-hudc-f { flex: 1 1 140px; min-width: 0; }
+.sbe-hudc-mini-ic { width: 34px; height: 34px; flex: none; display: grid; place-items: center; padding: 0; }
+.sbe-hudc-mini-ic .sbe-hud-ic--img { width: 22px; height: 22px; object-fit: contain; }
+.sbe-hudc-minis > button[data-do] { align-self: flex-start; width: auto; }

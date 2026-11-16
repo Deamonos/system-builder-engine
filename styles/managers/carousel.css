@@ -1,0 +1,224 @@
+/**
+ * SBE — Carrousel de combat (bande des portraits) et son manager.
+ * Les couleurs suivent le thème SBE (variables).
+ */
+
+/* ---------- La bande ---------- */
+#sbe-carousel { z-index: 30; pointer-events: none; display: flex; }
+.sbe-car-wrap {
+  --sbe-car-h: calc(var(--sbe-car-size) * 1.3);
+  --sbe-car-radius: var(--car-radius);
+  /* Couleurs du carrousel : celles du thème SBE, sauf thème propre du MJ
+     (style injecté par carousel-theme.mjs). */
+  --car-panel: var(--sbe-header-grad);
+  --car-panel-border: var(--sbe-surf-4);
+  --car-text: var(--sbe-text-strong);
+  --car-accent: var(--sbe-accent);
+  --car-accent-2: var(--sbe-accent-light);
+  --car-frame: var(--sbe-surf-5);
+  --car-card: var(--sbe-surf-1);
+  --car-hostile: var(--sbe-fail);
+  --car-friendly: var(--sbe-ok);
+  --car-neutral: var(--sbe-warn);
+  --car-radius: 8px;
+  --car-bw: 2px;
+  display: flex; flex-direction: column; gap: 6px; max-width: 100%; max-height: inherit; pointer-events: auto;
+}
+.sbe-car-wrap.is-square, .sbe-car-wrap.is-round { --sbe-car-h: var(--sbe-car-size); }
+.sbe-car-wrap.is-top { align-items: flex-start; }
+.sbe-car-wrap.is-right { align-items: flex-end; }
+
+/* Le round, au-dessus et centré. */
+.sbe-car-round {
+  align-self: center; padding: 2px 12px; border: 1px solid var(--car-panel-border); border-bottom: 2px solid var(--car-accent); border-radius: 999px;
+  background: var(--car-svg-round, none) center / 100% 100% no-repeat, var(--car-panel); color: var(--car-text); box-shadow: 0 2px 6px var(--sbe-shadow-primary);
+  font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; font-size: 0.8em; white-space: nowrap;
+}
+.sbe-car-round b { font-weight: inherit; }
+/* Le nom de celui qui joue, après le round. */
+.sbe-car-round em { font-style: normal; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--car-accent-2); }
+.sbe-car-round em::before { content: "·"; margin: 0 6px; color: var(--sbe-text-dim); }
+/* La pastille empiète sur la marge de la bande (gardée pour les ombres et le halo) : elle reste près des portraits. */
+.sbe-car-round { position: relative; z-index: 1; margin-bottom: -10px; }
+.sbe-car-round.is-wait { color: var(--sbe-text-dim); text-transform: none; letter-spacing: 0; }
+.is-right .sbe-car-round { align-self: flex-end; }
+
+/* Portraits et boutons. */
+.sbe-car-main { display: flex; min-height: 0; max-width: 100%; }
+.is-top .sbe-car-main { flex-direction: column; align-items: center; }
+.is-right .sbe-car-main { flex-direction: row-reverse; align-items: stretch; gap: 6px; flex: 1 1 auto; }
+.sbe-car-btns {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; padding: 4px;
+  border: 1px solid var(--car-panel-border); border-radius: 8px; background: var(--car-panel); box-shadow: 0 2px 6px var(--sbe-shadow-primary);
+}
+.sbe-car-btns button {
+  flex: 0 0 auto; width: 26px; height: 26px; padding: 0; line-height: 1; font-size: 12px;
+  border: 1px solid var(--sbe-surf-5); border-radius: 6px; background: var(--sbe-surf-3); color: var(--sbe-text);
+}
+.sbe-car-btns button:hover { background: var(--sbe-raised); border-color: var(--car-accent-2); color: var(--sbe-text-max); }
+/* En haut : sous les portraits, centrés, repliés tant que la souris n'est pas sur le carrousel. */
+.is-top .sbe-car-btns { max-height: 0; padding-block: 0; opacity: 0; overflow: hidden; border-width: 0; transition: max-height 0.2s ease, opacity 0.2s ease, padding 0.2s ease; }
+.is-top:hover .sbe-car-btns, .is-top:focus-within .sbe-car-btns { max-height: 80px; padding-block: 4px; opacity: 1; border-width: 1px; }
+/* À droite : en colonne, à gauche des portraits. */
+.is-right .sbe-car-btns { flex-direction: column; flex-wrap: nowrap; align-self: flex-start; margin-top: 10px; max-width: 0; padding-inline: 0; opacity: 0; overflow: hidden; border-width: 0; transition: max-width 0.2s ease, opacity 0.2s ease, padding 0.2s ease; }
+.is-right:hover .sbe-car-btns, .is-right:focus-within .sbe-car-btns { max-width: 60px; padding-inline: 4px; opacity: 1; border-width: 1px; }
+
+.sbe-car-track { display: flex; gap: 10px; overflow: auto; max-width: 100%; min-height: 0; scrollbar-width: thin; padding: 12px; background: var(--car-svg-band, none) center / 100% 100% no-repeat; }
+.is-top .sbe-car-track { flex-direction: row; align-items: flex-start; }
+.is-right .sbe-car-track { flex-direction: column; align-items: flex-end; max-height: 100%; }
+
+/* ---------- Portraits ---------- */
+.sbe-car-p {
+  position: relative; flex: 0 0 auto; width: var(--sbe-car-size); height: var(--sbe-car-h); overflow: hidden;
+  border: var(--car-bw) solid var(--car-frame); border-radius: var(--sbe-car-radius);
+  background: var(--car-card); box-shadow: 0 2px 6px var(--sbe-shadow-primary);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.is-round .sbe-car-p { --sbe-car-radius: 50%; }
+.sbe-car-p:hover { transform: translateY(-2px); border-color: var(--sbe-tone-3); }
+.is-right .sbe-car-p:hover { transform: translateX(-2px); }
+/* Thème avancé : SVG posé par-dessus le portrait (cadre). */
+.sbe-car-p::before { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: var(--car-svg-frame, none) center / 100% 100% no-repeat; }
+/* Thème avancé : icônes en SVG (vaincu, « Suivant »). */
+.sbe-car-svgic { display: none; width: 1em; height: 1em; vertical-align: -0.12em; background: center / contain no-repeat; }
+.sbe-car-svgic.is-defeat { background-image: var(--car-svg-defeat); }
+.sbe-car-svgic.is-next { background-image: var(--car-svg-next); margin-right: 3px; }
+.sbe-car-img { position: absolute; inset: 0; background-size: cover; background-position: center top; }
+/* Dégradé du bas : le nom reste lisible sur toute image. */
+.sbe-car-shade { position: absolute; inset: 0; background: linear-gradient(to top, var(--sbe-shadow-primary) 0%, transparent 45%); pointer-events: none; }
+/* Liseré d'attitude (ennemi, allié, neutre). */
+.sbe-car-p::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--sbe-surf-5); }
+.sbe-car-p.is-hostile::after { background: var(--car-hostile); }
+.sbe-car-p.is-friendly::after { background: var(--car-friendly); }
+.sbe-car-p.is-neutral::after { background: var(--car-neutral); }
+.is-round .sbe-car-p::after { display: none; }
+
+/* Le combattant actif : plus grand (réglage), cadre de l'accent, halo (réglage). */
+.sbe-car-p.is-active { border-color: var(--car-accent-2); width: calc(var(--sbe-car-size) * var(--sbe-car-scale, 1.15)); height: calc(var(--sbe-car-h) * var(--sbe-car-scale, 1.15)); }
+.is-glow .sbe-car-p.is-active { box-shadow: 0 0 0 2px var(--car-accent), 0 0 8px var(--car-accent); }
+.is-anim.is-glow .sbe-car-p.is-active { animation: sbe-car-glow 2.4s ease-in-out infinite; }
+
+/* Le prochain à jouer : cadre de l'accent et languette « Suivant ». */
+.sbe-car-p.is-next { border-color: var(--car-accent); }
+.sbe-car-nexttag {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 3; max-width: 90%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  padding: 0 6px 1px; border-radius: 0 0 6px 6px; background: var(--car-accent); color: var(--sbe-text-max);
+  font-size: max(8px, calc(var(--sbe-car-size) * 0.11)); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; box-shadow: 0 2px 4px var(--sbe-shadow-primary);
+}
+.is-round .sbe-car-nexttag { top: 2%; border-radius: 6px; }
+.sbe-car-p.is-next .sbe-car-init { top: calc(max(8px, var(--sbe-car-size) * 0.11) + 8px); }
+.sbe-car-p.is-next .sbe-car-fx { top: calc(max(10px, var(--sbe-car-size) * 0.15) + max(8px, var(--sbe-car-size) * 0.11) + 20px); }
+.is-round .sbe-car-p.is-next .sbe-car-init { top: 18%; }
+
+/* Ceux qui ont déjà joué ce round : assombris. */
+.sbe-car-p.is-played .sbe-car-img { filter: brightness(0.5) saturate(0.6); }
+.sbe-car-p.is-played .sbe-car-foot, .sbe-car-p.is-played .sbe-car-init, .sbe-car-p.is-played .sbe-car-fx { opacity: 0.65; }
+@keyframes sbe-car-glow {
+  0%, 100% { box-shadow: 0 0 0 2px var(--car-accent), 0 0 6px var(--car-accent); }
+  50% { box-shadow: 0 0 0 2px var(--car-accent-2), 0 0 11px var(--car-accent-2); }
+}
+
+/* Reflet qui traverse le portrait du nouveau combattant actif. */
+.sbe-car-sweep { position: absolute; top: 0; bottom: 0; left: 0; width: 45%; z-index: 4; pointer-events: none; background: linear-gradient(90deg, transparent, var(--sbe-overlay-2), var(--sbe-tone-1), var(--sbe-overlay-2), transparent); opacity: 0.55; mix-blend-mode: screen; }
+
+.sbe-car-p.is-defeated .sbe-car-img { filter: grayscale(1) brightness(0.7); }
+.sbe-car-defmark { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: calc(var(--sbe-car-size) * 0.4); line-height: 1; color: var(--car-hostile); opacity: 0.9; z-index: 1; text-shadow: 0 0 6px var(--sbe-shadow-primary); pointer-events: none; }
+.sbe-car-p.is-hidden { opacity: 0.5; border-style: dashed; }
+
+.sbe-car-init {
+  position: absolute; top: 3px; left: 3px; z-index: 2; min-width: 1.7em; padding: 1px 5px; border-radius: 999px;
+  background: var(--sbe-surf-2); border: 1px solid var(--car-accent); color: var(--sbe-text-strong);
+  font-weight: 700; text-align: center; font-size: max(10px, calc(var(--sbe-car-size) * 0.15)); box-shadow: 0 2px 6px var(--sbe-shadow-primary);
+}
+.is-active .sbe-car-init { background: var(--car-accent); color: var(--sbe-text-max); }
+.is-round .sbe-car-init { top: 6%; left: 50%; transform: translateX(-50%); }
+/* Pied du portrait : barres puis nom. */
+.sbe-car-foot { position: absolute; left: 0; right: 0; bottom: 5px; z-index: 2; display: flex; flex-direction: column; gap: 2px; padding: 0 4px; }
+.is-round .sbe-car-foot { bottom: 12%; padding: 0 14%; }
+.sbe-car-name {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  text-align: center; color: var(--sbe-text-max); font-weight: 600; text-shadow: 0 1px 2px var(--sbe-shadow-primary), 0 0 4px var(--sbe-shadow-primary);
+  font-size: max(9px, calc(var(--sbe-car-size) * 0.14));
+}
+.sbe-car-gauges { display: flex; flex-direction: column; gap: 2px; }
+.sbe-car-gauge { height: max(4px, calc(var(--sbe-car-size) * 0.06)); border-radius: 999px; overflow: hidden; background: var(--sbe-shadow-primary); box-shadow: inset 0 0 0 1px var(--sbe-edge-soft); }
+.sbe-car-gauge { position: relative; transition: height 0.15s ease; }
+.sbe-car-gauge > i { display: block; height: 100%; border-radius: inherit; background: var(--bar-c); transition: width 0.3s ease; }
+/* Chiffres dans la barre : toujours, ou au survol du portrait (la barre s'épaissit). */
+.sbe-car-gauge > span {
+  position: absolute; inset: 0; display: none; align-items: center; justify-content: center; white-space: nowrap;
+  font-size: max(8px, calc(var(--sbe-car-size) * 0.11)); font-weight: 700; line-height: 1; color: var(--sbe-text-max);
+  text-shadow: 0 0 2px var(--sbe-shadow-primary), 0 0 2px var(--sbe-shadow-primary);
+}
+.sbe-car-gauge.is-text-always, .sbe-car-p:hover .sbe-car-gauge.is-text-hover { height: max(11px, calc(var(--sbe-car-size) * 0.14)); }
+.sbe-car-gauge.is-text-always > span, .sbe-car-p:hover .sbe-car-gauge.is-text-hover > span { display: flex; }
+
+/* Effets actifs : colonne d'icônes à gauche, sous l'initiative. */
+.sbe-car-fx { position: absolute; left: 3px; top: calc(max(10px, var(--sbe-car-size) * 0.15) + 12px); z-index: 2; display: flex; flex-direction: column; gap: 2px; }
+.is-round .sbe-car-fx { left: 10%; top: 30%; }
+.sbe-car-fxi { position: relative; width: max(14px, calc(var(--sbe-car-size) * 0.2)); height: max(14px, calc(var(--sbe-car-size) * 0.2)); border-radius: 4px; background-size: cover; background-position: center; background-color: var(--sbe-surf-2); box-shadow: 0 0 0 1px var(--sbe-surf-5); }
+.sbe-car-fxmore { font-size: 9px; font-weight: 700; color: var(--sbe-text-max); text-shadow: 0 0 3px var(--sbe-shadow-primary); text-align: center; }
+
+/* Info-bulle d'un portrait */
+.sbe-car-tipbox { max-width: 280px; }
+.sbe-car-tipbox:has(.sbe-car-tip.has-head) { padding: 0; overflow: hidden; }
+.sbe-car-tip { display: flex; flex-direction: column; gap: 6px; text-align: left; min-width: 200px; }
+.sbe-car-tip.has-head { gap: 0; }
+.sbe-car-tip-name { font-weight: 700; font-size: 1.05em; }
+.sbe-car-tip-h { display: flex; gap: 8px; align-items: center; padding: 6px 8px; border-left: 4px solid var(--sbe-surf-5); border-bottom: 1px solid var(--sbe-surf-4); }
+.sbe-car-tip-h.is-hostile { border-left-color: var(--sbe-fail); }
+.sbe-car-tip-h.is-friendly { border-left-color: var(--sbe-ok); }
+.sbe-car-tip-h.is-neutral { border-left-color: var(--sbe-warn); }
+.sbe-car-tip-h > div { display: flex; flex-direction: column; min-width: 0; }
+.sbe-car-tip-h small { opacity: 0.75; font-size: 0.85em; }
+.sbe-car-tip-mini { flex: 0 0 auto; width: 32px; height: 32px; border-radius: 5px; background-size: cover; background-position: center top; box-shadow: 0 0 0 1px var(--sbe-surf-5); }
+.sbe-car-tip-b { display: flex; flex-direction: column; gap: 6px; }
+.has-head .sbe-car-tip-b { padding: 6px 9px 7px; }
+.sbe-car-tip-keys { display: flex; flex-direction: column; gap: 3px; }
+.sbe-car-tip-row { display: grid; grid-template-columns: 1fr auto; column-gap: 12px; row-gap: 2px; align-items: center; }
+.sbe-car-tip-row > span { opacity: 0.8; }
+.sbe-car-tip-row > b { text-align: right; font-variant-numeric: tabular-nums; }
+.sbe-car-tip-meter { grid-column: 1 / -1; height: 4px; border-radius: 999px; overflow: hidden; background: var(--sbe-surf-4); }
+.sbe-car-tip-meter > i { display: block; height: 100%; border-radius: inherit; background: var(--bar-c, var(--sbe-accent)); }
+.sbe-car-tip-fx { display: flex; flex-direction: column; gap: 4px; border-top: 1px solid var(--sbe-surf-4); padding-top: 5px; }
+.sbe-car-tip-keys + .sbe-car-tip-fx { margin-top: 0; }
+.sbe-car-tip-b > .sbe-car-tip-fx:first-child { border-top: 0; padding-top: 0; }
+.sbe-car-tip-e { display: flex; gap: 7px; align-items: center; }
+.sbe-car-tip-e img { width: 20px; height: 20px; border: 0; flex: 0 0 auto; border-radius: 4px; }
+.sbe-car-tip-en { flex: 1 1 auto; min-width: 0; }
+.sbe-car-tip-e > small { flex: 0 0 auto; opacity: 0.7; font-size: 0.85em; white-space: nowrap; }
+.sbe-car-tip-e p { margin: 2px 0 0; font-size: 0.9em; opacity: 0.85; }
+.sbe-car-acts { position: absolute; top: 3px; right: 3px; z-index: 3; display: flex; flex-direction: column; gap: 3px; }
+.is-round .sbe-car-acts { top: 28%; right: 4%; }
+.sbe-car-acts button {
+  width: 24px; height: 24px; padding: 0; line-height: 1; font-size: 11px; border-radius: 50%;
+  border: 1px solid var(--car-accent-2); background: var(--sbe-surf-2); color: var(--sbe-text-strong); box-shadow: 0 2px 6px var(--sbe-shadow-primary);
+}
+.sbe-car-acts button:hover { background: var(--car-accent); color: var(--sbe-text-max); }
+
+/* Marque « round suivant » */
+.sbe-car-wrapmark { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; color: var(--sbe-text-dim); font-size: 0.7em; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+.sbe-car-wrapmark span { padding: 2px 4px; border-radius: 4px; background: var(--sbe-surf-2); }
+.is-top .sbe-car-wrapmark { align-self: stretch; writing-mode: vertical-rl; transform: rotate(180deg); padding: 0 1px; border-right: 2px dashed var(--sbe-surf-6); }
+.is-right .sbe-car-wrapmark { align-self: flex-end; width: var(--sbe-car-size); padding: 2px 0; border-top: 2px dashed var(--sbe-surf-6); }
+
+/* ---------- Manager ---------- */
+.sbe-carousel-config .window-content { display: flex; flex-direction: column; gap: 8px; padding: 8px; }
+.sbe-carousel-config .sbe-mc-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.sbe-car-cfg-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px; padding: 6px; border: 1px solid var(--sbe-surf-4); border-radius: 6px; background: var(--sbe-surf-2); }
+.sbe-car-cfg-row .sbe-mc-f { flex: 1 1 110px; }
+.sbe-car-cfg-row input[type="color"] { width: 100%; min-width: 40px; height: 28px; padding: 0; }
+.sbe-car-cfg-del { flex: 0 0 auto; width: 2em; padding: 0; }
+.sbe-car-cfg-colors { width: 100%; border-collapse: collapse; }
+.sbe-car-cfg-colors th { text-align: center; font-size: 0.85em; color: var(--sbe-text-dim); }
+.sbe-car-cfg-colors td { padding: 2px 4px; }
+.sbe-car-cfg-colors input[type="color"] { width: 100%; height: 26px; padding: 0; }
+.sbe-carousel-config .sbe-ma-row > button { flex: 0 0 auto; width: auto; }
+/* Thème avancé : section repliable, champs de code. */
+.sbe-car-adv > summary { cursor: pointer; list-style: revert; }
+.sbe-car-adv > summary h3 { display: inline; }
+.sbe-car-adv h4 { margin: 8px 0 2px; }
+.sbe-car-code { width: 100%; min-height: 3em; font-family: var(--font-mono, monospace); font-size: 12px; resize: vertical; }
+.sbe-car-svgrow .sbe-mc-f:last-child { flex: 1 1 100%; }
+.sbe-car-slots .sbe-mc-f { flex: 1 1 140px; }
+.sbe-car-cfg-ico { flex: 0 0 auto; min-width: 28px; text-align: center; font-size: 18px; }

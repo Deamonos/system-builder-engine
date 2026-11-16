@@ -1,0 +1,62 @@
+/**
+ * SBE — Thème sombre (palette par défaut)
+ * Les 29 jetons de couleur + effets dérivés, déclinaison sombre.
+ * Surchargés à l'exécution par le manager de thème (managers/theme/).
+ * Toute modification ici doit être répercutée dans THEME_DEFAULTS
+ * (module/managers/theme/theme-manager.mjs) pour que « Réinitialiser »
+ * revienne au bon thème.
+ */
+
+:root,
+html,
+body,
+.theme-dark,
+body.theme-dark,
+.application.theme-dark {
+  /* Surfaces : de la plus profonde (champs) à la plus claire */
+  --sbe-surf-1: #141519;   /* champs de saisie      */
+  --sbe-surf-2: #1c1f24;   /* fond de fenêtre       */
+  --sbe-surf-3: #25282d;   /* bandeau / panneaux    */
+  --sbe-surf-4: #3b3f45;   /* arêtes                */
+  --sbe-surf-5: #4a4e55;
+  --sbe-surf-6: #5e636a;
+  --sbe-raised: #2f3338;   /* survol de bouton      */
+  --sbe-ctx-bg: #25282d;   /* fond des menus contextuels */
+
+  /* Échelle de teinte (sert de TEXTE en thème sombre) */
+  --sbe-tone-1: #e7e4dd;
+  --sbe-tone-2: #d0cdc6;
+  --sbe-tone-3: #b8b4ab;
+  --sbe-tone-4: #9c988f;
+  --sbe-tone-5: #7e7a72;
+  --sbe-tone-6: #6a665f;
+
+  /* Textes */
+  --sbe-text:          #e7e4dd;
+  --sbe-text-2:        #b8b4ab;
+  --sbe-text-dim:      #9c988f;
+  --sbe-text-strong:   #f3f0e9;
+  --sbe-text-max:      #ffffff;
+
+  /* Accents rouille */
+  --sbe-accent:        #b5471f;
+  --sbe-accent-dark:   #8a3517;
+  --sbe-accent-light:  #d2622c;
+  --sbe-accent-text:   #d2622c;   /* liens / accents de texte */
+  --sbe-content-link:  #e7e4dd;
+  --sbe-scrollbar:     #8a3517;
+  --sbe-scroll-hover:  #4a4e55;
+
+  /* États */
+  --sbe-fail: #8b0000;
+  --sbe-ok:     #5a8f4e;
+  --sbe-warn:   #c9a227;
+
+  /* Effets */
+  --sbe-header-grad:     linear-gradient(180deg, #2a2d32 0%, #1f2125 100%);
+  --sbe-shadow:          0 8px 28px rgba(0, 0, 0, 0.65);
+  --sbe-shadow-primary:  rgba(0, 0, 0, 0.6);
+  --sbe-edge-soft:       rgba(255, 255, 255, 0.08);
+  --sbe-overlay:         rgba(255, 255, 255, 0.04);
+  --sbe-overlay-2:       rgba(255, 255, 255, 0.07);
+}

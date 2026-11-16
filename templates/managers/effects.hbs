@@ -1,0 +1,58 @@
+<div class="sbe-fx-root">
+
+  {{!-- LISTE --}}
+  <aside class="sbe-fx-side">
+    <div class="sbe-fx-tools">
+      <button type="button" data-action="newDef"><i class="fa-solid fa-plus"></i> {{localize "SBE.Effects.New"}}</button>
+      <button type="button" data-action="importDefs" data-tooltip-text="{{localize "SBE.Effects.Import"}}"><i class="fa-solid fa-file-import"></i></button>
+      <button type="button" data-action="exportDefs" data-tooltip-text="{{localize "SBE.Effects.Export"}}"><i class="fa-solid fa-file-export"></i></button>
+    </div>
+    <div class="sbe-fx-list">
+      {{#each list}}
+      <a class="sbe-fx-item {{#if active}}active{{/if}}" data-action="select" data-index="{{i}}">
+        <img src="{{icon}}" alt="" {{{tint}}}>
+        <span class="sbe-fx-item-name">{{label}}</span>
+        {{#if key}}<span class="sbe-fx-item-key">{{key}}</span>{{/if}}
+      </a>
+      {{else}}
+      <p class="notes">{{localize "SBE.Effects.Empty"}}</p>
+      {{/each}}
+    </div>
+    <div class="sbe-fx-natives">
+      <div class="sbe-fx-subtitle">{{localize "SBE.Effects.Natives"}}</div>
+      <p class="notes">{{localize "SBE.Effects.NativesHint"}}</p>
+      <label class="sbe-fx-check"><input type="checkbox" data-action="toggleAllNatives" {{#if hideAllNatives}}checked{{/if}}> {{localize "SBE.Effects.NativesHideAll"}}</label>
+      {{#each natives}}
+      <div class="sbe-fx-native {{#if hidden}}is-hidden{{/if}} {{#if active}}active{{/if}}">
+        <a class="sbe-fx-native-open" data-action="customizeNative" data-id="{{id}}" data-tooltip-text="{{localize "SBE.Effects.NativeCustomize"}}">
+          <img src="{{img}}" alt="" {{{tint}}}>
+          <span class="sbe-fx-item-name">{{name}}</span>
+          {{#if custom}}<span class="sbe-fx-item-key">{{localize "SBE.Effects.NativeModified"}}</span>{{/if}}
+        </a>
+        {{#if custom}}<a data-action="resetNative" data-id="{{id}}" data-tooltip-text="{{localize "SBE.Effects.NativeReset"}}"><i class="fa-solid fa-rotate-left"></i></a>{{/if}}
+        <a data-action="toggleNative" data-id="{{id}}" data-tooltip-text="{{localize "SBE.Effects.NativeToggle"}}">
+          <i class="fa-solid {{#if hidden}}fa-eye-slash{{else}}fa-eye{{/if}}"></i></a>
+      </div>
+      {{/each}}
+    </div>
+  </aside>
+
+  {{!-- ÉDITEUR --}}
+  <section class="sbe-fx-main">
+    <div class="sbe-fx-edit">
+    {{#if def}}
+      {{> "systems/system-builder-engine/templates/managers/effect-editor.hbs"}}
+    {{else}}
+      <p class="notes">{{localize "SBE.Effects.PickOrCreate"}}</p>
+    {{/if}}
+    </div>
+
+    <footer class="sbe-fx-footer">
+      {{#if def}}
+      <button type="button" data-action="dupDef"><i class="fa-solid fa-copy"></i> {{localize "SBE.Effects.Duplicate"}}</button>
+      <button type="button" data-action="delDef"><i class="fa-solid fa-trash"></i> {{localize "SBE.Effects.Delete"}}</button>
+      {{/if}}
+      <button type="button" class="sbe-fx-save" data-action="save"><i class="fa-solid fa-floppy-disk"></i> {{localize "SBE.Effects.Save"}}</button>
+    </footer>
+  </section>
+</div>

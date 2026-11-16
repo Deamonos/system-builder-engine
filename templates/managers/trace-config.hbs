@@ -1,0 +1,300 @@
+{{!-- SBE — Configuration des traces au sol. --}}
+<div class="sbe-tc">
+  {{#*inline "sbe-tc-cond"}}
+  <div class="sbe-tc-row sbe-tc-cond">
+    <div class="sbe-tc-field sbe-tc-grow">
+      <label>{{label}}</label>
+      <input type="text" list="sbe-tc-keys" value="{{c.key}}" data-f="{{p}}.key" placeholder="{{localize "SBE.Ph.TraceKey"}}">
+    </div>
+    <div class="sbe-tc-field">
+      <label>{{localize "SBE.Traces.Op"}}</label>
+      <select data-f="{{p}}.op">{{#each ops}}<option value="{{id}}" {{#if (eq id ../c.op)}}selected{{/if}}>{{label}}</option>{{/each}}</select>
+    </div>
+    {{#unless (eq c.op "any")}}
+    <div class="sbe-tc-field"><label>{{localize "SBE.Traces.Value"}}</label><input type="number" step="any" value="{{c.value}}" data-f="{{p}}.value"></div>
+    <div class="sbe-tc-field">
+      <label>{{localize "SBE.Traces.Unit"}}</label>
+      <select data-f="{{p}}.unit">
+        <option value="value" {{#if (eq c.unit "value")}}selected{{/if}}>{{localize "SBE.Traces.UnitValue"}}</option>
+        <option value="pct" {{#if (eq c.unit "pct")}}selected{{/if}}>{{localize "SBE.Traces.UnitPct"}}</option>
+      </select>
+    </div>
+    {{/unless}}
+  </div>
+  {{/inline}}
+  {{#*inline "sbe-tc-effs"}}
+  <div class="sbe-tc-field sbe-tc-effs">
+    <label>{{localize "SBE.Traces.Effects"}}</label>
+    <p class="notes">{{localize "SBE.Traces.EffectsHint"}}</p>
+    <div class="sbe-tc-effgrid" data-cf-off>
+      {{#each effs}}
+      <label class="sbe-tc-check sbe-tc-eff" data-tooltip-text="{{label}}"><input type="checkbox" {{#if on}}checked{{/if}} data-f="eff:{{../p}}:{{id}}">{{#if img}}<img src="{{img}}" alt="">{{/if}}<span>{{label}}</span></label>
+      {{/each}}
+    </div>
+    {{#if both}}
+    <div class="sbe-tc-field sbe-tc-effmode">
+      <label>{{localize "SBE.Traces.EffMode"}}</label>
+      <select data-f="{{p}}.effMode">
+        <option value="or" {{#if (eq c.effMode "or")}}selected{{/if}}>{{localize "SBE.Traces.EffModeOr"}}</option>
+        <option value="and" {{#if (eq c.effMode "and")}}selected{{/if}}>{{localize "SBE.Traces.EffModeAnd"}}</option>
+      </select>
+    </div>
+    {{/if}}
+  </div>
+  {{/inline}}
+  <aside class="sbe-tc-list">
+    <ul>
+      {{#each types}}
+      <li class="{{#if active}}active{{/if}} {{#unless enabled}}is-off{{/unless}}" data-action="tcSelect" data-id="{{id}}">
+        <span class="sbe-tc-dot" style="background:{{color}}"></span><span class="sbe-tc-name">{{name}}</span>
+        {{#unless isBase}}<a class="sbe-tc-rm" data-action="tcDelete" data-id="{{id}}" data-tooltip-text="{{localize "SBE.Traces.DeleteTitle"}}"><i class="fa-solid fa-trash"></i></a>{{/unless}}
+      </li>
+      {{/each}}
+    </ul>
+    <ul class="sbe-tc-fpentry">
+      <li class="{{#if fpMode}}active{{/if}}" data-action="tcSelect" data-id="__footprints"><i class="fa-solid fa-shoe-prints"></i><span class="sbe-tc-name">{{localize "SBE.Traces.FpSection"}}</span></li>
+    </ul>
+    <button type="button" data-action="tcAdd"><i class="fa-solid fa-plus"></i> {{localize "SBE.Traces.AddType"}}</button>
+    <button type="button" data-action="tcReset"><i class="fa-solid fa-droplet"></i> {{localize "SBE.Traces.ResetBlood"}}</button>
+    <div class="sbe-tc-field">
+      <label>{{localize "SBE.Traces.MaxPerScene"}}</label>
+      <input type="number" min="20" step="10" value="{{opts.maxPerScene}}" data-opt="maxPerScene">
+      <p class="notes">{{localize "SBE.Traces.MaxPerSceneHint"}}</p>
+    </div>
+    <h3><i class="fa-solid fa-magnifying-glass"></i> {{localize "SBE.Traces.Track"}}</h3>
+    <div class="sbe-tc-field">
+      <label>{{localize "SBE.Traces.TrackKey"}}</label>
+      <input type="text" list="sbe-tc-keys" value="{{opts.track.key}}" data-opt="track.key" placeholder="{{localize "SBE.Ph.TrackKey"}}">
+    </div>
+    <div class="sbe-tc-field">
+      <label>{{localize "SBE.Traces.TrackRadius"}}</label>
+      <input type="number" min="1" step="1" value="{{opts.track.radius}}" data-opt="track.radius">
+    </div>
+    <div class="sbe-tc-field">
+      <label>{{localize "SBE.Traces.TrackMinutes"}}</label>
+      <input type="number" min="1" step="1" value="{{opts.track.minutes}}" data-opt="track.minutes">
+    </div>
+    <p class="notes">{{localize "SBE.Traces.TrackHint"}}</p>
+    <label class="sbe-tc-check"><input type="checkbox" {{#if opts.hoverAge}}checked{{/if}} data-opt="hoverAge"> {{localize "SBE.Traces.HoverAge"}}</label>
+    <p class="notes">{{localize "SBE.Traces.HoverAgeHint"}}</p>
+    <button type="button" data-action="tcClearScene"><i class="fa-solid fa-broom"></i> {{localize "SBE.Traces.ToolClear"}}</button>
+  </aside>
+
+  <div class="sbe-tc-edit">
+    {{#if fpMode}}
+    <h3><i class="fa-solid fa-shoe-prints"></i> {{localize "SBE.Traces.FpSection"}}</h3>
+    <p class="notes">{{localize "SBE.Traces.FpHint"}}</p>
+    {{#each rules}}
+    <div class="sbe-tc-rule">
+      <span class="sbe-tc-rule-prev">{{#if img}}<img src="{{footprint}}" alt="">{{else}}{{{svg}}}{{/if}}</span>
+      <div class="sbe-tc-rule-body">
+        <div class="sbe-tc-row">
+          <div class="sbe-tc-field">
+            <label>{{localize "SBE.Traces.FpKindLabel"}}</label>
+            <select data-r="{{idx}}.kind">{{#each kinds}}<option value="{{id}}" {{#if on}}selected{{/if}}>{{label}}</option>{{/each}}</select>
+          </div>
+          {{#if isKey}}
+          <div class="sbe-tc-field sbe-tc-grow"><label>{{localize "SBE.Traces.FpKey"}}</label><input type="text" list="sbe-tc-keys" value="{{key}}" data-r="{{idx}}.key" placeholder="{{localize "SBE.Ph.FpKey"}}"></div>
+          <div class="sbe-tc-field">
+            <label>{{localize "SBE.Traces.Op"}}</label>
+            <select data-r="{{idx}}.op">{{#each ../ops}}<option value="{{id}}" {{#if (eq id ../op)}}selected{{/if}}>{{label}}</option>{{/each}}</select>
+          </div>
+          {{#unless (eq op "any")}}
+          <div class="sbe-tc-field"><label>{{localize "SBE.Traces.Value"}}</label><input type="text" value="{{value}}" data-r="{{idx}}.value" placeholder="{{localize "SBE.Ph.FpValue"}}"></div>
+          {{/unless}}
+          {{else}}
+          <div class="sbe-tc-field sbe-tc-grow">
+            <label>{{localize "SBE.Traces.FpTarget"}}</label>
+            <select data-r="{{idx}}.ref">
+              <option value="" {{#unless ref}}selected{{/unless}}>—</option>
+              {{#each refs}}<option value="{{id}}" {{#if on}}selected{{/if}}>{{name}}</option>{{/each}}
+            </select>
+          </div>
+          {{/if}}
+        </div>
+        <div class="sbe-tc-row">
+          <div class="sbe-tc-field sbe-tc-grow">
+            <label>{{localize "SBE.Traces.FpUse"}}</label>
+            <select data-r="{{idx}}.footprint">
+              {{#if img}}<option value="{{footprint}}" selected>{{localize "SBE.Traces.FootprintUpload"}}</option>{{/if}}
+              {{#each feet}}<option value="{{id}}" {{#if on}}selected{{/if}}>{{label}} ({{id}})</option>{{/each}}
+            </select>
+          </div>
+          <button type="button" class="sbe-tc-rule-img" data-action="tcRuleImg" data-idx="{{idx}}"><i class="fa-solid fa-image"></i> {{localize "SBE.Traces.FootprintUpload"}}</button>
+        </div>
+      </div>
+      <div class="sbe-tc-rule-tools">
+        <a data-action="tcRuleMove" data-idx="{{idx}}" data-dir="-1" class="{{#if first}}is-off{{/if}}" data-tooltip-text="{{localize "SBE.Traces.FpUp"}}"><i class="fa-solid fa-arrow-up"></i></a>
+        <a data-action="tcRuleMove" data-idx="{{idx}}" data-dir="1" class="{{#if last}}is-off{{/if}}" data-tooltip-text="{{localize "SBE.Traces.FpDown"}}"><i class="fa-solid fa-arrow-down"></i></a>
+        <a data-action="tcRuleDel" data-idx="{{idx}}" data-tooltip-text="{{localize "SBE.Traces.FpDelete"}}"><i class="fa-solid fa-trash"></i></a>
+      </div>
+    </div>
+    {{else}}
+    <p class="notes sbe-tc-empty">{{localize "SBE.Traces.FpNone"}}</p>
+    {{/each}}
+    <button type="button" data-action="tcRuleAdd"><i class="fa-solid fa-plus"></i> {{localize "SBE.Traces.FpAdd"}}</button>
+    {{else}}
+    {{#with type}}
+    <div class="sbe-tc-row">
+      <div class="sbe-tc-field sbe-tc-grow">
+        <label>{{localize "SBE.Traces.Name"}}</label>
+        <input type="text" value="{{name}}" data-f="name">
+      </div>
+      <label class="sbe-tc-check"><input type="checkbox" {{#if enabled}}checked{{/if}} data-f="enabled"> {{localize "SBE.Traces.Enabled"}}</label>
+      {{#unless ../isBlood}}<a class="sbe-tc-del" data-action="tcDelete" data-id="{{id}}" data-tooltip-text="{{localize "SBE.Traces.DeleteTitle"}}"><i class="fa-solid fa-trash"></i></a>{{/unless}}
+    </div>
+
+    <h3><i class="fa-solid fa-users"></i> {{localize "SBE.Traces.Templates"}}</h3>
+    <div class="sbe-tc-row sbe-tc-wrap">
+      {{#each ../templates}}
+      <label class="sbe-tc-check"><input type="checkbox" {{#if on}}checked{{/if}} data-f="tpl:{{id}}"> {{name}}</label>
+      {{else}}<span class="notes">{{localize "SBE.Traces.NoTemplates"}}</span>{{/each}}
+    </div>
+    <p class="notes">{{localize "SBE.Traces.TemplatesHint"}}</p>
+
+    <h3><i class="fa-solid fa-bolt"></i> {{localize "SBE.Traces.When"}}</h3>
+    <div class="sbe-tc-row">
+      <label class="sbe-tc-check"><input type="checkbox" {{#if combatOnly}}checked{{/if}} data-f="combatOnly"> {{localize "SBE.Traces.CombatOnly"}}</label>
+      <label class="sbe-tc-check"><input type="checkbox" {{#if scaleToken}}checked{{/if}} data-f="scaleToken"> {{localize "SBE.Traces.ScaleToken"}}</label>
+    </div>
+    <p class="notes">{{localize "SBE.Traces.ScaleTokenHint"}}</p>
+    <div class="sbe-tc-row sbe-tc-wrap">
+      <label class="sbe-tc-check"><input type="checkbox" {{#if alternate}}checked{{/if}} data-f="alternate"> {{localize "SBE.Traces.Alternate"}}</label>
+      <label class="sbe-tc-check"><input type="checkbox" {{#if skipAir}}checked{{/if}} data-f="skipAir"> {{localize "SBE.Traces.SkipAir"}}</label>
+      <label class="sbe-tc-check"><input type="checkbox" {{#if hidden}}checked{{/if}} data-f="hidden"> {{localize "SBE.Traces.Hidden"}}</label>
+    </div>
+    <p class="notes">{{localize "SBE.Traces.WhenHint"}}</p>
+
+    <h3><i class="fa-solid fa-burst"></i> {{localize "SBE.Traces.Impact"}}</h3>
+    <div class="sbe-tc-row">
+      <label class="sbe-tc-check"><input type="checkbox" {{#if impact.on}}checked{{/if}} data-f="impact.on"> {{localize "SBE.Traces.ImpactOn"}}</label>
+    </div>
+    {{#if impact.on}}
+    {{> "sbe-tc-cond" c=impact p="impact" label=(localize "SBE.Traces.WatchKey") ops=../ops}}
+    {{> "sbe-tc-effs" c=impact p="impact" effs=../impactEffects both=../impactBoth}}
+    <div class="sbe-tc-row">
+      <div class="sbe-tc-field"><label>{{localize "SBE.Traces.Count"}}</label><input type="number" min="1" max="10" value="{{impact.count}}" data-f="impact.count"></div>
+      <div class="sbe-tc-field"><label>{{localize "SBE.Traces.Size"}}</label><input type="number" min="0.1" max="5" step="0.1" value="{{impact.size}}" data-f="impact.size"></div>
+      <div class="sbe-tc-field"><label>{{localize "SBE.Traces.Delay"}}</label><input type="number" min="0" step="100" value="{{delay}}" data-f="delay"></div>
+    </div>
+    <div class="sbe-tc-row">
+      <label class="sbe-tc-check"><input type="checkbox" {{#if impact.byLoss}}checked{{/if}} data-f="impact.byLoss"> {{localize "SBE.Traces.ByLoss"}}</label>
+    </div>
+    <label class="sbe-tc-fplabel">{{localize "SBE.Traces.Shapes"}}</label>
+    <div class="sbe-tc-row sbe-tc-wrap">
+      {{#each ../impactShapes}}
+      <label class="sbe-tc-check"><input type="checkbox" {{#if on}}checked{{/if}} data-f="shape:impact:{{id}}"> {{label}}</label>
+      {{/each}}
+    </div>
+    <p class="notes">{{localize "SBE.Traces.ImpactHint"}}</p>
+    {{/if}}
+
+    <h3><i class="fa-solid fa-shoe-prints"></i> {{localize "SBE.Traces.Trail"}}</h3>
+    <div class="sbe-tc-row">
+      <label class="sbe-tc-check"><input type="checkbox" {{#if trail.on}}checked{{/if}} data-f="trail.on"> {{localize "SBE.Traces.TrailOn"}}</label>
+    </div>
+    {{#if trail.on}}
+    <div class="sbe-tc-row">
+      <div class="sbe-tc-field"><label>{{localize "SBE.Traces.Spacing"}}</label><input type="number" min="0.1" step="0.1" value="{{trail.spacing}}" data-f="trail.spacing"></div>
+      <div class="sbe-tc-field"><label>{{localize "SBE.Traces.Size"}}</label><input type="number" min="0.1" max="5" step="0.1" value="{{trail.size}}" data-f="trail.size"></div>
+      <label class="sbe-tc-check"><input type="checkbox" {{#if orient}}checked{{/if}} data-f="orient"> {{localize "SBE.Traces.Orient"}}</label>
+    </div>
+    <div class="sbe-tc-row">
+      <label class="sbe-tc-check"><input type="checkbox" {{#if trail.grow}}checked{{/if}} data-f="trail.grow"> {{localize "SBE.Traces.TrailGrow"}}</label>
+    </div>
+    {{> "sbe-tc-cond" c=trail p="trail" label=(localize "SBE.Traces.Condition") ops=../ops}}
+    {{> "sbe-tc-effs" c=trail p="trail" effs=../trailEffects both=../trailBoth}}
+    <p class="notes">{{localize "SBE.Traces.ConditionHint"}}</p>
+    <label class="sbe-tc-fplabel">{{localize "SBE.Traces.Shapes"}}</label>
+    <div class="sbe-tc-row sbe-tc-wrap">
+      {{#each ../trailShapes}}
+      <label class="sbe-tc-check"><input type="checkbox" {{#if on}}checked{{/if}} data-f="shape:trail:{{id}}"> {{label}}</label>
+      {{/each}}
+    </div>
+    <p class="notes">{{localize "SBE.Traces.TrailHint"}}</p>
+    {{/if}}
+
+    <h3><i class="fa-solid fa-person-falling"></i> {{localize "SBE.Traces.Drag"}}</h3>
+    <div class="sbe-tc-row">
+      <label class="sbe-tc-check"><input type="checkbox" {{#if drag.on}}checked{{/if}} data-f="drag.on"> {{localize "SBE.Traces.DragOn"}}</label>
+    </div>
+    {{#if drag.on}}
+    {{> "sbe-tc-cond" c=drag p="drag" label=(localize "SBE.Traces.Condition") ops=../ops}}
+    <div class="sbe-tc-row">
+      <div class="sbe-tc-field"><label>{{localize "SBE.Traces.Size"}}</label><input type="number" min="0.1" max="5" step="0.1" value="{{drag.size}}" data-f="drag.size"></div>
+    </div>
+    <p class="notes">{{localize "SBE.Traces.DragHint"}}</p>
+    {{/if}}
+
+    <h3><i class="fa-solid fa-shapes"></i> {{localize "SBE.Traces.Look"}}</h3>
+    <p class="notes">{{localize "SBE.Traces.LookHint"}}</p>
+    <label class="sbe-tc-fplabel">{{localize "SBE.Traces.Footprint"}}</label>
+    <div class="sbe-tc-fpgrid">
+      {{#each ../footprints}}
+      <a class="sbe-tc-fpcell {{#if on}}active{{/if}}" data-action="tcPickFoot" data-id="{{id}}" style="--fp:{{../color.value}}">
+        {{{svg}}}<span>{{label}}</span><small>{{id}}</small>
+      </a>
+      {{/each}}
+      <a class="sbe-tc-fpcell {{#if ../fpImage}}active{{/if}}" data-action="tcFootprintImg" style="--fp:{{color.value}}">
+        {{#if ../fpImage}}<img src="{{footprint}}" alt="">{{else}}<i class="fa-solid fa-image"></i>{{/if}}
+        <span>{{localize "SBE.Traces.FootprintUpload"}}</span>
+      </a>
+    </div>
+    <p class="notes">{{localize "SBE.Traces.FootprintHint"}}</p>
+    <div class="sbe-tc-images">
+      {{#each images}}
+      <span class="sbe-tc-img"><img src="{{this}}" alt=""><a data-action="tcDelImage" data-idx="{{@index}}"><i class="fa-solid fa-xmark"></i></a></span>
+      {{/each}}
+      <button type="button" data-action="tcAddImage"><i class="fa-solid fa-image"></i> {{localize "SBE.Traces.AddImage"}}</button>
+    </div>
+    <div class="sbe-tc-row sbe-tc-fp">
+      <div class="sbe-tc-field sbe-tc-grow">
+        <label>{{localize "SBE.Traces.ImageFolder"}}</label>
+        <input type="text" value="{{imageFolder}}" data-f="imageFolder" placeholder="{{localize "SBE.Traces.ImageFolderNone"}}">
+      </div>
+      <button type="button" data-action="tcPickFolder"><i class="fa-solid fa-folder-open"></i> {{localize "SBE.Traces.PickFolder"}}</button>
+    </div>
+    {{#if imageFolder}}<p class="notes">{{localize "SBE.Traces.FolderCount" n=../folderCount}}</p>{{/if}}
+    <p class="notes">{{localize "SBE.Traces.ImagesHint"}}</p>
+    <div class="sbe-tc-row">
+      <div class="sbe-tc-field sbe-tc-grow">
+        <label>{{localize "SBE.Traces.ColorKey"}}</label>
+        <input type="text" list="sbe-tc-keys" value="{{color.key}}" data-f="color.key" {{#if ../isBlood}}readonly{{/if}}>
+      </div>
+      <div class="sbe-tc-field"><label>{{localize "SBE.Traces.Color"}}</label><input type="color" value="{{color.value}}" data-f="color.value"></div>
+      <div class="sbe-tc-field"><label>{{localize "SBE.Traces.Alpha"}}</label><input type="number" min="0.05" max="1" step="0.05" value="{{color.alpha}}" data-f="color.alpha"></div>
+    </div>
+    <p class="notes">{{#if ../isBlood}}{{localize "SBE.Traces.BloodKeyHint"}}{{else}}{{localize "SBE.Traces.ColorKeyHint"}}{{/if}}</p>
+
+    <h3><i class="fa-solid fa-hourglass-half"></i> {{localize "SBE.Traces.Lifetime"}}</h3>
+    <div class="sbe-tc-row">
+      <div class="sbe-tc-field">
+        <label>{{localize "SBE.Traces.Persist"}}</label>
+        <select data-f="persist">
+          <option value="scene" {{#if (eq persist "scene")}}selected{{/if}}>{{localize "SBE.Traces.PersistScene"}}</option>
+          <option value="ephemeral" {{#if (eq persist "ephemeral")}}selected{{/if}}>{{localize "SBE.Traces.PersistEphemeral"}}</option>
+        </select>
+      </div>
+      <div class="sbe-tc-field">
+        <label>{{localize "SBE.Traces.Fade"}}</label>
+        <select data-f="fade.mode">
+          <option value="none" {{#if (eq fade.mode "none")}}selected{{/if}}>{{localize "SBE.Traces.FadeNone"}}</option>
+          <option value="real" {{#if (eq fade.mode "real")}}selected{{/if}}>{{localize "SBE.Traces.FadeReal"}}</option>
+          <option value="world" {{#if (eq fade.mode "world")}}selected{{/if}}>{{localize "SBE.Traces.FadeWorld"}}</option>
+        </select>
+      </div>
+      {{#unless (eq fade.mode "none")}}
+      <div class="sbe-tc-field"><label>{{localize "SBE.Traces.FadeAfter"}} ({{../fadeUnit}})</label><input type="number" min="1" value="{{fade.amount}}" data-f="fade.amount"></div>
+      {{/unless}}
+    </div>
+    <div class="sbe-tc-row">
+      <label class="sbe-tc-check"><input type="checkbox" {{#if wallsBlock}}checked{{/if}} data-f="wallsBlock"> {{localize "SBE.Traces.WallsBlock"}}</label>
+    </div>
+    <p class="notes">{{localize "SBE.Traces.WallsHint"}}</p>
+    {{else}}
+    <p class="notes">{{localize "SBE.Traces.NoType"}}</p>
+    {{/with}}
+    {{/if}}
+  </div>
+  <datalist id="sbe-tc-keys">{{#each keys}}<option value="{{this}}"></option>{{/each}}</datalist>
+</div>

@@ -1,0 +1,44 @@
+/* SBE — Langues des personnages : passages, chat, fenêtre du MJ. */
+
+/* Un passage marqué : souligné de la couleur de sa langue. */
+.sbe-lang { --sbe-lang-color: #8a6d3b; }
+.sbe-lang.is-gm, .ProseMirror .sbe-lang, .editor-content .sbe-lang:not(.sbe-lang-on) {
+  text-decoration: underline dotted var(--sbe-lang-color);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+.sbe-lang.is-known { text-decoration: underline dotted color-mix(in srgb, var(--sbe-lang-color) 50%, transparent); text-underline-offset: 3px; }
+.sbe-lang.is-foreign .sbe-lang-x { color: var(--sbe-lang-color); }
+.sbe-lang.is-cipher { cursor: help; }
+.sbe-lang.is-cipher:hover { outline: 1px dashed var(--sbe-lang-color); outline-offset: 2px; }
+.message-content.sbe-lang.is-gm { text-decoration: none; border-left: 3px solid var(--sbe-lang-color); padding-left: 6px; }
+
+/* Étiquette de langue d'un message. */
+/* Sous le nom de l'orateur : une ligne à part dans l'en-tête (qui passe
+   à la ligne), avant le chuchotement et la saveur. */
+.message-header .sbe-lang-badge { flex: 1 0 100%; order: 1; font-size: 0.8em; font-weight: 600; color: var(--sbe-lang-color, inherit); white-space: nowrap; }
+.message-header:has(.sbe-lang-badge) { flex-wrap: wrap; }
+.message-header:has(.sbe-lang-badge) > :is(.whisper-to, .flavor-text) { order: 2; }
+
+/* Bouton du chat : la langue parlée en couleur. */
+#chat-controls [data-action="sbe-language"].sbe-lang-active { color: var(--sbe-lang-color); }
+
+/* Fenêtre du MJ. */
+.sbe-lang-app { display: flex; flex-direction: column; gap: 8px; height: 100%; }
+.sbe-lang-top { display: flex; align-items: flex-end; gap: 12px; }
+.sbe-lang-top > .sbe-cf-cell { flex: 1 1 auto; }
+.sbe-lang-io { display: flex; gap: 6px; }
+.sbe-lang-cols { display: flex; gap: 12px; flex: 1 1 auto; min-height: 0; }
+.sbe-lang-list { flex: 0 0 200px; display: flex; flex-direction: column; gap: 6px; overflow-y: auto; }
+.sbe-lang-list ul { list-style: none; margin: 0; padding: 0; }
+.sbe-lang-list li { display: flex; align-items: center; gap: 6px; padding: 4px 6px; cursor: pointer; border: 1px solid transparent; }
+.sbe-lang-list li.active { border-color: var(--sbe-accent); }
+.sbe-lang-list li a { margin-left: auto; opacity: 0.6; }
+.sbe-lang-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.sbe-lang-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbe-lang-edit { flex: 1 1 auto; overflow-y: auto; min-width: 0; }
+.sbe-lang-preview { --sbe-lang-color: #8a6d3b; }
+.sbe-lang-preview p { margin: 4px 0; }
+.sbe-lang-preview .sbe-lang-x { color: var(--sbe-lang-color); }
+.message-content.sbe-lang.is-known { text-decoration: none; }
+.sbe-lang-warn { color: var(--sbe-warn, #c98a00); grid-column: 1 / -1; }

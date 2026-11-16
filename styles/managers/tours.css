@@ -1,0 +1,125 @@
+/* ============================================================
+ * SBE — Visites guidées (managers/tours)
+ * La bulle de Foundry en verre teinté aux couleurs du thème SBE :
+ * fond translucide flouté, liseré d'accent, en-tête avec icône et
+ * pastille d'étape, barre de progression, boutons écrits. Le projecteur
+ * respire autour de la cible.
+ * ============================================================ */
+.tour.sbe-tour {
+  --sbe-tour-glass: color-mix(in srgb, var(--sbe-surf-1) 56%, transparent);
+  --sbe-tour-edge: color-mix(in srgb, var(--sbe-accent) 55%, transparent);
+  width: min(380px, calc(100vw - 16px));
+  max-width: none;
+  padding: 14px 16px 12px;
+  background: var(--sbe-tour-glass);
+  -webkit-backdrop-filter: blur(14px) saturate(1.35);
+  backdrop-filter: blur(14px) saturate(1.35);
+  color: var(--sbe-text);
+  border: 1px solid var(--sbe-tour-edge);
+  border-radius: 14px;
+  font-family: var(--sbe-font-primary);
+  box-shadow:
+    0 18px 40px rgb(0 0 0 / 0.45),
+    0 0 0 1px rgb(255 255 255 / 0.04) inset,
+    0 1px 0 rgb(255 255 255 / 0.08) inset;
+  overflow: hidden;
+}
+/* Entrée animée à la première bulle seulement : d'une étape à l'autre, la bulle reste en place (pas de clignotement). */
+.tour.sbe-tour.sbe-tour-enter { animation: sbe-tour-in 140ms ease-out both; }
+/* Fenêtre au milieu de l'écran (étapes sans cible). */
+.tour-center-step.sbe-tour { width: min(460px, calc(100vw - 32px)); padding: 18px 20px 14px; }
+body.game .tour-center-step.sbe-tour.sbe-tour-enter { animation-name: sbe-tour-in-center; }
+/* Reflet d'accent en haut de la bulle, qui glisse doucement. */
+/* Animé par déplacement (transform) : la bulle floutée n'est pas repeinte à chaque image. */
+.tour.sbe-tour::before {
+  content: ""; position: absolute; top: 0; left: -100%; width: 200%; height: 3px; pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--sbe-accent), var(--sbe-accent-light), var(--sbe-accent), transparent) 0 0 / 50% 100% repeat-x;
+  will-change: transform;
+  animation: sbe-tour-sheen 4s linear infinite;
+}
+
+.tour.sbe-tour .step-header { display: flex; align-items: center; gap: 8px; padding: 0 28px 10px 0; margin-bottom: 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--sbe-tone-3) 70%, transparent); }
+.tour.sbe-tour .step-header::after { display: none; }
+.tour.sbe-tour .step-title { flex: 1; margin: 0; text-align: left; font-family: var(--sbe-font-heading); font-size: 1.15rem;
+  color: var(--sbe-text-strong); display: flex; align-items: center; gap: 8px; border: none; }
+.tour.sbe-tour .sbe-tour-logo { width: 34px; height: 34px; flex: none; border: none; border-radius: 8px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.35), 0 0 0 1px color-mix(in srgb, var(--sbe-accent) 45%, transparent); }
+/* Fenêtre au milieu (bienvenue, fin) : le logo en grand, au-dessus du titre. */
+.tour-center-step.sbe-tour .step-header { position: relative; justify-content: center; padding-right: 0; }
+.tour-center-step.sbe-tour .step-title { flex-direction: column; align-items: center; text-align: center; gap: 10px; font-size: 1.3rem; }
+.tour-center-step.sbe-tour .sbe-tour-chip { position: absolute; top: 0; left: 0; }
+.tour-center-step.sbe-tour .sbe-tour-logo { width: 72px; height: 72px; border-radius: 16px; animation: sbe-tour-float 4s ease-in-out infinite; }
+.tour.sbe-tour .sbe-tour-chip { flex: none; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; letter-spacing: .04em;
+  color: var(--sbe-text-2); background: color-mix(in srgb, var(--sbe-tone-3) 45%, transparent); }
+.tour.sbe-tour [data-action="exit"] { top: 14px; right: 12px; color: var(--sbe-text-dim); transition: color var(--sbe-transition), transform var(--sbe-transition); }
+.tour.sbe-tour [data-action="exit"]:hover { color: var(--sbe-accent); transform: rotate(90deg); }
+
+.tour.sbe-tour p.content { margin: 0 0 8px; color: var(--sbe-text-2); font-size: 0.95rem; line-height: 1.5; text-align: left; }
+.tour.sbe-tour p.content:first-of-type { color: var(--sbe-text); }
+
+.sbe-tour-bar { height: 4px; margin: 12px 0 10px; border-radius: 999px; overflow: hidden;
+  background: color-mix(in srgb, var(--sbe-tone-3) 50%, transparent); }
+.sbe-tour-bar > i { display: block; height: 100%; border-radius: inherit;
+  background: linear-gradient(90deg, var(--sbe-accent-dark), var(--sbe-accent-light));
+  transition: width 400ms cubic-bezier(.2, .8, .2, 1); }
+
+.tour.sbe-tour .step-controls { display: flex; align-items: center; gap: 8px; }
+.tour.sbe-tour .step-controls .progress { flex: 1; font-size: 0; } /* l'étape est dans la pastille de l'en-tête */
+.tour.sbe-tour .step-controls .step-button { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px;
+  border-radius: 999px; font-size: 0.85rem; text-decoration: none; cursor: var(--cursor-pointer, pointer);
+  transition: background var(--sbe-transition), color var(--sbe-transition), transform var(--sbe-transition); }
+.tour.sbe-tour .step-controls .step-button > * { cursor: inherit; }
+.tour.sbe-tour .step-controls [data-action="previous"] { color: var(--sbe-text-2); background: color-mix(in srgb, var(--sbe-tone-3) 35%, transparent); }
+.tour.sbe-tour .step-controls [data-action="previous"]:hover { color: var(--sbe-text); }
+.tour.sbe-tour .step-controls [data-action="previous"].is-empty { visibility: hidden; }
+.tour.sbe-tour .step-controls :is([data-action="next"], [data-action="complete"]) { color: var(--sbe-text-max);
+  background: linear-gradient(135deg, var(--sbe-accent), var(--sbe-accent-dark));
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--sbe-accent) 35%, transparent); }
+.tour.sbe-tour .step-controls :is([data-action="next"], [data-action="complete"]):hover { transform: translateX(2px); }
+.tour.sbe-tour .step-controls .step-button.disabled { opacity: .5; pointer-events: none; }
+
+/* Sommaire des autres visites. */
+.sbe-tour-list { display: flex; flex-direction: column; gap: 6px; margin: 8px 0 10px; }
+.sbe-tour-list button { justify-content: flex-start; gap: 8px; border-radius: 10px;
+  background: color-mix(in srgb, var(--sbe-tone-3) 30%, transparent); border: 1px solid color-mix(in srgb, var(--sbe-accent) 30%, transparent); }
+.sbe-tour-list button:hover { background: color-mix(in srgb, var(--sbe-accent) 18%, transparent); }
+/* Visite déjà terminée : une coche au bout. */
+.sbe-tour-list button .sbe-tour-done { margin-left: auto; color: var(--sbe-ok, var(--sbe-accent)); }
+
+/* Projecteur : bord arrondi, liseré d'accent qui respire. */
+.tour-fadeout.sbe-tour-spot { border-radius: 10px; }
+.tour-fadeout.sbe-tour-spot::after {
+  content: ""; position: absolute; inset: -4px; border-radius: 14px; pointer-events: none;
+  border: 2px solid var(--sbe-accent);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--sbe-accent) 45%, transparent);
+  will-change: opacity, transform;
+  animation: sbe-tour-breathe 1.8s ease-in-out infinite;
+}
+/* Cadre posé sur plusieurs éléments visés ensemble. */
+.sbe-tour-zone { position: fixed; pointer-events: none; z-index: 1; }
+
+/* Case « Ne plus afficher au démarrage ». */
+.tour.sbe-tour .sbe-tour-skip { display: flex; align-items: center; gap: 6px; margin-top: 10px; padding-top: 8px;
+  border-top: 1px solid color-mix(in srgb, var(--sbe-tone-3) 60%, transparent); font-size: 0.8rem; color: var(--sbe-text-dim); cursor: var(--cursor-pointer, pointer); }
+.tour.sbe-tour .sbe-tour-skip input { margin: 0; width: 15px; height: 15px; flex: none; accent-color: var(--sbe-accent); }
+
+@keyframes sbe-tour-in { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: none; } }
+@keyframes sbe-tour-in-center { from { opacity: 0; transform: translate(-50%, calc(-50% + 10px)) scale(.97); } to { opacity: 1; transform: translate(-50%, -50%); } }
+@keyframes sbe-tour-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes sbe-tour-sheen { from { transform: translateX(0); } to { transform: translateX(50%); } }
+@keyframes sbe-tour-breathe {
+  0%, 100% { opacity: .95; transform: scale(1); }
+  50% { opacity: .4; transform: scale(1.012); }
+}
+
+/* Étape qui montre la scène : les fenêtres ouvertes s'effacent le temps de l'étape. */
+body.sbe-tour-clear > .application:has(> .window-header) { visibility: hidden; }
+
+/* Dernière bulle : lien vers la documentation du sujet. */
+/* Accueil : liens vers la feuille de route et le Discord. */
+.sbe-tour-links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.sbe-tour-link { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 10px; color: var(--sbe-accent); text-decoration: none;
+  background: color-mix(in srgb, var(--sbe-tone-3) 30%, transparent); border: 1px solid color-mix(in srgb, var(--sbe-accent) 30%, transparent); }
+.sbe-tour-link:hover { background: color-mix(in srgb, var(--sbe-accent) 18%, transparent); }
+.sbe-tour-doc {display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; cursor: pointer; color: var(--sbe-accent); text-decoration: underline; text-underline-offset: 2px; }

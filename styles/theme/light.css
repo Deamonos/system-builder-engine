@@ -1,0 +1,51 @@
+/**
+ * SBE — Thème clair (palette par défaut)
+ * Mêmes jetons que dark.css, déclinaison claire.
+ * Actif quand l'utilisateur choisit le thème clair dans Foundry.
+ */
+
+html.theme-light,
+body.theme-light,
+.theme-light,
+.application.theme-light {
+  --sbe-surf-1: #eef0f2;
+  --sbe-surf-2: #d8dbde;
+  --sbe-surf-3: #c7cace;
+  --sbe-surf-4: #aab0b6;
+  --sbe-surf-5: #888d93;
+  --sbe-surf-6: #6c7177;
+  --sbe-raised: #bdc1c6;
+  --sbe-ctx-bg: #d8dbde;   /* fond des menus contextuels */
+
+  --sbe-tone-1: #e6e8ea;
+  --sbe-tone-2: #d8dbde;
+  --sbe-tone-3: #c7cace;
+  --sbe-tone-4: #aab0b6;
+  --sbe-tone-5: #888d93;
+  --sbe-tone-6: #6c7177;
+
+  --sbe-text:          #1e2024;
+  --sbe-text-2:        #3a3d42;
+  --sbe-text-dim:      #5a5d63;
+  --sbe-text-strong:   #101216;
+  --sbe-text-max:      #000000;
+
+  --sbe-accent:        #b5471f;
+  --sbe-accent-dark:   #a13c17;
+  --sbe-accent-light:  #c95a28;
+  --sbe-accent-text:   #b5471f;
+  --sbe-content-link:  #1e2024;
+  --sbe-scrollbar:     #8a3517;
+  --sbe-scroll-hover:  #7c8087;
+
+  --sbe-fail: #8b0000;
+  --sbe-ok:     #37602f;
+  --sbe-warn:   #7a5d0c;
+
+  --sbe-header-grad:     linear-gradient(180deg, #c5c9ce 0%, #b3b8be 100%);
+  --sbe-shadow:          0 8px 24px rgba(0, 0, 0, 0.30);
+  --sbe-shadow-primary:  #b5471f;
+  --sbe-edge-soft:       rgba(0, 0, 0, 0.12);
+  --sbe-overlay:         rgba(0, 0, 0, 0.05);
+  --sbe-overlay-2:       rgba(0, 0, 0, 0.09);
+}

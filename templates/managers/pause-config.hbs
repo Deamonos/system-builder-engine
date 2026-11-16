@@ -1,0 +1,240 @@
+<div class="sbe-pause-config-root">
+<div class="sbe-pause-config-body">
+
+  {{!-- ================= MÉDIA ================= --}}
+  <details class="sbe-section" open data-sync>
+    <summary>
+      <span class="sbe-section-title">{{localize "SBE.PauseBanner.Media.Title"}}</span>
+      <label class="sbe-section-toggle">
+        <input type="checkbox" name="media.enabled" {{checked config.media.enabled}}>
+      </label>
+    </summary>
+    <div class="sbe-section-rows">
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Media.Path"}}</label>
+        <div class="form-fields">
+          <file-picker name="media.path" type="imagevideo" value="{{config.media.path}}"></file-picker>
+        </div>
+        <p class="hint">{{localize "SBE.PauseBanner.Media.PathHint"}}</p>
+      </div>
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Media.Size"}}</label>
+        <div class="form-fields">
+          <range-picker name="media.size" value="{{config.media.size}}" min="20" max="800" step="10"></range-picker>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  {{!-- ================= TEXTE ================= --}}
+  <details class="sbe-section" open data-sync>
+    <summary>
+      <span class="sbe-section-title">{{localize "SBE.PauseBanner.Text.Title"}}</span>
+      <label class="sbe-section-toggle">
+        <input type="checkbox" name="text.enabled" {{checked config.text.enabled}}>
+      </label>
+    </summary>
+    <div class="sbe-section-rows">
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Text.Content"}}</label>
+        <div class="form-fields">
+          <input type="text" name="text.content" value="{{config.text.content}}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Text.Font"}}</label>
+        <div class="form-fields">
+          <select name="text.font">
+            <option value="">{{localize "SBE.PauseBanner.Text.FontPlaceholder"}}</option>
+            {{#each fontFamilies}}
+              <option value="{{this}}" style="font-family:'{{this}}';" {{#if (eq this @root.config.text.font)}}selected{{/if}}>{{this}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <p class="hint">{{localize "SBE.PauseBanner.Text.FontHint"}}</p>
+      </div>
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Text.Size"}}</label>
+        <div class="form-fields">
+          <range-picker name="text.size" value="{{config.text.size}}" min="0.8" max="6" step="0.1"></range-picker>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Text.Color"}}</label>
+        <div class="form-fields">
+          <color-picker name="text.color" value="{{config.text.color}}"></color-picker>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Text.Position"}}</label>
+        <div class="form-fields">
+          <select name="text.position">
+            {{selectOptions positionChoices selected=config.text.position localize=true}}
+          </select>
+        </div>
+        <p class="hint">{{localize "SBE.PauseBanner.Text.PositionHint"}}</p>
+      </div>
+      <div class="form-group sbe-free-only">
+        <label>{{localize "SBE.PauseBanner.Text.PosX"}}</label>
+        <div class="form-fields">
+          <range-picker name="text.posX" value="{{config.text.posX}}" min="0" max="100" step="1"></range-picker>
+        </div>
+      </div>
+      <div class="form-group sbe-free-only">
+        <label>{{localize "SBE.PauseBanner.Text.PosY"}}</label>
+        <div class="form-fields">
+          <range-picker name="text.posY" value="{{config.text.posY}}" min="0" max="100" step="1"></range-picker>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  {{!-- ================= BANDE DE FOND ================= --}}
+  <details class="sbe-section" open data-sync>
+    <summary>
+      <span class="sbe-section-title">{{localize "SBE.PauseBanner.Band.Title"}}</span>
+      <label class="sbe-section-toggle">
+        <input type="checkbox" name="band.enabled" {{checked config.band.enabled}}>
+      </label>
+    </summary>
+    <div class="sbe-section-rows">
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Band.Color"}}</label>
+        <div class="form-fields">
+          <color-picker name="band.color" value="{{config.band.color}}"></color-picker>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Band.Opacity"}}</label>
+        <div class="form-fields">
+          <range-picker name="band.opacity" value="{{config.band.opacity}}" min="0" max="100" step="1"></range-picker>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Band.Width"}}</label>
+        <div class="form-fields">
+          <range-picker name="band.width" value="{{config.band.width}}" min="10" max="100" step="1"></range-picker>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Band.Height"}}</label>
+        <div class="form-fields">
+          <range-picker name="band.height" value="{{config.band.height}}" min="50" max="800" step="10"></range-picker>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  {{!-- ================= POSITION & ANIMATION ================= --}}
+  <details class="sbe-section" open data-sync>
+    <summary>
+      <span class="sbe-section-title">{{localize "SBE.PauseBanner.Layout.Title"}}</span>
+    </summary>
+    <div class="sbe-section-rows">
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Layout.VerticalPos"}}</label>
+        <div class="form-fields">
+          <range-picker name="layout.verticalPos" value="{{config.layout.verticalPos}}" min="5" max="95" step="1"></range-picker>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Layout.HorizontalPos"}}</label>
+        <div class="form-fields">
+          <range-picker name="layout.horizontalPos" value="{{config.layout.horizontalPos}}" min="5" max="95" step="1"></range-picker>
+        </div>
+        <p class="hint">{{localize "SBE.PauseBanner.Layout.HorizontalPosHint"}}</p>
+      </div>
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Anim.Appear"}}</label>
+        <div class="form-fields">
+          <select name="anim.appear">
+            {{selectOptions appearChoices selected=config.anim.appear localize=true}}
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Anim.AppearDuration"}}</label>
+        <div class="form-fields">
+          <range-picker name="anim.appearDuration" value="{{config.anim.appearDuration}}" min="0.1" max="3" step="0.1"></range-picker>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Anim.Idle"}}</label>
+        <div class="form-fields">
+          <select name="anim.idle">
+            {{selectOptions idleChoices selected=config.anim.idle localize=true}}
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Anim.Disappear"}}</label>
+        <div class="form-fields">
+          <select name="anim.disappear">
+            {{selectOptions disappearChoices selected=config.anim.disappear localize=true}}
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Layout.Darken"}}</label>
+        <div class="form-fields">
+          <range-picker name="layout.darken" value="{{config.layout.darken}}" min="0" max="90" step="1"></range-picker>
+        </div>
+        <p class="hint">{{localize "SBE.PauseBanner.Layout.DarkenHint"}}</p>
+      </div>
+    </div>
+  </details>
+
+  {{!-- ================= SON ================= --}}
+  <details class="sbe-section" data-sync>
+    <summary>
+      <span class="sbe-section-title">{{localize "SBE.PauseBanner.Sound.Title"}}</span>
+      <label class="sbe-section-toggle">
+        <input type="checkbox" name="sound.enabled" {{checked config.sound.enabled}}>
+      </label>
+    </summary>
+    <div class="sbe-section-rows">
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Sound.Path"}}</label>
+        <div class="form-fields">
+          <file-picker name="sound.path" type="audio" value="{{config.sound.path}}"></file-picker>
+        </div>
+        <p class="hint">{{sbeAudioFormats}} {{localize "SBE.PauseBanner.Sound.PathHint"}}</p>
+      </div>
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Sound.ResumePath"}}</label>
+        <div class="form-fields">
+          <file-picker name="sound.resumePath" type="audio" value="{{config.sound.resumePath}}"></file-picker>
+        </div>
+        <p class="hint">{{localize "SBE.PauseBanner.Sound.ResumePathHint"}}</p>
+      </div>
+      <div class="form-group">
+        <label>{{localize "SBE.PauseBanner.Sound.Volume"}}</label>
+        <div class="form-fields">
+          <range-picker name="sound.volume" value="{{config.sound.volume}}" min="0" max="100" step="1"></range-picker>
+        </div>
+      </div>
+    </div>
+  </details>
+
+</div>
+
+{{!-- ================= BOUTONS ================= --}}
+<footer class="form-footer sbe-pause-config-footer">
+  <button type="button" data-action="preview">
+    <i class="fa-solid fa-eye"></i>
+    <span>{{localize "SBE.PauseBanner.Buttons.Preview"}}</span>
+  </button>
+  <button type="button" data-action="previewStop">
+    <i class="fa-solid fa-eye-slash"></i>
+    <span>{{localize "SBE.PauseBanner.Buttons.PreviewStop"}}</span>
+  </button>
+  <button type="submit">
+    <i class="fa-solid fa-floppy-disk"></i>
+    <span>{{localize "SBE.PauseBanner.Buttons.Save"}}</span>
+  </button>
+  <button type="button" data-action="reset" class="sbe-danger">
+    <i class="fa-solid fa-rotate-left"></i>
+    <span>{{localize "SBE.PauseBanner.Buttons.Reset"}}</span>
+  </button>
+</footer>
+</div>

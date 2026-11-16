@@ -1,0 +1,83 @@
+{{!-- SBE — Feuille du GROUPE (MJ) : membres, sauvegardes, réglages. --}}
+<section class="sbe-group sbe-group-scroll">
+  <header class="sbe-group-head">
+    <img class="sbe-group-img" src="{{document.img}}" alt="" data-action="editImage" data-edit="img">
+    <input class="sbe-group-name" type="text" name="name" value="{{document.name}}" {{#unless isGM}}disabled{{/unless}}>
+  </header>
+
+  <h3 class="sbe-group-title"><i class="fa-solid fa-users"></i> {{localize "SBE.Group.Members"}}</h3>
+  <p class="notes">{{localize "SBE.Group.MembersHint"}}</p>
+  <ul class="sbe-group-members">
+    {{#each members}}
+    <li class="sbe-group-member {{#if missing}}is-missing{{/if}}" data-uuid="{{uuid}}">
+      <img src="{{img}}" alt="">
+      <a class="sbe-group-mname" data-action="groupOpen">{{name}}</a>
+      {{#if ../isGM}}<a class="sbe-group-x" data-action="groupRemove" data-tooltip="{{localize "SBE.Group.Remove"}}" aria-label="{{localize "SBE.Group.Remove"}}"><i class="fa-solid fa-xmark"></i></a>{{/if}}
+    </li>
+    {{else}}
+    <li class="sbe-group-empty notes">{{localize "SBE.Group.NoMembers"}}</li>
+    {{/each}}
+  </ul>
+
+  {{#if isGM}}
+  <h3 class="sbe-group-title"><i class="fa-solid fa-floppy-disk"></i> {{localize "SBE.Group.Saves"}}</h3>
+  <p class="notes">{{localize "SBE.Group.SavesHint"}}</p>
+  <div class="sbe-group-slots">
+    {{#each slots}}
+    <div class="sbe-group-slot {{#if auto}}is-auto{{/if}} {{#unless has}}is-empty{{/unless}}">
+      <div class="sbe-group-slot-info">
+        <b>{{label}}</b>
+        {{#if has}}
+          <span><i class="fa-solid fa-hourglass-half"></i> {{world}}</span>
+          <span class="notes"><i class="fa-regular fa-clock"></i> {{real}} · {{localize "SBE.Group.SlotCount" n=count}}</span>
+        {{else}}
+          <span class="notes">{{localize "SBE.Group.SlotNone"}}</span>
+        {{/if}}
+      </div>
+      <div class="sbe-group-slot-btns">
+        {{#unless auto}}<button type="button" data-action="groupSave" data-slot="{{id}}"><i class="fa-solid fa-floppy-disk"></i> {{localize "SBE.Group.Save"}}</button>{{/unless}}
+        <button type="button" data-action="groupLoad" data-slot="{{id}}" {{#unless has}}disabled{{/unless}}><i class="fa-solid fa-clock-rotate-left"></i> {{localize "SBE.Group.Load"}}</button>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+
+  <h3 class="sbe-group-title"><i class="fa-solid fa-rotate"></i> {{localize "SBE.Group.Auto"}}</h3>
+  <p class="notes">{{localize "SBE.Group.ActiveHint"}}</p>
+  <button type="button" class="sbe-group-active {{#if isActive}}is-on{{/if}}" data-action="groupActive">
+    <i class="fa-solid {{#if isActive}}fa-toggle-on{{else}}fa-toggle-off{{/if}}"></i>
+    {{#if isActive}}{{localize "SBE.Group.IsActive"}}{{else}}{{localize "SBE.Group.MakeActive"}}{{/if}}
+  </button>
+  <label class="sbe-group-check"><input type="checkbox" name="system.autoSave.newDay" {{#if system.autoSave.newDay}}checked{{/if}}> {{localize "SBE.Group.AutoNewDay"}}</label>
+  <div class="sbe-group-field">
+    <label>{{localize "SBE.Group.AutoTimer"}}</label>
+    <input type="number" name="system.autoSave.timerMinutes" value="{{system.autoSave.timerMinutes}}" min="0" step="1">
+    <p class="notes">{{localize "SBE.Group.AutoTimerHint"}}</p>
+  </div>
+
+  <h3 class="sbe-group-title"><i class="fa-solid fa-volume-high"></i> {{localize "SBE.Group.Sound"}}</h3>
+  <div class="sbe-group-field">
+    <label>{{localize "SBE.Group.SoundFile"}}</label>
+    <div class="sbe-group-row">
+      <input type="text" name="system.media.sound" value="{{system.media.sound}}" placeholder="sounds/…">
+      <button type="button" class="sbe-group-icon" data-action="groupPickSound" data-tooltip="{{localize "SBE.Common.Browse"}}" aria-label="{{localize "SBE.Common.Browse"}}"><i class="fa-solid fa-folder-open"></i></button>
+      <button type="button" class="sbe-group-icon" data-action="groupTestSound" data-tooltip="{{localize "SBE.Media.Test"}}" aria-label="{{localize "SBE.Media.Test"}}"><i class="fa-solid fa-play"></i></button>
+    </div>
+    <p class="notes">{{audioFormats}}</p>
+  </div>
+  <div class="sbe-group-field">
+    <label>{{localize "SBE.Media.Volume"}}</label>
+    <div class="sbe-group-row">
+      <input type="range" class="sbe-group-volume" name="system.media.volume" value="{{system.media.volume}}" min="0" max="100" step="1">
+      <output class="sbe-group-volout">{{system.media.volume}}%</output>
+    </div>
+  </div>
+  <div class="sbe-group-field">
+    <label>{{localize "SBE.Media.Audience"}}</label>
+    <select name="system.media.audience">
+      <option value="gm" {{#unless audAll}}selected{{/unless}}>{{localize "SBE.Media.AudGm"}}</option>
+      <option value="all" {{#if audAll}}selected{{/if}}>{{localize "SBE.Media.AudAll"}}</option>
+    </select>
+  </div>
+  {{/if}}
+</section>

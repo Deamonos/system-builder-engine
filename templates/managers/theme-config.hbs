@@ -1,0 +1,383 @@
+<div class="sbe-theme-root">
+
+  {{!-- ================= BIBLIOTHÈQUE : quel thème on règle ================= --}}
+  <section class="sbe-thlib">
+    <label class="sbe-thlib-f sbe-thlib-pick"><span>{{localize "SBE.Theme.Lib.Editing"}}</span>
+      <select class="sbe-thlib-sel">
+        {{#each lib.themes}}<option value="{{this.id}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>{{/each}}
+      </select></label>
+    <div class="sbe-thlib-btns">
+      <button type="button" data-lib="new" data-tooltip="{{localize 'SBE.Theme.Lib.NewHint'}}"><i class="fa-solid fa-plus"></i> {{localize "SBE.Theme.Lib.New"}}</button>
+      <button type="button" data-lib="dup" data-tooltip="{{localize 'SBE.Theme.Lib.DupHint'}}"><i class="fa-solid fa-clone"></i> {{localize "SBE.Theme.Lib.Dup"}}</button>
+      {{#unless lib.builtin}}
+      <button type="button" data-lib="rename"><i class="fa-solid fa-pen"></i> {{localize "SBE.Theme.Lib.Rename"}}</button>
+      <button type="button" data-lib="delete" class="sbe-thlib-del"><i class="fa-solid fa-trash"></i> {{localize "SBE.Theme.Lib.Delete"}}</button>
+      {{/unless}}
+    </div>
+    <div class="sbe-thlib-opts">
+      {{#unless lib.builtin}}
+      <label class="sbe-thlib-f"><span>{{localize "SBE.Theme.Lib.Base"}}</span>
+        <select class="sbe-thlib-base">
+          <option value="light" {{#if (eq lib.base "light")}}selected{{/if}}>{{localize "SBE.Theme.Lib.BaseLight"}}</option>
+          <option value="dark" {{#if (eq lib.base "dark")}}selected{{/if}}>{{localize "SBE.Theme.Lib.BaseDark"}}</option>
+        </select></label>
+      {{/unless}}
+      <label class="sbe-thlib-check"><input type="checkbox" class="sbe-thlib-offer" {{checked lib.offered}} {{#if lib.imposed}}disabled{{/if}}> {{localize "SBE.Theme.Lib.Offered"}}</label>
+      <label class="sbe-thlib-check"><input type="checkbox" class="sbe-thlib-impose" {{checked lib.imposed}}> {{localize "SBE.Theme.Lib.Impose"}}</label>
+    </div>
+    <p class="hint">{{#if lib.builtin}}{{localize "SBE.Theme.Lib.BuiltinHint"}}{{else}}{{localize "SBE.Theme.Lib.NamedHint"}}{{/if}}</p>
+  </section>
+
+  {{!-- ================= LES TROIS PARTIES DU THÈME ================= --}}
+  <nav class="sbe-thparts">
+    <a data-thpart="theme" class="{{#if (eq part "theme")}}is-on{{/if}}"><i class="fa-solid fa-palette"></i> {{localize "SBE.Theme.Part.theme"}}</a>
+    <a data-thpart="tooltip" class="{{#if (eq part "tooltip")}}is-on{{/if}}"><i class="fa-solid fa-message"></i> {{localize "SBE.Theme.Part.tooltip"}}</a>
+    <a data-thpart="chat" class="{{#if (eq part "chat")}}is-on{{/if}}"><i class="fa-solid fa-comments"></i> {{localize "SBE.Theme.Part.chat"}}</a>
+  </nav>
+
+  {{!-- ================= APERÇU (suit la partie ouverte) ================= --}}
+  <section class="sbe-thp">
+    {{!-- Aperçu du thème général (onglets Couleurs → CSS) --}}
+    <div class="sbe-thp-main">
+    <div class="sbe-thp-bar">
+      {{!-- L'aperçu suit le style (clair / sombre) du thème réglé. --}}
+      <button type="button" data-action="preview"><i class="fa-solid fa-display"></i> {{localize "SBE.Theme.Buttons.Preview"}}</button>
+      <span class="hint">{{localize "SBE.Theme.PreviewHint"}}</span>
+    </div>
+    <div class="sbe-thp-stage"></div>
+    </div>
+    {{!-- Aperçus des onglets Info-bulles et Messages du chat (remplis par
+         leurs panneaux) : l'aperçu suit l'onglet ouvert. --}}
+    <div class="sbe-thp-alt sbe-tooltip-config" data-alt="tooltip" hidden></div>
+    <div class="sbe-thp-alt sbe-chat-config" data-alt="chat" hidden></div>
+  </section>
+
+  {{!-- ================= ONGLETS ================= --}}
+  <nav class="sbe-thtabs">
+    <a data-thtab="colors" class="{{#if (eq tab "colors")}}is-on{{/if}}"><i class="fa-solid fa-palette"></i> {{localize "SBE.Theme.Tab.colors"}}</a>
+    <a data-thtab="fonts" class="{{#if (eq tab "fonts")}}is-on{{/if}}"><i class="fa-solid fa-font"></i> {{localize "SBE.Theme.Tab.fonts"}}</a>
+    <a data-thtab="look" class="{{#if (eq tab "look")}}is-on{{/if}}"><i class="fa-solid fa-window-maximize"></i> {{localize "SBE.Theme.Tab.look"}}</a>
+    <a data-thtab="media" class="{{#if (eq tab "media")}}is-on{{/if}}"><i class="fa-solid fa-volume-high"></i> {{localize "SBE.Theme.Tab.media"}}</a>
+    <a data-thtab="css" class="{{#if (eq tab "css")}}is-on{{/if}}"><i class="fa-solid fa-code"></i> {{localize "SBE.Theme.Tab.css"}}</a>
+  </nav>
+
+  <div class="sbe-theme-body">
+
+    {{!-- ================= POLICES ================= --}}
+    <div class="sbe-thpane" data-pane="fonts">
+    <details class="sbe-section" open data-sync>
+      <summary><span class="sbe-section-title">{{localize "SBE.Theme.Fonts.Title"}}</span></summary>
+      <div class="sbe-section-rows">
+
+        <div class="form-group">
+          <label>{{localize "SBE.Theme.Fonts.Primary"}}</label>
+          <div class="form-fields">
+            <select name="fonts.primary.family">
+              <option value="">{{localize "SBE.Theme.Fonts.DefaultFamily"}}</option>
+              {{#each fontFamilies}}
+                <option value="{{this}}" style="font-family:'{{this}}';" {{#if (eq this @root.config.fonts.primary.family)}}selected{{/if}}>{{this}}</option>
+              {{/each}}
+            </select>
+          </div>
+          <p class="hint">{{localize "SBE.Theme.Fonts.FamilyHint"}}</p>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "SBE.Theme.Fonts.PrimaryStyle"}}</label>
+          <div class="form-fields sbe-font-style">
+            <select name="fonts.primary.weight">
+              {{selectOptions weightChoices selected=config.fonts.primary.weight localize=true}}
+            </select>
+            <label class="sbe-style-toggle sbe-style-i" data-tooltip="{{localize 'SBE.Theme.Fonts.Italic'}}">
+              <input type="checkbox" name="fonts.primary.italic" {{checked config.fonts.primary.italic}}>
+              <span>I</span>
+            </label>
+            <label class="sbe-style-toggle sbe-style-u" data-tooltip="{{localize 'SBE.Theme.Fonts.Underline'}}">
+              <input type="checkbox" name="fonts.primary.underline" {{checked config.fonts.primary.underline}}>
+              <span>S</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "SBE.Theme.Fonts.Heading"}}</label>
+          <div class="form-fields">
+            <select name="fonts.heading.family">
+              <option value="">{{localize "SBE.Theme.Fonts.SameAsPrimary"}}</option>
+              {{#each fontFamilies}}
+                <option value="{{this}}" style="font-family:'{{this}}';" {{#if (eq this @root.config.fonts.heading.family)}}selected{{/if}}>{{this}}</option>
+              {{/each}}
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "SBE.Theme.Fonts.HeadingStyle"}}</label>
+          <div class="form-fields sbe-font-style">
+            <label class="sbe-style-toggle sbe-style-b" data-tooltip="{{localize 'SBE.Theme.Fonts.Bold'}}">
+              <input type="checkbox" name="fonts.heading.bold" {{checked config.fonts.heading.bold}}>
+              <span>G</span>
+            </label>
+            <label class="sbe-style-toggle sbe-style-i" data-tooltip="{{localize 'SBE.Theme.Fonts.Italic'}}">
+              <input type="checkbox" name="fonts.heading.italic" {{checked config.fonts.heading.italic}}>
+              <span>I</span>
+            </label>
+            <label class="sbe-style-toggle sbe-style-u" data-tooltip="{{localize 'SBE.Theme.Fonts.Underline'}}">
+              <input type="checkbox" name="fonts.heading.underline" {{checked config.fonts.heading.underline}}>
+              <span>S</span>
+            </label>
+            <select name="fonts.heading.caseMode">
+              {{selectOptions caseChoices selected=config.fonts.heading.caseMode localize=true}}
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "SBE.Theme.Fonts.HeadingSpacing"}}</label>
+          <div class="form-fields">
+            <range-picker name="fonts.heading.spacing" value="{{config.fonts.heading.spacing}}" min="0" max="6" step="0.5"></range-picker>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "SBE.Theme.Fonts.BaseSize"}}</label>
+          <div class="form-fields">
+            <select name="fonts.baseSize">
+              {{selectOptions sizeChoices selected=config.fonts.baseSize localize=true}}
+            </select>
+          </div>
+        </div>
+
+      </div>
+    </details>
+
+    </div>
+
+    {{!-- ================= INTERFACE ================= --}}
+    <div class="sbe-thpane" data-pane="look">
+    <details class="sbe-section" open data-sync>
+      <summary><span class="sbe-section-title">{{localize "SBE.Theme.Interface.Title"}}</span></summary>
+      <div class="sbe-section-rows">
+        <div class="form-group">
+          <label>{{localize "SBE.Theme.Interface.Titlebar"}}</label>
+          <div class="form-fields">
+            <select name="interface.titlebar">
+              {{selectOptions titlebarChoices selected=config.interface.titlebar localize=true}}
+            </select>
+          </div>
+          <p class="hint">{{localize "SBE.Theme.Interface.TitlebarHint"}}</p>
+        </div>
+        <div class="form-group">
+          <label>{{localize "SBE.Theme.Interface.Opacity"}}</label>
+          <div class="form-fields">
+            <input type="number" name="interface.opacity" min="20" max="100" step="5" value="{{config.interface.opacity}}">
+          </div>
+          <p class="hint">{{localize "SBE.Theme.Interface.OpacityHint"}}</p>
+        </div>
+        <div class="form-group">
+          <label>{{localize "SBE.Theme.Interface.OpacityScope"}}</label>
+          <div class="form-fields">
+            <select name="interface.opacityScope">
+              {{selectOptions opacityScopeChoices selected=config.interface.opacityScope localize=true}}
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>{{localize "SBE.Theme.Interface.OpacityHover"}}</label>
+          <div class="form-fields">
+            <input type="checkbox" name="interface.opacityHover" {{#if config.interface.opacityHover}}checked{{/if}}>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    {{!-- ================= HABILLAGE ================= --}}
+    <details class="sbe-section" open data-sync>
+      <summary><span class="sbe-section-title">{{localize "SBE.Theme.Dressing.Title"}}</span></summary>
+      <div class="sbe-section-rows">
+
+        <div class="form-group">
+          <label>{{localize "SBE.Theme.Dressing.TexturePath"}}</label>
+          <div class="form-fields">
+            <file-picker name="dressing.texture.path" type="image" value="{{config.dressing.texture.path}}"></file-picker>
+          </div>
+          <p class="hint">{{localize "SBE.Theme.Dressing.TextureHint"}}</p>
+        </div>
+        <div class="form-group stacked">
+          <label>{{localize "SBE.Theme.Dressing.TextureCode"}}</label>
+          <p class="hint">{{localize "SBE.Theme.Dressing.SvgCodeHint"}}</p>
+          <textarea name="dressing.texture.code" rows="4">{{config.dressing.texture.code}}</textarea>
+        </div>
+        <div class="form-group">
+          <label>{{localize "SBE.Theme.Dressing.TextureMode"}}</label>
+          <div class="form-fields">
+            <select name="dressing.texture.mode">
+              {{selectOptions textureModeChoices selected=config.dressing.texture.mode localize=true}}
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>{{localize "SBE.Theme.Dressing.TextureOpacity"}}</label>
+          <div class="form-fields">
+            <range-picker name="dressing.texture.opacity" value="{{config.dressing.texture.opacity}}" min="5" max="100" step="5"></range-picker>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "SBE.Theme.Dressing.HeaderPath"}}</label>
+          <div class="form-fields">
+            <file-picker name="dressing.header.path" type="image" value="{{config.dressing.header.path}}"></file-picker>
+          </div>
+          <p class="hint">{{localize "SBE.Theme.Dressing.HeaderHint"}}</p>
+        </div>
+        <div class="form-group stacked">
+          <label>{{localize "SBE.Theme.Dressing.HeaderCode"}}</label>
+          <p class="hint">{{localize "SBE.Theme.Dressing.SvgCodeHint"}}</p>
+          <textarea name="dressing.header.code" rows="4">{{config.dressing.header.code}}</textarea>
+        </div>
+        <div class="form-group">
+          <label>{{localize "SBE.Theme.Dressing.HeaderHeight"}}</label>
+          <div class="form-fields">
+            <range-picker name="dressing.header.height" value="{{config.dressing.header.height}}" min="40" max="400" step="10"></range-picker>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>{{localize "SBE.Theme.Dressing.HeaderOpacity"}}</label>
+          <div class="form-fields">
+            <range-picker name="dressing.header.opacity" value="{{config.dressing.header.opacity}}" min="5" max="100" step="5"></range-picker>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>{{localize "SBE.Theme.Dressing.HeaderFade"}}</label>
+          <div class="form-fields">
+            <input type="checkbox" name="dressing.header.fade" {{checked config.dressing.header.fade}}>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>{{localize "SBE.Theme.Dressing.HeaderFadeStart"}}</label>
+          <div class="form-fields">
+            <range-picker name="dressing.header.fadeStart" value="{{config.dressing.header.fadeStart}}" min="0" max="95" step="5"></range-picker>
+          </div>
+          <p class="hint">{{localize "SBE.Theme.Dressing.HeaderFadeStartHint"}}</p>
+        </div>
+
+      </div>
+    </details>
+
+    {{!-- ================= HTML LIBRE ================= --}}
+    <details class="sbe-section" open data-sync>
+      <summary><span class="sbe-section-title">{{localize "SBE.Theme.Html.Title"}}</span></summary>
+      <div class="sbe-section-rows">
+        <p class="hint">{{localize "SBE.Theme.Html.Intro"}}</p>
+        <div class="form-group stacked">
+          <label>{{localize "SBE.Theme.Html.Windows"}}</label>
+          <p class="hint">{{localize "SBE.Theme.Html.WindowsHint"}}</p>
+          <textarea name="htmlDecor.windows" rows="5">{{config.htmlDecor.windows}}</textarea>
+        </div>
+        <div class="form-group stacked">
+          <label>{{localize "SBE.Theme.Html.Overlay"}}</label>
+          <p class="hint">{{localize "SBE.Theme.Html.OverlayHint"}}</p>
+          <textarea name="htmlDecor.overlay" rows="5">{{config.htmlDecor.overlay}}</textarea>
+        </div>
+      </div>
+    </details>
+
+    </div>
+
+    {{!-- ================= MÉDIAS ================= --}}
+    <div class="sbe-thpane" data-pane="media">
+      {{{soundsHtml}}}
+    </div>
+
+    {{!-- ================= GROUPES DE COULEURS ================= --}}
+    <div class="sbe-thpane" data-pane="colors">
+    {{#each groups}}
+      <details class="sbe-section" open data-sync>
+        <summary><span class="sbe-section-title">{{this.label}}</span></summary>
+        <div class="sbe-section-rows">
+          {{#if this.hint}}<p class="hint">{{this.hint}}</p>{{/if}}
+          <div class="sbe-color-head">
+            <span></span>
+            <span>{{localize "SBE.Theme.ColumnDark"}}</span>
+            <span>{{localize "SBE.Theme.ColumnLight"}}</span>
+          </div>
+          {{#each this.rows}}
+            <div class="sbe-color-row">
+              <label>{{this.label}}</label>
+              <span class="sbe-color-cell">
+                <input type="color" class="sbe-swatch" data-token="{{this.token}}" data-mode="dark" value="{{this.dark}}">
+              </span>
+              <span class="sbe-color-cell">
+                <input type="color" class="sbe-swatch" data-token="{{this.token}}" data-mode="light" value="{{this.light}}">
+              </span>
+            </div>
+          {{/each}}
+        </div>
+      </details>
+    {{/each}}
+      <details class="sbe-section" open>
+        <summary><span class="sbe-section-title">{{localize "SBE.Theme.Ui.Title"}}</span></summary>
+        <div class="sbe-section-rows">
+          <p class="hint">{{localize "SBE.Theme.Ui.Hint"}}</p>
+          <div class="sbe-color-head">
+            <span></span>
+            <span>{{localize "SBE.Theme.ColumnDark"}}</span>
+            <span>{{localize "SBE.Theme.ColumnLight"}}</span>
+          </div>
+          {{#each uiRows}}
+            <div class="sbe-color-row">
+              <label>{{this.label}}</label>
+              <span class="sbe-color-cell sbe-uicell" data-ui="{{this.key}}" data-mode="dark">
+                <input type="checkbox" {{checked this.dark.on}} data-tooltip="{{localize 'SBE.Theme.Ui.Custom'}}">
+                <input type="color" value="{{this.dark.value}}">
+              </span>
+              <span class="sbe-color-cell sbe-uicell" data-ui="{{this.key}}" data-mode="light">
+                <input type="checkbox" {{checked this.light.on}} data-tooltip="{{localize 'SBE.Theme.Ui.Custom'}}">
+                <input type="color" value="{{this.light.value}}">
+              </span>
+            </div>
+          {{/each}}
+        </div>
+      </details>
+    </div>
+
+    {{!-- ================= CSS AVANCÉ ================= --}}
+    <div class="sbe-thpane" data-pane="css">
+    <details class="sbe-section" open data-sync>
+      <summary><span class="sbe-section-title">{{localize "SBE.Theme.CustomCss.Title"}}</span></summary>
+      <div class="sbe-section-rows">
+        <div class="form-group stacked">
+          <textarea name="customCss" rows="6" placeholder="{{localize 'SBE.Theme.CustomCss.Placeholder'}}">{{config.customCss}}</textarea>
+          <p class="hint">{{localize "SBE.Theme.CustomCss.Hint"}}</p>
+        </div>
+      </div>
+    </details>
+    </div>
+
+    {{!-- ================= INFO-BULLES / MESSAGES DU CHAT =================
+         Panneaux à part (leur propre formulaire), remplis au rendu. --}}
+    <div class="sbe-thpane sbe-thpanel sbe-tooltip-config" data-pane="tooltip"></div>
+    <div class="sbe-thpane sbe-thpanel sbe-chat-config" data-pane="chat"></div>
+
+  </div>
+
+  {{!-- ================= BOUTONS ================= --}}
+  <footer class="form-footer sbe-theme-footer">
+    <button type="button" data-action="exportTheme">
+      <i class="fa-solid fa-file-export"></i>
+      <span>{{localize "SBE.Common.Export"}}</span>
+    </button>
+    <button type="button" data-action="importTheme">
+      <i class="fa-solid fa-file-import"></i>
+      <span>{{localize "SBE.Common.Import"}}</span>
+    </button>
+    <button type="button" data-action="save">
+      <i class="fa-solid fa-floppy-disk"></i>
+      <span>{{localize "SBE.Theme.Buttons.Save"}}</span>
+    </button>
+    <button type="button" data-action="reset" class="sbe-danger">
+      <i class="fa-solid fa-rotate-left"></i>
+      <span>{{localize "SBE.Theme.Buttons.Reset"}}</span>
+    </button>
+  </footer>
+</div>

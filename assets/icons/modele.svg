@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SBE : icône par défaut des MODÈLES — fiche en construction
+     (champs + bouton d'ajout), blanc plein sur fond transparent,
+     dans le style des icônes natives de Foundry. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <g fill="#ffffff">
+    <!-- Cadre de la fiche : rectangle arrondi évidé -->
+    <path fill-rule="evenodd" d="
+      M88 30h336c32 0 58 26 58 58v336c0 32-26 58-58 58H88c-32 0-58-26-58-58V88c0-32 26-58 58-58z
+      M88 68c-11 0-20 9-20 20v336c0 11 9 20 20 20h336c11 0 20-9 20-20V88c0-11-9-20-20-20H88z"/>
+    <!-- Champs de la fiche -->
+    <rect x="112" y="108" width="288" height="46" rx="12"/>
+    <rect x="112" y="184" width="198" height="46" rx="12"/>
+    <rect x="112" y="260" width="252" height="46" rx="12"/>
+    <!-- Bouton d'ajout : anneau évidé + croix -->
+    <path fill-rule="evenodd" d="
+      M256 338c30.4 0 55 24.6 55 55s-24.6 55-55 55-55-24.6-55-55 24.6-55 55-55z
+      m0 26c-16 0-29 13-29 29s13 29 29 29 29-13 29-29-13-29-29-29z"/>
+    <rect x="248" y="366" width="16" height="54" rx="8"/>
+    <rect x="229" y="385" width="54" height="16" rx="8"/>
+  </g>
+</svg>

@@ -1,0 +1,614 @@
+{
+  "chapters": [
+    {
+      "id": "demarrer",
+      "title": {
+        "fr": "Bien démarrer",
+        "en": "Getting started"
+      },
+      "pages": [
+        {
+          "id": "bienvenue",
+          "title": {
+            "fr": "Bienvenue",
+            "en": "Welcome"
+          }
+        },
+        {
+          "id": "idees",
+          "title": {
+            "fr": "Les idées de base",
+            "en": "The basic ideas"
+          }
+        },
+        {
+          "id": "premier-modele",
+          "title": {
+            "fr": "Votre premier modèle en 10 minutes",
+            "en": "Your first template in 10 minutes"
+          }
+        },
+        {
+          "id": "demo",
+          "title": {
+            "fr": "La démo Brumeval",
+            "en": "The Brumeval demo"
+          }
+        }
+      ]
+    },
+    {
+      "id": "atelier-ch",
+      "title": {
+        "fr": "L'atelier",
+        "en": "The workshop"
+      },
+      "pages": [
+        {
+          "id": "atelier",
+          "title": {
+            "fr": "Construire un modèle",
+            "en": "Building a template"
+          }
+        },
+        {
+          "id": "onglets-options",
+          "title": {
+            "fr": "Onglets et options du modèle",
+            "en": "Template tabs and options"
+          }
+        },
+        {
+          "id": "verifier",
+          "title": {
+            "fr": "Vérifier et renommer une clé",
+            "en": "Checking and renaming a key"
+          }
+        }
+      ]
+    },
+    {
+      "id": "composants-ch",
+      "title": {
+        "fr": "Les composants",
+        "en": "Components"
+      },
+      "pages": [
+        {
+          "id": "champs",
+          "title": {
+            "fr": "Les champs de saisie",
+            "en": "Input fields"
+          }
+        },
+        {
+          "id": "jauge",
+          "title": {
+            "fr": "Jauges et points temporaires",
+            "en": "Gauges and temporary points"
+          }
+        },
+        {
+          "id": "mise-en-page",
+          "title": {
+            "fr": "Cadres, colonnes et onglets",
+            "en": "Frames, columns and tabs"
+          }
+        },
+        {
+          "id": "affichages",
+          "title": {
+            "fr": "Tables, graphiques et HTML",
+            "en": "Tables, charts and HTML"
+          }
+        },
+        {
+          "id": "reglages-communs",
+          "title": {
+            "fr": "Réglages communs, style et info-bulle",
+            "en": "Common settings, style and tooltip"
+          }
+        }
+      ]
+    },
+    {
+      "id": "formules-ch",
+      "title": {
+        "fr": "Formules et jets de dés",
+        "en": "Formulas and dice rolls"
+      },
+      "pages": [
+        {
+          "id": "formules",
+          "title": {
+            "fr": "Écrire une formule",
+            "en": "Writing a formula"
+          }
+        },
+        {
+          "id": "fonctions",
+          "title": {
+            "fr": "Les fonctions de formule",
+            "en": "Formula functions"
+          }
+        },
+        {
+          "id": "tables-correspondance",
+          "title": {
+            "fr": "Les tables de correspondance",
+            "en": "Lookup tables"
+          }
+        },
+        {
+          "id": "jets",
+          "title": {
+            "fr": "Les jets de dés",
+            "en": "Dice rolls"
+          }
+        },
+        {
+          "id": "demandes-jet",
+          "title": {
+            "fr": "Les demandes de jet du MJ",
+            "en": "GM roll requests"
+          }
+        },
+        {
+          "id": "relances",
+          "title": {
+            "fr": "Relances et bonus après le jet",
+            "en": "Rerolls and bonuses after the roll"
+          }
+        }
+      ]
+    },
+    {
+      "id": "inventaire-ch",
+      "title": {
+        "fr": "L'inventaire",
+        "en": "Inventory"
+      },
+      "pages": [
+        {
+          "id": "inventaire",
+          "title": {
+            "fr": "Comment SBE range les objets",
+            "en": "How SBE stores items"
+          }
+        },
+        {
+          "id": "slots",
+          "title": {
+            "fr": "Les slots (équipement)",
+            "en": "Slots (equipment)"
+          }
+        },
+        {
+          "id": "conteneurs",
+          "title": {
+            "fr": "Les conteneurs",
+            "en": "Containers"
+          }
+        },
+        {
+          "id": "grille-spatiale",
+          "title": {
+            "fr": "La grille spatiale",
+            "en": "The spatial grid"
+          }
+        }
+      ]
+    },
+    {
+      "id": "boutons-ch",
+      "title": {
+        "fr": "Les boutons et les étapes",
+        "en": "Buttons and steps"
+      },
+      "pages": [
+        {
+          "id": "boutons",
+          "title": {
+            "fr": "Le composant Bouton",
+            "en": "The Button component"
+          }
+        },
+        {
+          "id": "etapes",
+          "title": {
+            "fr": "Les étapes",
+            "en": "Steps"
+          }
+        },
+        {
+          "id": "etapes-liste",
+          "title": {
+            "fr": "Toutes les étapes",
+            "en": "All the steps"
+          }
+        },
+        {
+          "id": "declencheurs",
+          "title": {
+            "fr": "Se lance tout seul",
+            "en": "Runs by itself"
+          }
+        }
+      ]
+    },
+    {
+      "id": "effets-ch",
+      "title": {
+        "fr": "Les effets",
+        "en": "Effects"
+      },
+      "pages": [
+        {
+          "id": "effets",
+          "title": {
+            "fr": "Créer un effet",
+            "en": "Creating an effect"
+          }
+        },
+        {
+          "id": "effets-avances",
+          "title": {
+            "fr": "Les effets qui évoluent",
+            "en": "Effects that evolve"
+          }
+        },
+        {
+          "id": "effets-apparence",
+          "title": {
+            "fr": "L'apparence d'un effet",
+            "en": "An effect's look"
+          }
+        },
+        {
+          "id": "effets-objets",
+          "title": {
+            "fr": "Les effets des objets",
+            "en": "Item effects"
+          }
+        }
+      ]
+    },
+    {
+      "id": "journee-ch",
+      "title": {
+        "fr": "La nouvelle journée",
+        "en": "The new day"
+      },
+      "pages": [
+        {
+          "id": "nouvelle-journee",
+          "title": {
+            "fr": "Passer la nuit",
+            "en": "Going through the night"
+          }
+        }
+      ]
+    },
+    {
+      "id": "objets-ch",
+      "title": {
+        "fr": "Les objets du monde",
+        "en": "World items"
+      },
+      "pages": [
+        {
+          "id": "objets-monde",
+          "title": {
+            "fr": "Créer et faire suivre les objets",
+            "en": "Creating items and keeping them in sync"
+          }
+        },
+        {
+          "id": "medias",
+          "title": {
+            "fr": "Les médias d'un objet",
+            "en": "An item's media"
+          }
+        },
+        {
+          "id": "identification",
+          "title": {
+            "fr": "Objets inconnus et inactifs",
+            "en": "Unknown and inactive items"
+          }
+        }
+      ]
+    },
+    {
+      "id": "apparence-ch",
+      "title": {
+        "fr": "L'apparence",
+        "en": "Appearance"
+      },
+      "pages": [
+        {
+          "id": "theme",
+          "title": {
+            "fr": "Le thème du système",
+            "en": "The system theme"
+          }
+        },
+        {
+          "id": "theme-modele",
+          "title": {
+            "fr": "Le thème d'un modèle",
+            "en": "A template's theme"
+          }
+        },
+        {
+          "id": "barres-jetons",
+          "title": {
+            "fr": "Les barres de jetons",
+            "en": "Token bars"
+          }
+        },
+        {
+          "id": "apparences-jeton",
+          "title": {
+            "fr": "Les apparences du jeton",
+            "en": "Token looks"
+          }
+        }
+      ]
+    },
+    {
+      "id": "partage-ch",
+      "title": {
+        "fr": "Import et export",
+        "en": "Import and export"
+      },
+      "pages": [
+        {
+          "id": "import-export",
+          "title": {
+            "fr": "Partager un modèle",
+            "en": "Sharing a template"
+          }
+        },
+        {
+          "id": "exports-reglages",
+          "title": {
+            "fr": "Tout ce qui s'exporte",
+            "en": "Everything that exports"
+          }
+        }
+      ]
+    },
+    {
+      "id": "scene-ch",
+      "title": {
+        "fr": "Les outils de scène",
+        "en": "Scene tools"
+      },
+      "pages": [
+        {
+          "id": "objets-scene",
+          "title": {
+            "fr": "Les objets de scène",
+            "en": "Scene objects"
+          }
+        },
+        {
+          "id": "pieges",
+          "title": {
+            "fr": "Les pièges",
+            "en": "Traps"
+          }
+        },
+        {
+          "id": "verrous",
+          "title": {
+            "fr": "Serrures et digicodes",
+            "en": "Locks and keypads"
+          }
+        },
+        {
+          "id": "coffres-sol",
+          "title": {
+            "fr": "Coffres et objets au sol",
+            "en": "Chests and ground items"
+          }
+        },
+        {
+          "id": "marchands",
+          "title": {
+            "fr": "Les marchands",
+            "en": "Merchants"
+          }
+        },
+        {
+          "id": "zones-traces",
+          "title": {
+            "fr": "Zones persistantes et traces",
+            "en": "Persistent zones and traces"
+          }
+        }
+      ]
+    },
+    {
+      "id": "combat-ch",
+      "title": {
+        "fr": "Le combat",
+        "en": "Combat"
+      },
+      "pages": [
+        {
+          "id": "attaques",
+          "title": {
+            "fr": "Attaquer une cible",
+            "en": "Attacking a target"
+          }
+        },
+        {
+          "id": "zones-attaque",
+          "title": {
+            "fr": "Les attaques de zone",
+            "en": "Area attacks"
+          }
+        },
+        {
+          "id": "localisation",
+          "title": {
+            "fr": "La localisation des coups",
+            "en": "Hit locations"
+          }
+        },
+        {
+          "id": "initiative",
+          "title": {
+            "fr": "Initiative et carrousel",
+            "en": "Initiative and carousel"
+          }
+        },
+        {
+          "id": "invocations",
+          "title": {
+            "fr": "Les invocations",
+            "en": "Summons"
+          }
+        }
+      ]
+    },
+    {
+      "id": "progression-ch",
+      "title": {
+        "fr": "La progression",
+        "en": "Progression"
+      },
+      "pages": [
+        {
+          "id": "niveaux",
+          "title": {
+            "fr": "Les niveaux",
+            "en": "Levels"
+          }
+        },
+        {
+          "id": "talents",
+          "title": {
+            "fr": "Les arbres de talents",
+            "en": "Talent trees"
+          }
+        }
+      ]
+    },
+    {
+      "id": "table-ch",
+      "title": {
+        "fr": "Les joueurs et la table",
+        "en": "Players and the table"
+      },
+      "pages": [
+        {
+          "id": "hud",
+          "title": {
+            "fr": "Le HUD d'actions",
+            "en": "The action HUD"
+          }
+        },
+        {
+          "id": "identite-pnj",
+          "title": {
+            "fr": "L'identité des PNJ",
+            "en": "NPC identity"
+          }
+        },
+        {
+          "id": "echanges",
+          "title": {
+            "fr": "Les échanges",
+            "en": "Trades"
+          }
+        },
+        {
+          "id": "groupes",
+          "title": {
+            "fr": "Groupes et sauvegardes",
+            "en": "Groups and saves"
+          }
+        },
+        {
+          "id": "quetes",
+          "title": {
+            "fr": "Le journal de quêtes",
+            "en": "The quest journal"
+          }
+        }
+      ]
+    },
+    {
+      "id": "monde-ch",
+      "title": {
+        "fr": "Le monde",
+        "en": "The world"
+      },
+      "pages": [
+        {
+          "id": "calendrier",
+          "title": {
+            "fr": "Calendrier et horloge",
+            "en": "Calendar and clock"
+          }
+        },
+        {
+          "id": "meteo",
+          "title": {
+            "fr": "La météo",
+            "en": "Weather"
+          }
+        },
+        {
+          "id": "langues",
+          "title": {
+            "fr": "Les langues",
+            "en": "Languages"
+          }
+        },
+        {
+          "id": "vision",
+          "title": {
+            "fr": "Vision et lumière",
+            "en": "Vision and light"
+          }
+        }
+      ]
+    },
+    {
+      "id": "pause-ch",
+      "title": {
+        "fr": "La pause",
+        "en": "Pause"
+      },
+      "pages": [
+        {
+          "id": "pause",
+          "title": {
+            "fr": "La bannière de pause",
+            "en": "The pause banner"
+          }
+        }
+      ]
+    },
+    {
+      "id": "securite-ch",
+      "title": {
+        "fr": "La sécurité",
+        "en": "Safety"
+      },
+      "pages": [
+        {
+          "id": "securite",
+          "title": {
+            "fr": "Ce que SBE protège",
+            "en": "What SBE protects"
+          }
+        }
+      ]
+    }
+  ]
+}

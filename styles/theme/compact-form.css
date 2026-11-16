@@ -1,0 +1,82 @@
+/**
+ * SBE — Formulaire condensé (helpers/compact-form.mjs)
+ * Deux champs par ligne, aide en bulle, champs inutiles masqués.
+ */
+.sbe-cf-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 12px; align-items: end; }
+.sbe-cf-cell { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sbe-cf-cell.is-wide { grid-column: 1 / -1; }
+.sbe-cf-cell > label { line-height: 1.2; }
+.sbe-cf-cell > input, .sbe-cf-cell > select, .sbe-cf-cell > textarea { width: 100%; min-width: 0; }
+.sbe-cf-cell.is-check { flex-direction: row; align-items: center; gap: 6px; padding-bottom: 4px; }
+.sbe-cf-cell.is-check > input { flex: none; width: auto; margin: 0; }
+.sbe-cf-cell input[type="color"] { width: 48px; flex: none; padding: 0; }
+.sbe-cf-inline { display: flex; gap: 6px; align-items: center; min-width: 0; }
+.sbe-cf-inline > input, .sbe-cf-inline > select { flex: 1 1 0; min-width: 0; }
+.sbe-cf-sec { display: flex; flex-direction: column; gap: 4px; }
+.sbe-cf-h { margin: 6px 0 0; font-size: 0.95em; border-bottom: 1px solid var(--sbe-tone-3); }
+.sbe-cf-grid[hidden], .sbe-cf-sec[hidden], .sbe-cf-cell[hidden] { display: none !important; }
+
+/* Fenêtres condensées d'office (classe sbe-condense, condense()).
+   Classes doublées : passer devant les mises en page des fenêtres
+   (flex en colonne) et des formulaires de Foundry (.standard-form). */
+.sbe-cf-auto.sbe-cf-auto { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 12px; align-items: end; align-content: start; }
+.sbe-cf-auto.sbe-cf-auto > :not(.sbe-cf-field), .sbe-cf-auto.sbe-cf-auto > .sbe-cf-field.is-wide { grid-column: 1 / -1; }
+.sbe-cf-auto > .sbe-cf-field.sbe-cf-field:not(.is-check) { display: flex; flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 2px; margin: 0; min-width: 0; }
+.sbe-cf-auto > .sbe-cf-field.sbe-cf-field:not(.is-check) > * { flex: 0 0 auto; max-width: 100%; min-width: 0; line-height: normal; }
+.sbe-cf-auto > .sbe-cf-field.sbe-cf-field:not(.is-check) > label { justify-content: flex-start; text-align: left; }
+.sbe-cf-auto > .sbe-cf-field.sbe-cf-field:not(.is-check) > :is(input:not([type="checkbox"]):not([type="radio"]):not([type="color"]), select) { width: 100%; }
+.sbe-cf-auto > .sbe-cf-field.sbe-cf-field.is-check { display: flex; flex-direction: row; align-items: center; gap: 6px; margin: 0; padding-bottom: 4px; }
+.sbe-cf-auto > .sbe-cf-field.sbe-cf-field.is-check > input { flex: none; width: auto; margin: 0; }
+
+/* ALIGNEMENT d'une ligne à l'autre colonne : un champ occupe deux rangées
+   de la grille (libellé, puis champ) partagées avec son voisin
+   (sous-grille). Les libellés commencent à la même hauteur même si l'un
+   tient sur deux lignes, et les champs aussi. Une case à cocher (texte à
+   côté de la case) tient une seule rangée, alignée sur les libellés :
+   plusieurs cases à la suite restent serrées. Une case qui prend toute la
+   ligne garde sa mise en page. */
+.sbe-cf-auto.sbe-cf-auto, .sbe-cf-grid { align-items: start; }
+.sbe-cf-auto > .sbe-cf-field.sbe-cf-field:not(.is-check):not(.is-wide):not(:has(> label ~ label)),
+.sbe-cf-grid > .sbe-cf-cell:not(.is-check):not(.is-wide):not(:has(> label ~ label)) {
+  grid-row: span 2; display: grid; grid-template-rows: subgrid; grid-template-columns: minmax(0, 1fr); row-gap: 2px; align-items: start;
+}
+.sbe-cf-auto > .sbe-cf-field.sbe-cf-field:not(.is-check):not(.is-wide):not(:has(> label ~ label)) > :first-child,
+.sbe-cf-grid > .sbe-cf-cell:not(.is-check):not(.is-wide):not(:has(> label ~ label)) > :first-child { grid-row: 1; }
+.sbe-cf-auto > .sbe-cf-field.sbe-cf-field:not(.is-check):not(.is-wide):not(:has(> label ~ label)) > :not(:first-child),
+.sbe-cf-grid > .sbe-cf-cell:not(.is-check):not(.is-wide):not(:has(> label ~ label)) > :not(:first-child) { grid-row: 2; }
+.sbe-cf-auto > .sbe-cf-field.sbe-cf-field.is-check,
+.sbe-cf-grid > .sbe-cf-cell.is-check { grid-row: span 1; align-self: start; flex-wrap: nowrap; align-items: flex-start !important; padding-bottom: 0; }
+.sbe-cf-auto > .sbe-cf-field.sbe-cf-field.is-check > input,
+.sbe-cf-grid > .sbe-cf-cell.is-check > input { margin-top: 1px; }
+
+/* Case à cocher et son texte : la case à gauche, le texte à côté (retrait
+   suspendu quand il passe sur deux lignes) et le « ? » collé au bout du
+   texte — même rendu partout. */
+:is(.sbe-cf-auto > label.sbe-cf-field.is-check,
+    .sbe-cf-auto > .sbe-cf-field > label:has(> input[type="checkbox"]),
+    .sbe-cf-grid > .sbe-cf-cell.is-check) {
+  display: block !important; padding-left: 24px; text-indent: -24px; line-height: 1.35; white-space: normal;
+}
+:is(.sbe-cf-auto > label.sbe-cf-field.is-check,
+    .sbe-cf-auto > .sbe-cf-field > label:has(> input[type="checkbox"]),
+    .sbe-cf-grid > .sbe-cf-cell.is-check) > input[type="checkbox"] {
+  display: inline-block; vertical-align: middle; margin: -3px 6px 0 0 !important; text-indent: 0;
+}
+:is(.sbe-cf-auto > label.sbe-cf-field.is-check,
+    .sbe-cf-auto > .sbe-cf-field > label:has(> input[type="checkbox"]),
+    .sbe-cf-grid > .sbe-cf-cell.is-check) > :is(.sbe-help, span) { text-indent: 0; }
+:is(.sbe-cf-auto > label.sbe-cf-field.is-check,
+    .sbe-cf-auto > .sbe-cf-field > label:has(> input[type="checkbox"]),
+    .sbe-cf-grid > .sbe-cf-cell.is-check) > .sbe-help { display: inline-block; margin-left: 4px; }
+.sbe-cf-grid > .sbe-cf-cell.is-check > input[type="color"],
+.sbe-cf-auto > label.sbe-cf-field.is-check > input[type="color"] { display: inline-block; vertical-align: middle; height: 1.5em; width: 40px; margin: -4px 0 0 6px; padding: 0; text-indent: 0; }
+
+/* Une case qui ne contient que des cases à cocher (Gras, Italique…) :
+   elles se suivent sur une ligne entière. */
+.sbe-cf-auto > .sbe-cf-field.sbe-cf-field:has(> label ~ label):not(:has(> :not(label, .sbe-help, .notes, .hint))) {
+  grid-column: 1 / -1; display: flex; flex-direction: row; flex-wrap: wrap; gap: 4px 16px; align-items: center;
+}
+
+/* Deux colonnes au plus ; une seule quand la place manque (panneau
+   latéral étroit) : chaque colonne garde au moins 170 px. */
+.sbe-cf-auto.sbe-cf-auto, .sbe-cf-grid { grid-template-columns: repeat(auto-fit, minmax(max(170px, calc((100% - 12px) / 2)), 1fr)); }

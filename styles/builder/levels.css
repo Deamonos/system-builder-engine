@@ -1,0 +1,106 @@
+/**
+ * SBE — Composant Niveau (builder/levels)
+ * Le niveau sur la fiche (valeur, « / max », jauge, bouton) et sa zone
+ * de fenêtre de passage dans l'atelier.
+ */
+
+/* ---------- Fiche ---------- */
+.sbe-level-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
+.sbe-level { display: inline-flex; align-items: baseline; gap: 4px; }
+.sbe-level-val { font-size: 1.3em; font-weight: 700; color: var(--sbe-text-strong); }
+.sbe-level-input { width: 4.5em; text-align: center; font-weight: 700; }
+.sbe-level-gauge {
+  position: relative;
+  flex: 1 1 120px;
+  min-width: 80px;
+  height: 16px;
+  border: 1px solid var(--sbe-surf-4);
+  border-radius: 8px;
+  background: var(--sbe-surf-2);
+  overflow: hidden;
+}
+.sbe-level-gauge > span { position: absolute; inset: 0 auto 0 0; background: var(--sbe-accent); }
+.sbe-level-gauge > em {
+  position: relative;
+  display: block;
+  font-size: 0.75em;
+  font-style: normal;
+  line-height: 16px;
+  text-align: center;
+  color: var(--sbe-text-strong);
+}
+.sbe-level-up { flex: 0 0 auto; width: auto; }
+.sbe-level-up small { color: var(--sbe-text-dim); }
+
+/* ---------- Atelier : la zone de la fenêtre de passage ---------- */
+.sbe-level-ws { display: flex; flex-direction: column; gap: 6px; }
+.sbe-level-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.sbe-level-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+  border: 1px dashed var(--sbe-surf-5);
+  border-radius: 6px;
+}
+.sbe-level-zonetitle { color: var(--sbe-text-dim); font-size: 0.85em; }
+.sbe-level-pending { color: var(--sbe-warn); font-size: 0.9em; }
+
+/* ---------- Fenêtre de passage ---------- */
+.sbe-lvlup .window-content { padding: 8px; }
+.sbe-lvlup-body { display: flex; flex-direction: column; gap: 8px; max-height: 75vh; }
+.sbe-lvlup-budget {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 10px;
+  border: 1px solid var(--sbe-surf-4);
+  border-radius: 6px;
+  background: var(--sbe-surf-2);
+}
+.sbe-lvlup-budget small { color: var(--sbe-text-dim); }
+.sbe-lvlup-budget.is-done { border-color: var(--sbe-ok); }
+.sbe-lvlup-budget.is-over { border-color: var(--sbe-fail); }
+.sbe-lvlup-budget.is-over b { color: var(--sbe-fail); }
+.sbe-lvlup-fields { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+.sbe-lvlup-foot { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
+.sbe-lvlup-foot button { flex: 0 0 auto; width: auto; }
+.sbe-lvlup-why { flex: 1 1 auto; color: var(--sbe-warn); font-size: 0.9em; }
+.sbe-lvlup-step { display: flex; align-items: center; gap: 4px; flex: 1 1 auto; min-width: 0; }
+.sbe-lvlup-step input { flex: 1 1 auto; min-width: 0; text-align: center; }
+.sbe-lvlup-step button { flex: 0 0 auto; width: 2em; padding: 0; }
+
+/* ---------- Fiche : descente, historique ---------- */
+.sbe-level-icon { flex: 0 0 auto; width: 2em; padding: 0; }
+.sbe-level-rulesbtn { flex: 0 0 auto; width: auto; margin-left: auto; }
+
+/* ---------- Historique ---------- */
+.sbe-lvlhist .window-content { padding: 8px; overflow-y: auto; }
+.sbe-lvlhist-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.sbe-lvlhist-row { padding: 6px 8px; border: 1px solid var(--sbe-surf-4); border-left: 3px solid var(--sbe-accent); border-radius: 6px; background: var(--sbe-surf-2); }
+.sbe-lvlhist-row.is-down { border-left-color: var(--sbe-warn); }
+.sbe-lvlhist-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; }
+.sbe-lvlhist-head span, .sbe-lvlhist-head small { color: var(--sbe-text-dim); font-size: 0.85em; }
+.sbe-lvlhist-head small.is-undone { color: var(--sbe-warn); }
+.sbe-lvlhist-ch { margin: 4px 0 0; padding-left: 1.2em; font-size: 0.9em; }
+
+/* ---------- Éditeur des règles ---------- */
+.sbe-lvlrules .window-content { padding: 8px; overflow-y: auto; }
+.sbe-lvlrules-body { display: flex; flex-direction: column; gap: 12px; }
+.sbe-lvlrules-body section { display: flex; flex-direction: column; gap: 6px; }
+.sbe-lvlrules-body h3, .sbe-lvlrules-body h4 { margin: 0; }
+.sbe-lvlrules-list { display: flex; flex-direction: column; gap: 8px; }
+.sbe-lvlrules-rule { display: flex; flex-direction: column; gap: 6px; padding: 8px; border: 1px solid var(--sbe-surf-4); border-radius: 6px; background: var(--sbe-surf-2); }
+.sbe-lvlrules-when, .sbe-lvlrules-act { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px; }
+.sbe-lvlrules-when .form-group, .sbe-lvlrules-act .form-group { display: flex; flex-direction: column; align-items: stretch; gap: 2px; flex: 1 1 120px; min-width: 0; margin: 0; }
+.sbe-lvlrules-acts { display: flex; flex-direction: column; gap: 4px; padding-left: 8px; border-left: 2px solid var(--sbe-surf-4); }
+.sbe-lvlrules-act { padding: 4px 0; }
+.sbe-lvlrules-del { flex: 0 0 auto; width: 2em; padding: 0; }
+.sbe-lvlrules-add { display: flex; flex-wrap: wrap; gap: 4px; align-items: stretch; }
+.sbe-lvlrules-add button { flex: 0 0 auto; width: auto; }
+.sbe-lvlrules-drop { flex: 1 1 140px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 4px 8px; border: 1px dashed var(--sbe-surf-5); border-radius: 6px; color: var(--sbe-text-dim); font-size: 0.9em; }
+.sbe-lvlrules-drop.is-over { border-color: var(--sbe-accent); color: var(--sbe-text-strong); }
+.sbe-lvlrules-item { display: flex; align-items: center; gap: 6px; padding: 2px 0; font-weight: 600; min-width: 0; }
+.sbe-lvlrules-item img { flex: 0 0 auto; width: 28px; height: 28px; object-fit: contain; border: 1px solid var(--sbe-surf-4); border-radius: 4px; background: var(--sbe-surf-1, transparent); }
+.sbe-lvlrules-item span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbe-lvlrules-check { display: flex; align-items: center; gap: 6px; }

@@ -1,0 +1,602 @@
+/**
+ * SBE — Messages de chat : la carte unique (.sbe-card) et le cadre
+ * habillé (li.chat-message.sbe-msg). Les réglages du MJ (manager
+ * « Messages de chat ») viennent PAR-DESSUS, dans <style id="sbe-chat-css">.
+ * Aucune couleur en dur : variables du thème, ou celles du manager.
+ */
+
+/* ---------- Cadre ---------- */
+li.chat-message.sbe-msg .message-header { align-items: center; }
+li.chat-message.sbe-msg .sbe-msg-portrait {
+  width: 32px; height: 32px; flex: 0 0 32px;
+  object-fit: cover; border: none; border-radius: 4px; margin-right: 6px;
+}
+
+/* ---------- Carte ---------- */
+.sbe-card {
+  --sbe-card-accent: var(--sbe-accent);
+  --sbe-card-icon: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sbe-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid var(--sbe-card-accent);
+}
+.sbe-card-icon { flex: none; display: flex; align-items: center; justify-content: center; }
+.sbe-card-icon .sbe-label-icon-img {
+  width: var(--sbe-card-icon); height: var(--sbe-card-icon);
+  object-fit: cover; border: none; border-radius: 4px; margin: 0;
+}
+.sbe-card-icon i.sbe-label-icon,
+.sbe-card-icon span.sbe-label-icon {
+  width: var(--sbe-card-icon);
+  font-size: calc(var(--sbe-card-icon) * 0.7);
+  line-height: var(--sbe-card-icon);
+  text-align: center;
+  color: var(--sbe-card-accent);
+}
+.sbe-card-titles { flex: 1 1 auto; min-width: 0; }
+.sbe-card-title { font-weight: 700; font-size: 1.05em; }
+.sbe-card-sub { font-size: 0.85em; opacity: 0.8; }
+.sbe-card-body { display: flex; flex-direction: column; gap: 4px; }
+.sbe-card-body > p { margin: 0; }
+.sbe-card-roll .dice-roll { margin: 0; }
+.sbe-card-result {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: var(--sbe-res, var(--sbe-card-accent));
+  color: var(--sbe-res-text, var(--sbe-text-max));
+  font-weight: 700;
+}
+.sbe-card-result-icon:empty { display: none; }
+.sbe-card-result-icon .sbe-label-icon-img { width: 18px; height: 18px; border: none; margin: 0; }
+.sbe-card-result-detail { font-weight: 400; opacity: 0.85; }
+
+/* Lignes communes des corps de carte (variations, apports). */
+.sbe-card-line { display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline; }
+.sbe-card-line .sbe-card-l { flex: 1 1 auto; }
+.sbe-card-delta { font-weight: 700; }
+.is-up > .sbe-card-delta, .sbe-card-delta.is-up { color: var(--sbe-ok); }
+.is-down > .sbe-card-delta, .sbe-card-delta.is-down { color: var(--sbe-fail); }
+.sbe-card-val { opacity: 0.8; font-size: 0.9em; }
+.sbe-card-src { width: 100%; font-size: 0.8em; opacity: 0.7; }
+.sbe-card-none { opacity: 0.8; margin: 0; }
+
+/* ---------- Fenêtre du manager ---------- */
+.sbe-chat-config .window-content { display: flex; flex-direction: column; gap: 8px; }
+.sbe-chat-config .sbe-chatc-preview {
+  flex: none;
+  padding: 8px;
+  border: 1px dashed var(--sbe-tone-4);
+  border-radius: 6px;
+  max-height: 40%;
+  overflow-y: auto;
+}
+.sbe-chat-config .sbe-chatc-preview ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.sbe-chat-config .sbe-chatc-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: 6px; scrollbar-gutter: stable; }
+.sbe-chat-config details.sbe-chatc-sec { margin-bottom: 8px; border: 1px solid var(--sbe-tone-5); border-radius: 6px; padding: 4px 8px; }
+.sbe-chat-config details.sbe-chatc-sec > summary { cursor: pointer; font-weight: 700; padding: 4px 0; }
+.sbe-chat-config .sbe-chatc-field { display: flex; flex-direction: column; gap: 3px; margin: 6px 0; }
+.sbe-chat-config .sbe-chatc-field > label { font-weight: 600; }
+.sbe-chat-config .sbe-chatc-field > .notes { margin: 0; font-size: 0.85em; opacity: 0.8; }
+.sbe-chat-config .sbe-chatc-row { display: flex; gap: 6px; align-items: center; }
+.sbe-chat-config .sbe-chatc-row > input[type="text"],
+.sbe-chat-config .sbe-chatc-row > select { flex: 1 1 auto; min-width: 0; }
+.sbe-chat-config .sbe-chatc-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 12px; }
+.sbe-chat-config .sbe-chatc-sub { border-top: 1px solid var(--sbe-tone-5); margin-top: 8px; padding-top: 6px; }
+.sbe-chat-config .sbe-chatc-sub > h4 { margin: 0 0 4px; border: none; }
+.sbe-chat-config textarea { width: 100%; min-height: 90px; font-family: monospace; box-sizing: border-box; }
+.sbe-chat-config .sbe-chatc-iconpick { flex: none; width: auto; padding: 2px 10px; }
+.sbe-chat-config footer.sbe-chatc-foot { flex: none; display: flex; flex-wrap: wrap; gap: 8px; }
+
+:is(.sbe-chat-config, .sbe-tooltip-config) .sbe-chatc-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+:is(.sbe-chat-config, .sbe-tooltip-config) .sbe-chatc-pair > label { display: flex; flex-direction: column; gap: 2px; font-weight: 400; }
+:is(.sbe-chat-config, .sbe-tooltip-config) .sbe-chatc-pair > label > span { font-size: 0.85em; opacity: 0.8; }
+:is(.sbe-chat-config, .sbe-tooltip-config) .sbe-chatc-ptheme { flex: none; display: flex; align-items: center; gap: 6px; }
+:is(.sbe-chat-config, .sbe-tooltip-config) .sbe-chatc-ptheme > span { flex: 1 1 auto; font-weight: 600; }
+:is(.sbe-chat-config, .sbe-tooltip-config) .sbe-chatc-ptheme > button { flex: none; width: auto; padding: 2px 10px; }
+:is(.sbe-chat-config, .sbe-tooltip-config) .sbe-chatc-ptheme > button.active { border-color: var(--sbe-accent); color: var(--sbe-accent); }
+:is(.sbe-chat-config, .sbe-tooltip-config) .sbe-chatc-pairhint { margin: 0 0 8px; }
+.sbe-chat-config .sbe-chatc-var { display: flex; flex-direction: column; gap: 4px; }
+
+/* ---------- Jet dans la carte : ligne + flèche de détail ---------- */
+.sbe-card-dice { border-radius: 6px; background: rgba(0, 0, 0, 0.12); overflow: hidden; }
+.sbe-card-dice > summary {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 8px; cursor: pointer; list-style: none;
+}
+.sbe-card-dice > summary::-webkit-details-marker { display: none; }
+.sbe-card-dice > summary::marker { content: ""; }
+.sbe-card-dice-caret { flex: none; font-size: 0.8em; opacity: 0.7; transition: transform 0.15s ease; }
+.sbe-card-dice[open] > summary .sbe-card-dice-caret { transform: rotate(90deg); }
+.sbe-card-dice-formula { flex: 1 1 auto; min-width: 0; font-weight: 600; opacity: 0.9; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbe-card-dice-total {
+  flex: none; min-width: 30px; text-align: center;
+  font-weight: 800; font-size: 1.3em;
+  padding: 1px 9px; border-radius: 6px;
+  border: 1px solid var(--sbe-card-accent);
+}
+.sbe-card-dice-detail { padding: 0 8px 6px; }
+.sbe-card-dice-detail:empty { display: none; }
+/* Le détail de Foundry est replié par défaut : ici, c'est la flèche qui décide. */
+.sbe-card-dice-detail .dice-tooltip {
+  display: block !important; height: auto !important; max-height: none !important;
+  grid-template-rows: 1fr !important; opacity: 1 !important; overflow: visible !important;
+}
+.sbe-card-dice-detail .dice-tooltip > * { overflow: visible !important; }
+
+/* ---------- Participants (acteur + jets) ---------- */
+.sbe-card { --sbe-card-portrait: 36px; }
+.sbe-card-sides { display: flex; flex-direction: column; gap: 6px; }
+.sbe-card-side { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.sbe-card-actor { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.sbe-card-portrait {
+  width: var(--sbe-card-portrait); height: var(--sbe-card-portrait);
+  flex: 0 0 var(--sbe-card-portrait);
+  object-fit: cover; border: none; border-radius: 50%;
+}
+.sbe-card-actor-name { font-weight: 700; min-width: 0; overflow-wrap: break-word; line-height: 1.15; }
+.sbe-card-vs {
+  text-align: center; font-weight: 800; font-size: 0.8em;
+  letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.7;
+  padding: 0 4px;
+}
+/* 2 colonnes dans un chat étroit : ligne de jet resserrée. */
+.sbe-card-sides[data-count="2"] .sbe-card-dice > summary { gap: 5px; padding: 4px 6px; }
+.sbe-card-sides[data-count="2"] .sbe-card-dice-total { font-size: 1.1em; padding: 1px 6px; min-width: 0; }
+
+/* ---------- Détail des dés (pastilles) ---------- */
+.sbe-card-dice-tag {
+  flex: none; display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.75em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+  padding: 1px 7px; border-radius: 10px;
+  background: var(--sbe-tag-bg, var(--sbe-card-accent)); color: var(--sbe-tag-text, var(--sbe-text-max));
+}
+.sbe-card-dice-tag[data-adv="adv"] { --sbe-tag-bg-d: var(--sbe-ok); }
+.sbe-card-dice-tag[data-adv="dis"] { --sbe-tag-bg-d: var(--sbe-fail); }
+.sbe-card-dice-tag { background: var(--sbe-tag-bg, var(--sbe-tag-bg-d, var(--sbe-card-accent))); }
+.sbe-card-dice-tag-ic:empty { display: none; }
+.sbe-card-dice-tag-ic .sbe-label-icon-img { width: 12px; height: 12px; border: none; margin: 0; }
+.sbe-card-dice-tag-ic i { font-size: 0.95em; }
+.sbe-card-roll { display: flex; flex-direction: column; gap: 4px; }
+/* Rien à dérouler : ni flèche, ni curseur (pas de contrôle mort). */
+.sbe-card-dice:has(> .sbe-card-dice-detail:empty) > summary { cursor: default; pointer-events: none; }
+.sbe-card-dice:has(> .sbe-card-dice-detail:empty) .sbe-card-dice-caret { visibility: hidden; }
+.sbe-dd { display: flex; flex-direction: column; gap: 4px; padding-top: 2px; }
+.sbe-dd-term { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.sbe-dd-f { font-size: 0.85em; opacity: 0.8; }
+.sbe-dd-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.sbe-dd-chip {
+  min-width: 24px; padding: 1px 5px; text-align: center; font-weight: 700;
+  border-radius: 4px; border: 1px solid currentColor; background: rgba(127, 127, 127, 0.12);
+}
+.sbe-dd-chip.is-max { color: var(--sbe-ok); }
+.sbe-dd-chip.is-min { color: var(--sbe-fail); }
+.sbe-dd-chip.is-off { opacity: 0.45; text-decoration: line-through; }
+.sbe-dd-calc { font-size: 0.85em; opacity: 0.85; }
+.sbe-card-side-after { display: flex; flex-direction: column; gap: 2px; }
+/* Apports (modificateur, effets visibles) : nom … pastille, puis
+   le récap « Seuil 40 → 50 ». Couleurs : manager des messages. */
+.sbe-card-mods {
+  --sbe-mod-up-c: var(--sbe-mod-up, var(--sbe-ok));
+  --sbe-mod-down-c: var(--sbe-mod-down, var(--sbe-fail));
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 4px 8px; border-radius: 6px;
+  background: var(--sbe-mod-bg, rgba(127, 127, 127, 0.1));
+  border-left: 3px solid var(--sbe-card-accent);
+}
+.sbe-card-mod { display: flex; align-items: center; gap: 6px; font-size: 0.9em; }
+.sbe-card-mod-ic { flex: none; display: flex; align-items: center; justify-content: center; width: 18px; }
+.sbe-card-mod-ic .sbe-label-icon-img { width: 18px; height: 18px; object-fit: cover; border: none; border-radius: 3px; margin: 0; }
+.sbe-card-mod-ic i, .sbe-card-mod-ic span { font-size: 0.95em; }
+.sbe-card-mod-l { flex: 1 1 auto; min-width: 0; opacity: 0.9; }
+.sbe-card-mod-v {
+  flex: none; min-width: 36px; text-align: center; font-weight: 800; font-variant-numeric: tabular-nums;
+  padding: 0 7px; border-radius: 10px; border: 1px solid currentColor;
+}
+.sbe-card-mod.is-up .sbe-card-mod-v { color: var(--sbe-mod-up-c); }
+.sbe-card-mod.is-down .sbe-card-mod-v { color: var(--sbe-mod-down-c); }
+.sbe-card-mods-sum {
+  display: flex; align-items: center; justify-content: flex-end; gap: 6px;
+  margin-top: 1px; padding-top: 3px; border-top: 1px dashed rgba(127, 127, 127, 0.4);
+  font-size: 0.85em; font-variant-numeric: tabular-nums;
+}
+.sbe-card-mods-cap { flex: 1 1 auto; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.9em; }
+.sbe-card-mods-from { opacity: 0.75; }
+.sbe-card-mods-sum > i { opacity: 0.6; font-size: 0.9em; }
+.sbe-card-mods-to { font-size: 1.1em; }
+.sbe-card-mods-to.is-up { color: var(--sbe-mod-up-c); }
+.sbe-card-mods-to.is-down { color: var(--sbe-mod-down-c); }
+
+/* ---------- Échanges ---------- */
+.sbe-trade-picks { display: flex; flex-direction: column; gap: 4px; max-height: 50vh; overflow-y: auto; }
+.sbe-trade-pick { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.sbe-trade-pick img { width: 32px; height: 32px; object-fit: cover; border: none; border-radius: 50%; }
+.sbe-trade-window .window-content { display: flex; flex-direction: column; gap: 8px; }
+.sbe-trade-cols { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.sbe-trade-side { display: flex; flex-direction: column; gap: 6px; min-height: 0; padding: 6px; border: 1px solid var(--sbe-tone-4); border-radius: 6px; }
+.sbe-trade-side > header { font-weight: 700; }
+.sbe-trade-side > header small { font-weight: 400; opacity: 0.8; }
+.sbe-trade-mine { border-style: dashed; }
+.sbe-trade-list { flex: 1 1 auto; overflow-y: auto; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; min-height: 60px; }
+.sbe-trade-item { display: flex; align-items: center; gap: 6px; }
+.sbe-trade-item img { width: 26px; height: 26px; object-fit: cover; border: none; flex: none; }
+.sbe-trade-name { flex: 1 1 auto; min-width: 0; }
+.sbe-trade-qty { width: 52px !important; flex: none; text-align: center; }
+.sbe-trade-max { flex: none; opacity: 0.7; font-size: 0.9em; }
+.sbe-trade-empty { opacity: 0.6; font-style: italic; text-align: center; padding: 10px 4px; }
+.sbe-trade-ok { color: var(--sbe-ok); font-weight: 700; }
+.sbe-trade-wait { opacity: 0.75; }
+.sbe-trade-foot { flex: none; display: flex; gap: 8px; }
+.sbe-trade-foot button.active { border-color: var(--sbe-ok); color: var(--sbe-ok); }
+.sbe-trade-config .window-content { display: flex; flex-direction: column; gap: 8px; }
+.sbe-trade-cfg-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: 6px; }
+.sbe-trade-cfg-body details.sbe-chatc-sec { margin-bottom: 8px; border: 1px solid var(--sbe-tone-5); border-radius: 6px; padding: 4px 8px; }
+.sbe-trade-cfg-body details.sbe-chatc-sec > summary { cursor: pointer; font-weight: 700; padding: 4px 0; }
+.sbe-trade-cfg-body .sbe-chatc-field { display: flex; flex-direction: column; gap: 3px; margin: 6px 0; }
+.sbe-trade-cfg-body .sbe-chatc-field > label { font-weight: 600; }
+.sbe-trade-checks { display: flex; flex-direction: column; gap: 3px; }
+.sbe-trade-check { display: flex; align-items: center; gap: 6px; }
+.sbe-trade-check img { width: 22px; height: 22px; object-fit: cover; border: none; }
+.sbe-trade-check small { opacity: 0.7; margin-left: auto; }
+.sbe-trade-config footer.sbe-chatc-foot { flex: none; display: flex; gap: 8px; }
+.sbe-trade-excdrop { list-style: none; margin: 0; padding: 6px; min-height: 48px; border: 2px dashed var(--sbe-tone-4); border-radius: 6px; }
+.sbe-trade-exc-del { flex: none; cursor: pointer; }
+
+/* ---------- Manager des info-bulles : couleurs sombre / clair ---------- */
+.sbe-tooltip-config .form-group > .sbe-chatc-pair { flex: 1 0 100%; }
+.sbe-tooltip-config .sbe-tooltip-ptheme { margin-bottom: 6px; }
+
+/* ---------- Demandes de jet : cartes ---------- */
+.sbe-rr-actions { display: flex; justify-content: center; }
+.sbe-rr-btn { width: auto; display: inline-flex; align-items: center; gap: 6px; padding: 3px 12px; }
+.sbe-rr-pending { display: flex; align-items: center; gap: 8px; }
+.sbe-rr-pending [hidden] { display: none !important; }
+.sbe-rr-wait { opacity: 0.7; font-style: italic; }
+/* Résultat propre à chaque participant (sa réussite / son échec). */
+/* En contour, plus discret que le verdict de l'opposition. */
+.sbe-card .sbe-card-result.sbe-card-result--side {
+  padding: 1px 6px; font-size: 0.8em; font-weight: 700;
+  background: none; color: var(--sbe-res, var(--sbe-card-accent));
+  border: 1px solid var(--sbe-res, var(--sbe-card-accent));
+}
+.sbe-card-side.is-winner .sbe-card-actor-name::before {
+  content: "\f521"; font-family: var(--font-awesome, "Font Awesome 6 Pro"), "Font Awesome 6 Free"; font-weight: 900;
+  margin-right: 5px; color: var(--sbe-card-accent);
+}
+.sbe-rr-verdict {
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px;
+  padding: 4px 8px; border-radius: 4px; font-weight: 700;
+  border: 1px solid var(--sbe-card-accent);
+}
+.sbe-rr-verdict > i { color: var(--sbe-card-accent); }
+.sbe-rr-verdict.is-none { opacity: 0.8; font-weight: 600; }
+
+/* ---------- Demandes de jet : fenêtre du MJ ---------- */
+.sbe-rr-dlg { display: flex; flex-direction: column; gap: 6px; }
+.sbe-rr-dlg [hidden] { display: none !important; }
+.sbe-rr-label { font-weight: 700; }
+:is(.sbe-rr-dlg, .sbe-rr-panel) > .notes { margin: -2px 0 2px; font-size: 0.85em; opacity: 0.8; }
+.sbe-rr-dlg input[type="checkbox"] { flex: none; width: auto; margin: 0; }
+.sbe-rr-switch { white-space: nowrap; }
+.sbe-rr-seg { display: flex; gap: 4px; }
+.sbe-rr-seg--wrap { flex-wrap: wrap; }
+.sbe-rr-seg-btn { flex: 1 1 auto; width: auto; display: inline-flex; align-items: center; justify-content: center; gap: 5px; padding: 3px 10px; }
+.sbe-rr-seg-btn.is-on { border-color: var(--sbe-accent, var(--color-border-highlight)); color: var(--sbe-accent, inherit); font-weight: 700; }
+.sbe-rr-panel { display: flex; flex-direction: column; gap: 4px; border-top: 1px solid var(--sbe-tone-5, rgba(127,127,127,.4)); padding-top: 6px; }
+.sbe-rr-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.sbe-rr-switch { display: flex; align-items: center; gap: 6px; }
+.sbe-rr-targets { display: flex; flex-direction: column; gap: 3px; max-height: 240px; overflow-y: auto; }
+.sbe-rr-targets.is-off { opacity: 0.45; pointer-events: none; }
+.sbe-rr-target { display: flex; align-items: center; gap: 6px; }
+.sbe-rr-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.sbe-rr-tok img { width: 26px; height: 26px; object-fit: cover; border: none; border-radius: 4px; flex: none; }
+.sbe-rr-tokname { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbe-rr-npc { font-size: 0.75em; padding: 0 5px; border-radius: 8px; border: 1px solid currentColor; opacity: 0.7; }
+.sbe-rr-tok select { flex: none; width: auto; min-width: 110px; }
+.sbe-rr-owner { flex: none; font-size: 0.8em; opacity: 0.65; }
+/* Fiche sans ce jet : grisé, pas visable. */
+.sbe-rr-lack { display: none; flex: none; font-size: 0.75em; font-style: italic; color: var(--sbe-fail, #c22525); }
+.sbe-rr-tok.is-lack { opacity: 0.5; }
+.sbe-rr-tok.is-lack .sbe-rr-lack { display: inline; }
+.sbe-rr-count { opacity: 0.7; font-size: 0.85em; }
+.sbe-rr-for { font-size: 0.9em; opacity: 0.85; text-align: center; }
+
+.sbe-rr-btn-ic:empty { display: none; }
+.sbe-rr-btn-ic .sbe-label-icon-img { width: 16px; height: 16px; border: none; margin: 0; }
+
+/* ---------- Carte d'objet (« Afficher dans le chat ») ---------- */
+.sbe-card-fold > summary { list-style: none; cursor: pointer; }
+.sbe-card-fold > summary::-webkit-details-marker { display: none; }
+.sbe-card-fold > summary::marker { content: ""; }
+.sbe-card-fold-caret { flex: none; margin-left: auto; opacity: 0.7; transition: transform 0.15s ease; }
+.sbe-card-fold[open] > summary .sbe-card-fold-caret { transform: rotate(180deg); }
+.sbe-card-fold:not([open]) > summary.sbe-card-head { border-bottom-color: transparent; padding-bottom: 0; }
+.sbe-card-fold > .sbe-card-body { margin-top: 6px; }
+.sbe-itemcard-desc > :first-child { margin-top: 0; }
+.sbe-itemcard-desc > :last-child { margin-bottom: 0; }
+.sbe-itemcard-list { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+.sbe-itemcard-list-title { font-weight: 700; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.85; }
+.sbe-itemcard-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.sbe-itemcard-chip {
+  display: inline-flex; align-items: center; gap: 5px; padding: 1px 8px 1px 2px;
+  border-radius: 12px; border: 1px solid var(--sbe-card-accent); font-size: 0.85em;
+}
+.sbe-itemcard-chip img { width: 20px; height: 20px; object-fit: cover; border: none; border-radius: 50%; margin: 0; }
+
+/* ---------- Manager Combat ---------- */
+.sbe-combat-config .window-content { display: flex; flex-direction: column; gap: 8px; }
+.sbe-cbt-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: 6px; }
+.sbe-cbt-body details.sbe-chatc-sec { margin-bottom: 8px; border: 1px solid var(--sbe-tone-5); border-radius: 6px; padding: 4px 8px; }
+.sbe-cbt-body details.sbe-chatc-sec > summary { cursor: pointer; font-weight: 700; padding: 4px 0; }
+.sbe-cbt-body .sbe-chatc-field { display: flex; flex-direction: column; gap: 3px; margin: 6px 0; }
+.sbe-cbt-body .sbe-chatc-field > label { font-weight: 600; }
+.sbe-cbt-types { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
+.sbe-cbt-type { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: end;
+  border: 1px solid var(--sbe-tone-4); border-radius: 6px; padding: 2px 8px; }
+.sbe-cbt-type .sbe-chatc-field { margin: 4px 0; }
+.sbe-cbt-del { cursor: pointer; padding-bottom: 10px; opacity: .75; }
+.sbe-cbt-del:hover { opacity: 1; color: var(--sbe-fail); }
+.sbe-cbt-add { width: auto; }
+.sbe-combat-config footer.sbe-chatc-foot { flex: none; display: flex; gap: 8px; }
+
+/* ---------- Carte d'attaque : dégâts ---------- */
+.sbe-atk-dmg { margin-top: 6px; padding: 4px 6px; border: 1px solid var(--sbe-tone-4); border-radius: 6px; }
+.sbe-atk-dmg-head { font-weight: 700; }
+.sbe-atk-type { font-weight: 600; opacity: .85; }
+.sbe-atk-dmg-calc { font-size: .9em; opacity: .85; }
+.sbe-atk-dmg-total { font-size: 1.1em; text-align: right; }
+/* Ce que les réactions de la cible ont retenu : icône, nom, montant. */
+.sbe-atk-reacts { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; margin-top: 2px; }
+.sbe-atk-react { display: inline-flex; align-items: center; gap: 5px; font-size: .9em; }
+.sbe-atk-react img { width: 18px; height: 18px; border: none; border-radius: 3px; object-fit: cover; flex: none; }
+.sbe-atk-react b { color: var(--sbe-ok, #5cb85c); }
+/* Attaque non létale : étiquette au-dessus des dégâts. */
+.sbe-atk-nonlethal-row { display: flex; justify-content: flex-end; margin-bottom: 2px; }
+.sbe-atk-nonlethal { padding: 0 6px; font-size: .8em; font-weight: 600; border: 1px solid currentColor; border-radius: 3px; opacity: .85; }
+.sbe-atk-applied { margin-top: 4px; color: var(--sbe-ok); font-weight: 700; }
+.sbe-atk-apply { margin-top: 4px; width: 100%; }
+.sbe-atk-note { opacity: .85; }
+.sbe-cbt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
+/* Initiative : une ligne par modèle de personnage. */
+.sbe-cbt-init-models { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
+.sbe-cbt-init-model { display: grid; grid-template-columns: 1.2fr 1fr 1fr auto; gap: 8px; align-items: end;
+  border: 1px solid var(--sbe-tone-4); border-radius: 6px; padding: 2px 8px; }
+.sbe-cbt-init-model .sbe-chatc-field { margin: 4px 0; min-width: 0; }
+.sbe-cbt-init-del { cursor: pointer; padding-bottom: 10px; opacity: .75; }
+.sbe-cbt-init-del:hover { opacity: 1; color: var(--sbe-fail); }
+.sbe-cbt-init-add { width: auto; }
+.sbe-init-pass { font-weight: 400; opacity: .85; }
+.sbe-cbt-check { display: flex; align-items: center; gap: 6px; font-weight: 600; margin-top: 4px; }
+
+/* ---------- Carte d'attaque : zone ---------- */
+.sbe-zone-head { font-weight: 700; margin: 2px 0 4px; }
+.sbe-zone-rows { display: flex; flex-direction: column; gap: 2px; margin-top: 4px; }
+.sbe-zone-row { display: flex; flex-direction: column; gap: 1px; padding: 3px 4px; border-bottom: 1px dashed var(--sbe-tone-4); }
+.sbe-zone-row:last-child { border-bottom: none; }
+.sbe-zone-line { display: flex; align-items: baseline; gap: 8px; }
+.sbe-zone-who { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Non létal : les dégâts sous la ligne du nom, à droite. */
+.sbe-zone-dmgline { justify-content: flex-end; }
+.sbe-zone-dmg { flex: none; white-space: nowrap; }
+.sbe-zone-meta { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: .85em; }
+.sbe-zone-int { opacity: .8; }
+.sbe-zone-save small { opacity: .8; }
+.sbe-zone-save.is-ok { color: var(--sbe-ok); }
+.sbe-zone-save.is-ko { color: var(--sbe-fail); }
+.sbe-zone-dmg small { opacity: .75; }
+
+/* ---------- Manager : formes de zone ---------- */
+.sbe-zone-editor .window-content { display: flex; flex-direction: column; gap: 8px; }
+.sbe-zed { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: 210px 1fr; gap: 10px; }
+.sbe-zed-side { display: flex; flex-direction: column; gap: 6px; min-height: 0; }
+.sbe-zed-list { list-style: none; margin: 0; padding: 0; flex: 1 1 auto; overflow-y: auto; border: 1px solid var(--sbe-tone-4); border-radius: 6px; }
+.sbe-zed-list li { padding: 5px 8px; cursor: pointer; display: flex; gap: 6px; align-items: center; border-bottom: 1px solid var(--sbe-tone-5); }
+.sbe-zed-list li.active { background: var(--sbe-surf-3); font-weight: 700; }
+.sbe-zed-list li.sbe-zed-empty { cursor: default; opacity: .7; }
+.sbe-zed-sidebtns { display: flex; flex-direction: column; gap: 4px; }
+.sbe-zed-main { min-height: 0; overflow-y: auto; padding-right: 4px; }
+.sbe-zed-props { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px 10px; }
+.sbe-zed-f { display: flex; flex-direction: column; gap: 2px; }
+.sbe-zed-f > span, .sbe-zed-int > span { font-weight: 600; font-size: .9em; }
+.sbe-zed-tools { display: flex; flex-wrap: wrap; align-items: end; gap: 6px; margin-top: 6px; }
+.sbe-zed-tools > button { flex: 0 0 auto; width: 34px; height: 30px; }
+.sbe-zed-tool.active { border-color: var(--sbe-accent); color: var(--sbe-accent); box-shadow: 0 0 0 1px var(--sbe-accent) inset; }
+.sbe-zed-int { display: flex; flex-direction: column; gap: 2px; }
+.sbe-zed-int input { width: 70px; }
+.sbe-zed-tools select { width: auto; }
+.sbe-zed-snap { display: flex; align-items: center; gap: 4px; }
+.sbe-zed-board { border: 1px solid var(--sbe-tone-4); border-radius: 6px; background: var(--sbe-surf-2); width: min(100%, 520px); }
+.sbe-zed-svg { display: block; width: 100%; height: auto; aspect-ratio: 1; cursor: crosshair; outline: none; }
+.sbe-zed-gridline { fill: none; stroke: var(--sbe-tone-4); stroke-width: .02; }
+.sbe-zed-piece { stroke-width: .05; cursor: pointer; }
+.sbe-zed-piece.is-sel { stroke: var(--sbe-accent); stroke-width: .09; stroke-dasharray: .2 .12; }
+.sbe-zed-draft { fill: rgba(255, 106, 0, .15); stroke: var(--sbe-accent); stroke-width: .05; stroke-dasharray: .15 .1; }
+.sbe-zed-dot { fill: var(--sbe-accent); }
+.sbe-zed-anchor { fill: #fff; stroke: #000; stroke-width: .05; }
+.sbe-zed-fwd { stroke: var(--sbe-text); stroke-width: .07; }
+.sbe-zed-fwdhead { fill: var(--sbe-text); }
+.sbe-zone-editor footer.sbe-chatc-foot { flex: none; display: flex; gap: 8px; }
+.sbe-zed-introw { display: flex; align-items: center; gap: 4px; }
+
+/* ---------- Corps (localisation des coups) ---------- */
+.sbe-bed-def { margin-left: auto; font-size: .8em; opacity: .7; }
+.sbe-bed-img { display: flex; gap: 4px; }
+.sbe-bed-img input { flex: 1; min-width: 0; }
+.sbe-bed-img button { flex: none; width: 32px; }
+.sbe-bed-imgf { grid-column: span 2; }
+.sbe-bed-h { margin: 10px 0 4px; font-size: 1em; border: 0; display: flex; align-items: center; gap: 6px; }
+.sbe-bed-models { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.sbe-bed-model { display: inline-flex; align-items: center; gap: 4px; }
+.sbe-bed-none { opacity: .7; }
+.sbe-bed-zones { display: flex; flex-direction: column; gap: 3px; margin-bottom: 4px; }
+.sbe-bed-zrow { display: grid; grid-template-columns: 22px minmax(90px, 1.4fr) 54px 54px minmax(70px, 1fr) minmax(70px, 1fr) 64px 64px 18px; gap: 4px; align-items: center; }
+.sbe-bed-zrow:has(.sbe-bed-wide) { grid-template-columns: 22px minmax(90px, 1.4fr) 112px minmax(70px, 1fr) minmax(70px, 1fr) 64px 64px 18px; }
+.sbe-bed-zhead b { font-size: .8em; color: var(--sbe-text-dim); }
+.sbe-bed-zrow.is-cur { background: var(--sbe-surf-3); border-radius: 4px; }
+.sbe-bed-zpick, .sbe-bed-zdel { cursor: pointer; display: flex; justify-content: center; }
+.sbe-bed-zdel { opacity: .7; } .sbe-bed-zdel:hover { opacity: 1; color: var(--sbe-fail); }
+.sbe-bed-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--sbe-tone-4); }
+.sbe-bed-zrow.is-cur .sbe-bed-dot { border-color: var(--sbe-text-strong); }
+.sbe-bed-share { text-align: center; color: var(--sbe-text-dim); }
+.sbe-bed-zadd { width: auto; }
+.sbe-bed-cur { margin-left: auto; align-self: center; }
+.sbe-bed-tooltext { margin: 4px 0; font-size: .85em; color: var(--sbe-text-dim); }
+.sbe-bed-board { width: min(100%, 440px); }
+.sbe-bed-svg { aspect-ratio: auto; }
+.sbe-bed-piece { fill-opacity: .35; stroke-width: .6; cursor: pointer; }
+.sbe-bed-piece.is-sel { fill-opacity: .6; stroke: var(--sbe-text-strong) !important; stroke-width: 1; stroke-dasharray: 2 1.2; }
+.sbe-bed-draft { fill: rgba(255, 106, 0, .15); stroke: var(--sbe-accent); stroke-width: .6; stroke-dasharray: 1.5 1; }
+.sbe-bed-svg .sbe-zed-dot { fill: var(--sbe-accent); }
+
+/* La silhouette : fenêtre de visée et carte d'attaque. */
+.sbe-loc-svg { display: block; }
+.sbe-loc-z { fill: var(--z); fill-opacity: .18; stroke: var(--z); stroke-width: .6; }
+.sbe-loc-z.is-on { fill-opacity: .75; }
+.sbe-loc-z[data-zone] { cursor: pointer; }
+.sbe-loc-aimbox { display: flex; gap: 10px; align-items: flex-start; }
+.sbe-loc-aimbox .sbe-loc-svg { width: 160px; flex: none; background: var(--sbe-surf-1); border: 1px solid var(--sbe-tone-4); border-radius: 6px; }
+.sbe-loc-aimlist { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.sbe-loc-aimbtn.is-on { border-color: var(--sbe-accent); color: var(--sbe-accent); }
+.sbe-loc-aimp { margin: 0 0 6px; }
+.sbe-loc-hit { display: flex; align-items: center; gap: 8px; margin-top: 4px; font-weight: 700; }
+.sbe-loc-hit .sbe-loc-svg.is-mini { width: 30px; height: auto; flex: none; }
+.sbe-loc-hit small { font-weight: 400; opacity: .8; }
+.sbe-loc-tag { font-weight: 400; opacity: .85; }
+
+/* ---------- Profils d'attaque et options ---------- */
+.sbe-cbt-profs { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
+.sbe-cbt-prof { border: 1px solid var(--sbe-tone-4); border-radius: 6px; padding: 2px 8px 6px; }
+.sbe-cbt-prof > summary { cursor: pointer; font-weight: 700; padding: 4px 0; display: flex; align-items: center; gap: 6px; }
+.sbe-cbt-profdel { margin-left: auto; opacity: .7; cursor: pointer; }
+.sbe-cbt-profdel:hover { opacity: 1; color: var(--sbe-fail); }
+.sbe-cbt-profadd { width: auto; }
+.sbe-combat-config .sbe-step-atk { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 4px 8px; }
+.sbe-combat-config .sbe-step-atk-field { display: flex; flex-direction: column; gap: 2px; }
+.sbe-combat-config .sbe-step-atk-field > span { font-size: .85em; font-weight: 600; }
+.sbe-combat-config .sbe-step-zone { margin: 6px 0 2px; padding: 2px 8px 6px; border: 1px solid var(--sbe-tone-4); border-radius: 4px; }
+.sbe-combat-config .sbe-step-zone > legend { font-weight: 600; padding: 0 4px; }
+.sbe-aopt-rows { display: flex; flex-direction: column; gap: 4px; margin-bottom: 4px; }
+.sbe-aopt-row { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr 1.3fr auto; gap: 6px; align-items: end; }
+.sbe-aopt-f { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sbe-aopt-f > span { font-size: .8em; font-weight: 600; }
+.sbe-aopt-defchk { width: auto; align-self: start; margin: 6px 0; }
+.sbe-aopt-del { cursor: pointer; opacity: .7; padding-bottom: 6px; }
+.sbe-aopt-del:hover { opacity: 1; color: var(--sbe-fail); }
+.sbe-aopt-add { width: auto; }
+/* Carte : options choisies */
+.sbe-atk-opts { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; }
+.sbe-atk-opt { font-size: .8em; font-weight: 700; padding: 0 6px; border-radius: 3px; border: 1px solid var(--sbe-tone-4); background: var(--sbe-surf-3); }
+
+/* ---------- Fenêtre « Recharger » ---------- */
+.sbe-load-list { display: flex; flex-direction: column; gap: 3px; }
+.sbe-load-row { display: flex; align-items: center; gap: 8px; padding: 3px 6px; border: 1px solid var(--sbe-tone-4, #555); border-radius: 4px; cursor: pointer; }
+.sbe-load-row:has(input:checked) { border-color: var(--sbe-accent, #c9822b); }
+.sbe-load-row img { width: 26px; height: 26px; object-fit: cover; border: none; flex: none; }
+.sbe-load-name { flex: 1 1 auto; font-weight: 600; }
+.sbe-load-qty { opacity: .8; }
+.sbe-load-tag { font-size: .75em; font-weight: 700; text-transform: uppercase; padding: 0 5px; border-radius: 3px; border: 1px solid var(--sbe-ok, #5a8f4e); color: var(--sbe-ok, #5a8f4e); }
+
+/* Détail du calcul des dégâts (repliable) */
+.sbe-atk-calc { margin-top: 4px; font-size: .85em; }
+.sbe-atk-calc > summary { cursor: pointer; list-style: none; display: flex; align-items: baseline; gap: 6px; opacity: .85; white-space: nowrap; }
+.sbe-atk-calc > summary::-webkit-details-marker { display: none; }
+.sbe-atk-calc > summary::marker { content: ""; }
+.sbe-atk-calc-caret { flex: none; transition: transform .15s ease; }
+.sbe-atk-calc[open] .sbe-atk-calc-caret { transform: rotate(90deg); }
+.sbe-atk-calc-short { margin-left: auto; font-family: monospace; white-space: nowrap; }
+.sbe-atk-calc ol { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-direction: column; gap: 1px; }
+/* Une étape : libellé et résultat sur la ligne, le détail du calcul en
+   dessous (il peut être long : il passe à la ligne au lieu d'écraser le
+   libellé lettre par lettre). */
+.sbe-atk-calc li { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "label value" "detail detail";
+  column-gap: 8px; row-gap: 0; align-items: baseline; padding: 2px 4px; border-bottom: 1px dotted var(--sbe-tone-4); }
+.sbe-atk-calc li > span:first-child { grid-area: label; overflow-wrap: break-word; }
+.sbe-atk-calc li > span:nth-child(2) { grid-area: detail; font-family: monospace; font-size: .92em; opacity: .75; overflow-wrap: anywhere; }
+.sbe-atk-calc li > span:nth-child(2):empty { display: none; }
+.sbe-atk-calc li > b { grid-area: value; text-align: right; }
+.sbe-atk-calc li.sbe-atk-calc-hit { display: block; font-style: italic; opacity: .85; }
+.sbe-atk-calc li.sbe-atk-calc-total { border-bottom: none; font-weight: 700; }
+
+/* Fenêtre de jet : aperçu en direct (lignes « libellé : valeur ») */
+.sbe-roll-dialog .sbe-roll-pv {
+  margin-top: 6px; padding: 6px 8px;
+  border: 1px solid var(--sbe-tone-4, rgba(128,128,128,.4)); border-radius: 6px;
+  background: color-mix(in srgb, var(--sbe-accent, #888) 6%, transparent);
+  display: flex; flex-direction: column; gap: 2px;
+}
+.sbe-roll-dialog .sbe-roll-pv-row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.sbe-roll-dialog .sbe-roll-pv-l { opacity: .8; }
+.sbe-roll-dialog .sbe-roll-pv-v { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+/* Éditeur des lignes d'aperçu (profil d'attaque et volet Avancé de l'arme) */
+.sbe-apv-rows { display: flex; flex-direction: column; gap: 4px; margin-bottom: 4px; }
+.sbe-apv-row { display: grid; grid-template-columns: 1fr 2.4fr auto; gap: 6px; align-items: end; }
+.sbe-apv-del { cursor: pointer; opacity: .7; padding-bottom: 6px; }
+.sbe-apv-del:hover { opacity: 1; color: var(--sbe-fail); }
+.sbe-apv-add { width: auto; }
+
+/* Carte « utilise » (consommables). */
+.sbe-use-lines { margin: 2px 0 4px; padding-left: 18px; }
+.sbe-use-lines li { margin: 1px 0; }
+.sbe-use-wait { margin: 4px 0; display: flex; align-items: center; gap: 6px; }
+.sbe-use-cancel { width: 100%; margin-top: 2px; }
+
+/* Fenêtre de jet : avantage en trois touches (désavantage rouge,
+   normal, avantage vert), couleurs du thème clair / sombre. */
+.sbe-roll-dialog .sbe-roll-advrow { flex-direction: column; align-items: stretch; gap: 4px; }
+.sbe-roll-dialog .sbe-roll-adv { display: flex; gap: 6px; }
+.sbe-roll-dialog .sbe-roll-adv-btn { flex: 1 1 0; position: relative; display: flex; cursor: pointer; margin: 0; }
+.sbe-roll-dialog .sbe-roll-adv-btn input { position: absolute; opacity: 0; pointer-events: none; }
+.sbe-roll-dialog .sbe-roll-adv-btn span { flex: 1; text-align: center; padding: 5px 8px; border-radius: 4px; font-weight: 700;
+  border: 1px solid var(--sbe-surf-4); background: var(--sbe-surf-1); color: var(--sbe-text-2); transition: background .12s, color .12s; }
+.sbe-roll-dialog .sbe-roll-adv-btn:hover span { background: var(--sbe-raised); }
+.sbe-roll-dialog .sbe-roll-adv-btn.is-dis span { border-color: var(--sbe-fail); }
+.sbe-roll-dialog .sbe-roll-adv-btn.is-adv span { border-color: var(--sbe-ok); }
+.sbe-roll-dialog .sbe-roll-adv-btn.is-dis input:checked + span { background: var(--sbe-fail); color: var(--sbe-text-max); }
+.sbe-roll-dialog .sbe-roll-adv-btn.is-normal input:checked + span { background: var(--sbe-surf-5); color: var(--sbe-text-max); }
+.sbe-roll-dialog .sbe-roll-adv-btn.is-adv input:checked + span { background: var(--sbe-ok); color: var(--sbe-text-max); }
+.sbe-roll-dialog .sbe-roll-adv-btn input:focus-visible + span { outline: 2px solid var(--sbe-accent); outline-offset: 1px; }
+
+/* Nom de l'orateur trop long : coupé par « … », l'heure et les boutons
+   gardent leur place (le nom entier au survol). */
+li.chat-message .message-header { flex-wrap: wrap; }
+li.chat-message .message-header > .message-sender { flex: 1 1 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+li.chat-message .message-header > .message-metadata { flex: none; white-space: nowrap; }
+
+/* Corriger les dégâts (MJ) : sous la carte d'attaque ou de zone. */
+.sbe-atk-fixpanel { margin-top: 6px; font-size: 0.9em; }
+.sbe-atk-fixpanel > summary { cursor: pointer; opacity: 0.85; }
+.sbe-atk-fixrow { display: flex; align-items: center; gap: 6px; margin: 4px 0; }
+.sbe-atk-fixwho { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbe-atk-fixbtns { display: flex; gap: 2px; flex: none; }
+.sbe-atk-fixbtns button { flex: none; width: auto; min-width: 0; padding: 0 6px; line-height: 20px; font-size: 0.85em; }
+.sbe-atk-fixbtns button.is-on { background: var(--sbe-accent); color: #fff; }
+.sbe-atk-fixsel { width: 100%; margin-top: 4px; }
+.sbe-atk-fix { font-style: italic; opacity: 0.85; }
+
+/* ---------- Après le jet : relances et bonus ---------- */
+.sbe-after-ed { display: flex; flex-direction: column; gap: 4px; }
+.sbe-after-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
+.sbe-after-f { display: flex; flex-direction: column; gap: 2px; }
+.sbe-after-f > span, .sbe-after-head b { font-weight: 600; font-size: .85em; }
+.sbe-after-row { display: grid; grid-template-columns: minmax(110px, 1.3fr) minmax(90px, 1.1fr) 52px 70px minmax(80px, .9fr) 52px 18px; gap: 4px; align-items: center; }
+.sbe-after-del { cursor: pointer; opacity: .7; } .sbe-after-del:hover { opacity: 1; color: var(--sbe-fail); }
+.sbe-after-add { width: auto; align-self: flex-start; }
+.sbe-after { display: flex; flex-direction: column; gap: 3px; margin-top: 4px; }
+.sbe-after-old { opacity: .5; text-decoration: line-through; }
+.sbe-after-line { font-size: .9em; }
+.sbe-after-line small, .sbe-after-left { color: var(--sbe-text-dim); font-size: .85em; }
+.sbe-after-btns { display: flex; flex-wrap: wrap; gap: 4px; }
+.sbe-after-btns button { width: auto; flex: 0 0 auto; padding: 0 8px; line-height: 24px; font-size: .9em; }
+.sbe-after-now { display: flex; align-items: center; gap: 10px; font-size: 1.1em; }
+.sbe-after-total { font-size: 1.6em; font-weight: 700; }

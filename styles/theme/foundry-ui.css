@@ -1,0 +1,714 @@
+/**
+ * SBE — Recoloration de l'interface Foundry
+ * Mappe les jetons --sbe-* vers les variables natives de Foundry v14
+ * et recouvre les fonds « parchemin » codés en image. Repris du
+ * premier système (éprouvé en jeu), renommé et sans partie HUD.
+ * Ne rien coder en dur ici : tout vient de la palette (dark/light.css).
+ */
+
+
+/* ============================================================ */
+/* MAPPAGE → variables natives de Foundry V14                    */
+/* (ne rien changer ici : tout vient de la palette ci-dessus)    */
+/* ============================================================ */
+
+/* =======================  THÈME CLAIR  ====================== */
+.theme-light,
+body.theme-light,
+.application.theme-light {
+  --color-light-1: var(--sbe-tone-1);
+  --color-light-2: var(--sbe-tone-2);
+  --color-light-3: var(--sbe-tone-3);
+  --color-light-4: var(--sbe-tone-4);
+  --color-light-5: var(--sbe-tone-5);
+  --color-light-6: var(--sbe-tone-6);
+
+  --hr-border: 2px groove var(--sbe-surf-3);
+
+  --color-text-primary: var(--sbe-text);
+  --color-text-secondary: var(--sbe-text-2);
+  --color-text-subtle: var(--sbe-text-dim);
+  --color-text-emphatic: var(--sbe-text-strong);
+  --color-text-dark-primary: var(--sbe-text);
+  --color-text-light-heading: var(--sbe-text-strong);
+  --color-text-light-highlight: var(--sbe-text-max);
+
+  --color-warm-1: var(--sbe-accent-dark);
+  --color-warm-2: var(--sbe-accent);
+  --color-warm-3: var(--sbe-accent-light);
+  --color-text-accent: var(--sbe-accent-text);
+  --color-text-hyperlink: var(--sbe-accent-text);
+  --content-link-text-color: var(--sbe-content-link);
+  --color-shadow-primary: var(--sbe-shadow-primary);
+  --color-shadow-highlight: var(--sbe-accent);
+  --color-scrollbar: var(--sbe-scrollbar);
+
+  --button-background-color: var(--sbe-surf-2);
+  --button-text-color: var(--sbe-text);
+  --button-border-color: var(--sbe-surf-4);
+  --button-hover-background-color: var(--sbe-surf-3);
+  --button-focus-outline-color: var(--sbe-accent);
+
+  --input-background-color: var(--sbe-surf-1);
+  --input-text-color: var(--sbe-text);
+  --input-border-color: var(--sbe-surf-4);
+  --input-focus-outline-color: var(--sbe-accent);
+
+  --color-border: var(--sbe-surf-4);
+  --color-border-dark: var(--sbe-surf-5);
+  --color-border-light-1: var(--sbe-surf-4);
+  --color-border-light-2: var(--sbe-surf-3);
+}
+
+/* =======================  THÈME SOMBRE  ===================== */
+.theme-dark,
+body.theme-dark,
+.application.theme-dark {
+  --color-dark-1: var(--sbe-surf-1);
+  --color-dark-2: var(--sbe-surf-2);
+  --color-dark-3: var(--sbe-surf-3);
+  --color-dark-4: var(--sbe-surf-4);
+  --color-dark-5: var(--sbe-surf-5);
+  --color-dark-6: var(--sbe-surf-6);
+
+  --color-light-1: var(--sbe-tone-1);
+  --color-light-2: var(--sbe-tone-2);
+  --color-light-3: var(--sbe-tone-3);
+  --color-light-4: var(--sbe-tone-4);
+  --color-light-5: var(--sbe-tone-5);
+  --color-light-6: var(--sbe-tone-6);
+
+  --hr-border: 2px groove var(--sbe-surf-4);
+
+  --color-text-primary: var(--sbe-text);
+  --color-text-secondary: var(--sbe-text-2);
+  --color-text-subtle: var(--sbe-text-dim);
+  --color-text-emphatic: var(--sbe-text-strong);
+  --color-text-dark-primary: var(--sbe-text);
+  --color-text-light-heading: var(--sbe-text-strong);
+  --color-text-light-highlight: var(--sbe-text-max);
+
+  --color-warm-1: var(--sbe-accent-dark);
+  --color-warm-2: var(--sbe-accent);
+  --color-warm-3: var(--sbe-accent-light);
+  --color-text-accent: var(--sbe-accent-text);
+  --color-text-hyperlink: var(--sbe-accent-text);
+  --content-link-text-color: var(--sbe-content-link);
+  --color-shadow-primary: var(--sbe-shadow-primary);
+  --color-shadow-highlight: var(--sbe-accent-light);
+  --color-scrollbar: var(--sbe-scrollbar);
+
+  --button-background-color: var(--sbe-surf-3);
+  --button-text-color: var(--sbe-text);
+  --button-border-color: var(--sbe-surf-4);
+  --button-hover-background-color: var(--sbe-raised);
+  --button-focus-outline-color: var(--sbe-accent);
+
+  --input-background-color: var(--sbe-surf-1);
+  --input-text-color: var(--sbe-text);
+  --input-border-color: var(--sbe-surf-4);
+  --input-focus-outline-color: var(--sbe-accent);
+
+  --color-border: var(--sbe-surf-4);
+  --color-border-dark: #2a2d31;
+  --color-border-light-1: var(--sbe-surf-4);
+  --color-border-light-2: var(--sbe-surf-5);
+}
+
+/* ============================================================ */
+/* SURCOUCHE — fonds "parchemin" codés en IMAGE par Foundry      */
+/* ------------------------------------------------------------ */
+/* Le parchemin des fenêtres natives n'est pas une variable mais */
+/* une image de fond → on la recouvre ici. On EXCLUT les fiches  */
+/* (.sheet = perso + objets) et tes fenêtres .sbe-window, qui    */
+/* gardent leur propre thème.                                    */
+/* ============================================================ */
+
+/* ------------------------------------------------------------ */
+/* PAS DE FLASH DE PARCHEMIN À L'OUVERTURE / FERMETURE           */
+/* Foundry ne pose theme-light/theme-dark SUR LA FENÊTRE qu'après */
+/* le premier rendu : une règle ".theme-dark .application ..." ne */
+/* matche donc pas pendant l'animation → la texture de base       */
+/* apparaissait le temps de l'anim. Ici l'écrasement est          */
+/* INCONDITIONNEL (indépendant de la classe portée par la         */
+/* fenêtre) et les couleurs viennent de la palette héritée du     */
+/* body, qui, lui, porte la classe dès le premier pixel.          */
+/*                                                                */
+/* EXCLUSION : on exclut .sbe-window (NOS fiches perso/créature */
+/* + nos objets) et non .sheet — car les fenêtres NATIVES de      */
+/* Foundry (Macro, Cartes/pioche, Table Aléatoire, Config de      */
+/* scène…) sont elles aussi des .sheet et doivent être thémées.   */
+/* ------------------------------------------------------------ */
+
+.application:not(.sbe-window):not(.faded-ui) {
+  background-color: var(--sbe-surf-2) !important;
+  background-image: none !important;
+}
+
+.application:not(.sbe-window):not(.faded-ui) .window-content {
+  background-color: var(--sbe-surf-2) !important;
+  background-image: none !important;
+  color: var(--sbe-text);
+}
+
+.application:not(.sbe-window):not(.faded-ui) .window-header {
+  background-color: var(--sbe-surf-3) !important;
+  background-image: none !important;
+  color: var(--sbe-text);
+  /* liseré rouille : même signature visuelle que les fenêtres sbe-window */
+  border-bottom: 2px solid var(--sbe-accent) !important;
+  padding: 8px 10px;
+}
+
+/* Titre : même typo que les fenêtres sbe-window (majuscules, gras, espacé) */
+.application:not(.sbe-window):not(.faded-ui) .window-title {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.9rem;
+  color: var(--sbe-text) !important;
+}
+
+/* Boutons du bandeau (fermer, contrôles…) */
+.application:not(.sbe-window):not(.faded-ui) .window-header button,
+.application:not(.sbe-window):not(.faded-ui) .window-header .header-control,
+.application:not(.sbe-window):not(.faded-ui) .window-header a.header-control {
+  color: var(--sbe-text-dim) !important;
+  background: transparent !important;
+  border: none;
+  border-radius: 2px;
+  transition: color 0.12s, background 0.12s;
+}
+.application:not(.sbe-window):not(.faded-ui) .window-header button:hover,
+.application:not(.sbe-window):not(.faded-ui) .window-header .header-control:hover {
+  color: var(--sbe-accent-light) !important;
+  background: var(--sbe-overlay-2) !important;
+}
+
+/* Boutons de contenu (Sauvegarder, Exécuter, Lancer…) — mêmes codes
+   que les boutons des fenêtres sbe-window. Les boutons du HUD (aperçu
+   du manager) gardent LEUR apparence : celle du thème du HUD. */
+.application:not(.sbe-window):not(.faded-ui) .window-content button:not(.sbe-hud-btn) {
+  background-color: var(--sbe-surf-3) !important;
+  background-image: none !important;
+  border: 1px solid var(--sbe-surf-4) !important;
+  color: var(--sbe-text) !important;
+  border-radius: 2px;
+  transition: background 0.12s, border-color 0.12s;
+}
+.application:not(.sbe-window):not(.faded-ui) .window-content button:not(.sbe-hud-btn):hover {
+  background-color: var(--sbe-raised) !important;
+  border-color: var(--sbe-accent) !important;
+}
+
+/* Zones internes des fiches natives (Macro, Cartes, Table Aléatoire,
+   Config de scène) qui reposent aussi sur le parchemin en image. */
+.application:not(.sbe-window):not(.faded-ui) .sheet-body,
+.application:not(.sbe-window):not(.faded-ui) .tab,
+.application:not(.sbe-window):not(.faded-ui) form,
+.application:not(.sbe-window):not(.faded-ui) .sheet-content {
+  background-image: none !important;
+  color: var(--sbe-text);
+}
+
+/* ------------------------------------------------------------ */
+/* PALETTES DE PRÉRÉGLAGE (Notes, Tuiles, Murs, Lumières…)        */
+/* ------------------------------------------------------------ */
+/* Ces fenêtres portent .faded-ui, classe qu'on exclut plus haut  */
+/* car elle sert AUSSI aux panneaux d'interface (barre d'outils,  */
+/* barre de raccourcis, liste des joueurs) qu'on ne doit pas      */
+/* repeindre. La différence : une palette est une VRAIE fenêtre,  */
+/* donc elle possède un bandeau (.window-header). On ne thème     */
+/* donc que les .faded-ui qui en ont un.                          */
+/* ------------------------------------------------------------ */
+
+.application.faded-ui:has(.window-header):not(.sbe-window) {
+  background-color: var(--sbe-surf-2) !important;
+  background-image: none !important;
+}
+
+.application.faded-ui:has(.window-header):not(.sbe-window) .window-content {
+  background-color: var(--sbe-surf-2) !important;
+  background-image: none !important;
+  color: var(--sbe-text);
+}
+
+.application.faded-ui:has(.window-header):not(.sbe-window) .window-header {
+  background-color: var(--sbe-surf-3) !important;
+  background-image: none !important;
+  color: var(--sbe-text);
+  border-bottom: 2px solid var(--sbe-accent) !important;
+  padding: 8px 10px;
+}
+
+.application.faded-ui:has(.window-header):not(.sbe-window) .window-title {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.9rem;
+  color: var(--sbe-text) !important;
+}
+
+.application.faded-ui:has(.window-header):not(.sbe-window) .window-header button,
+.application.faded-ui:has(.window-header):not(.sbe-window) .window-header .header-control,
+.application.faded-ui:has(.window-header):not(.sbe-window) .window-header a.header-control {
+  color: var(--sbe-text-dim) !important;
+  background: transparent !important;
+  border: none;
+  border-radius: 2px;
+}
+.application.faded-ui:has(.window-header):not(.sbe-window) .window-header button:hover,
+.application.faded-ui:has(.window-header):not(.sbe-window) .window-header .header-control:hover {
+  color: var(--sbe-accent-light) !important;
+  background: var(--sbe-overlay-2) !important;
+}
+
+.application.faded-ui:has(.window-header):not(.sbe-window) .window-content button:not(.sbe-hud-btn) {
+  background-color: var(--sbe-surf-3) !important;
+  background-image: none !important;
+  border: 1px solid var(--sbe-surf-4) !important;
+  color: var(--sbe-text) !important;
+  border-radius: 2px;
+}
+.application.faded-ui:has(.window-header):not(.sbe-window) .window-content button:not(.sbe-hud-btn):hover {
+  background-color: var(--sbe-raised) !important;
+  border-color: var(--sbe-accent) !important;
+}
+
+/* Sections repliables / fieldsets internes de ces palettes */
+.application.faded-ui:has(.window-header):not(.sbe-window) fieldset,
+.application.faded-ui:has(.window-header):not(.sbe-window) details,
+.application.faded-ui:has(.window-header):not(.sbe-window) .form-group {
+  background-image: none !important;
+  color: var(--sbe-text);
+}
+
+/* ============================================================ */
+/* BARRE DE DROITE (#sidebar) — fond recoloré, icônes intactes  */
+/* ------------------------------------------------------------ */
+/* On recolore le panneau (fond parchemin → gris métal / sombre) */
+/* mais on NE touche PAS aux onglets/icônes (qui restent comme   */
+/* à l'origine, sans case derrière).                             */
+/* ============================================================ */
+
+/* --- CLAIR --- */
+/* Panneau + bande d'onglets : TRANSPARENTS (canvas visible derrière) */
+.theme-light #sidebar,
+.theme-light #sidebar-tabs,
+.theme-light #sidebar nav.tabs,
+.theme-light #sidebar menu.tabs {
+  background: transparent !important;
+  background-image: none !important;
+}
+/* Contenu seulement (répertoires, combat, réglages) : fond gris métal.
+   Le chat est traité à part (transparent) plus bas.                  */
+.theme-light #sidebar .window-content,
+.theme-light #sidebar .sidebar-tab,
+.theme-light #sidebar .directory {
+  background: var(--sbe-surf-2) !important;
+  background-image: none !important;
+}
+
+/* --- SOMBRE --- */
+.theme-dark #sidebar,
+.theme-dark #sidebar-tabs,
+.theme-dark #sidebar nav.tabs,
+.theme-dark #sidebar menu.tabs {
+  background: transparent !important;
+  background-image: none !important;
+}
+.theme-dark #sidebar .window-content,
+.theme-dark #sidebar .sidebar-tab,
+.theme-dark #sidebar .directory {
+  background: var(--sbe-surf-2) !important;
+  background-image: none !important;
+}
+
+/* ---- CHAT : panneau transparent (zone vide = canvas visible) ----
+   Les messages gardent leur propre fond (chat SBE à venir). 2 thèmes.
+   .chat-sidebar bat la règle .sidebar-tab ci-dessus (même spécificité,
+   déclarée après).                                                   */
+.theme-light #chat,
+.theme-light #sidebar .chat-sidebar,
+.theme-dark #chat,
+.theme-dark #sidebar .chat-sidebar {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* ============================================================ */
+/* BARRE D'ONGLETS DU SIDEBAR (#sidebar-tabs)                    */
+/* ------------------------------------------------------------ */
+/* #sidebar-tabs est une .faded-ui, comme la barre de gauche :   */
+/* on NE touche PAS au fond des boutons, Foundry les rend déjà   */
+/* identiques à gauche dans les DEUX thèmes (clair ET sombre).   */
+/* On garde juste la BANDE transparente (le gris venait de       */
+/* #sidebar, déjà passé en transparent plus haut).               */
+/* ============================================================ */
+#sidebar-tabs,
+#sidebar-tabs nav.tabs,
+#sidebar-tabs menu.tabs {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* ============================================================ */
+/* CORRECTIFS THÈME SOMBRE — fenêtres dessinées pour le CLAIR    */
+/* ------------------------------------------------------------ */
+/* La boutique (.sbe-window-shop) et la fiche perso            */
+/* (.character-sheet) utilisent des jetons clairs (champs blancs,*/
+/* panneaux en surimpression NOIRE) qui cassent sur fond sombre. */
+/* On ajoute des variantes gâtées sur .theme-dark → AUCUN impact */
+/* sur le thème clair. Le texte des champs hérite déjà du clair  */
+/* (variables core), donc on ne force que les FONDS (sauf champs */
+/* désactivés dont le texte était codé en dur en sombre).        */
+/* ============================================================ */
+
+/* ---- FICHE PERSO : champs blancs → champs sombres lisibles ---- */
+.theme-dark .character-sheet {
+  --re-bg-input:        rgba(255, 255, 255, 0.07);
+  --re-bg-input-hover:  rgba(255, 255, 255, 0.12);
+  --re-bg-soft:         rgba(255, 255, 255, 0.04);
+  --re-bg-soft-hover:   rgba(255, 255, 255, 0.08);
+}
+.theme-dark .character-sheet input,
+.theme-dark .character-sheet select,
+.theme-dark .character-sheet textarea {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+.theme-dark .character-sheet input:focus,
+.theme-dark .character-sheet select:focus,
+.theme-dark .character-sheet textarea:focus {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: #b5471f;
+  outline: none;
+}
+/* Champs désactivés : texte était #555 (illisible sur sombre) */
+.theme-dark .character-sheet input[disabled],
+.theme-dark .character-sheet .field input[disabled] {
+  background: rgba(255, 255, 255, 0.04);
+  color: #9c988f;
+}
+.theme-dark .character-sheet input::placeholder,
+.theme-dark .character-sheet textarea::placeholder { color: #7e7a72; }
+
+/* ---- BOUTIQUE : surimpression NOIRE → surimpression CLAIRE ---- */
+.theme-dark .shop-header,
+.theme-dark .commerce-header { background: rgba(255, 255, 255, 0.05); }
+
+.theme-dark .shop-view-btn,
+.theme-dark .commerce-view-btn,
+.theme-dark .shop-cat-tab,
+.theme-dark .commerce-cat-tab {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #e7e4dd;
+}
+.theme-dark .shop-view-btn:hover,
+.theme-dark .commerce-view-btn:hover,
+.theme-dark .shop-cat-tab:hover,
+.theme-dark .commerce-cat-tab:hover { background: rgba(255, 255, 255, 0.12); }
+/* Les états .active gardent leurs couleurs vives (vert/rouille)
+   définies dans commerce.css — non écrasés ici. */
+
+/* Boutons d'action colorés de la boutique : on réaffirme leurs couleurs
+   vives sous .theme-dark (spécificité 0,0,2,0) pour battre le style de
+   bouton par défaut de Foundry qui les rendait pâles/illisibles. */
+.theme-dark .shop-nego-btn { background: #b8860b; color: #fff; border: none; }
+.theme-dark .shop-nego-btn:hover { background: #d4a017; }
+.theme-dark .shop-buy-btn { background: #2e7d46; color: #fff; border: none; }
+.theme-dark .shop-buy-btn:hover { background: #379a55; }
+.theme-dark .shop-sell-btn { background: #2e6f9e; color: #fff; border: none; }
+.theme-dark .shop-sell-btn:hover { background: #357fb3; }
+.theme-dark .commerce-gm-nego-btn,
+.theme-dark .shop-nego-gm-btn { background: #6a4ca0; color: #fff; border: none; }
+.theme-dark .commerce-gm-nego-btn:hover,
+.theme-dark .shop-nego-gm-btn:hover { background: #7d5cb8; }
+
+.theme-dark .sbe-window-shop input,
+.theme-dark .sbe-window-shop select,
+.theme-dark .sbe-window-shop textarea {
+  background: rgba(255, 255, 255, 0.07);
+  color: #e7e4dd;
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+/* ---- BOUTONS DE COIN (contrôles d'en-tête) des fenêtres
+        non-sbe-window (boutique + fiche perso) ---- */
+.theme-dark .character-sheet .window-header button,
+.theme-dark .character-sheet .window-header .header-control,
+.theme-dark .character-sheet .window-header a.header-control,
+.theme-dark .sbe-window-shop .window-header button,
+.theme-dark .sbe-window-shop .window-header .header-control,
+.theme-dark .sbe-window-shop .window-header a.header-control {
+  background: transparent;
+  color: #b8b4ab;
+  border: none;
+}
+.theme-dark .character-sheet .window-header button:hover,
+.theme-dark .character-sheet .window-header .header-control:hover,
+.theme-dark .sbe-window-shop .window-header button:hover,
+.theme-dark .sbe-window-shop .window-header .header-control:hover {
+  color: #d2622c;
+  background: rgba(255, 255, 255, 0.08);
+}
+.theme-dark .character-sheet .window-header button i,
+.theme-dark .character-sheet .window-header .header-control i,
+.theme-dark .sbe-window-shop .window-header button i,
+.theme-dark .sbe-window-shop .window-header .header-control i { color: inherit; }
+
+/* ---- Boutons d'ACHAT de la boutique : garantir le vert vif
+        (le bouton sombre core de Foundry pouvait l'écraser) ---- */
+.theme-dark .sbe-window-shop .shop-buy-btn {
+  background: #2e7d46;
+  color: #fff;
+  border: none;
+}
+.theme-dark .sbe-window-shop .shop-buy-btn:hover { background: #379a55; }
+.theme-dark .sbe-window-shop .shop-buy-btn:disabled,
+.theme-dark .sbe-window-shop .shop-article.shop-soldout .shop-buy-btn {
+  background: #555; color: #cfcfcf; opacity: 0.7;
+}
+
+/* ============================================================ */
+/* FENÊTRE CONFIG MARCHAND (.sbe-window-merchant-config)       */
+/* ------------------------------------------------------------ */
+/* Champs/selects/cases sans fond explicite → rendaient en BLANC */
+/* sur le thème sombre. On force les fonds sombres + color-scheme*/
+/* dark pour les cases à cocher/menus natifs.                    */
+/* ============================================================ */
+.theme-dark .sbe-window-merchant-config { color-scheme: dark; }
+
+.theme-dark .sbe-window-merchant-config input,
+.theme-dark .sbe-window-merchant-config select,
+.theme-dark .sbe-window-merchant-config textarea {
+  background: rgba(255, 255, 255, 0.07);
+  color: #e7e4dd;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+.theme-dark .sbe-window-merchant-config input:focus,
+.theme-dark .sbe-window-merchant-config select:focus,
+.theme-dark .sbe-window-merchant-config textarea:focus {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: #b5471f;
+  outline: none;
+}
+.theme-dark .sbe-window-merchant-config input::placeholder { color: #7e7a72; }
+.theme-dark .sbe-window-merchant-config select option {
+  background: #1c1f24; color: #e7e4dd;
+}
+/* Panneaux/articles en surimpression noire → claire */
+.theme-dark .sbe-window-merchant-config .commerce-article,
+.theme-dark .sbe-window-merchant-config .commerce-group-items .commerce-article {
+  background: rgba(255, 255, 255, 0.03);
+}
+/* Boutons de coin (en-tête) */
+.theme-dark .sbe-window-merchant-config .window-header button,
+.theme-dark .sbe-window-merchant-config .window-header .header-control,
+.theme-dark .sbe-window-merchant-config .window-header a.header-control {
+  background: transparent; color: #b8b4ab; border: none;
+}
+.theme-dark .sbe-window-merchant-config .window-header button:hover,
+.theme-dark .sbe-window-merchant-config .window-header .header-control:hover {
+  color: #d2622c; background: rgba(255, 255, 255, 0.08);
+}
+
+/* ---- Boutons VENDRE (boutique joueur) : bleu vif garanti ---- */
+.theme-dark .sbe-window-shop .shop-sell-btn {
+  background: #2e6f9e; color: #fff; border: none;
+}
+.theme-dark .sbe-window-shop .shop-sell-btn:hover { background: #357fb3; }
+.theme-dark .sbe-window-shop .shop-sell-dropzone {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* ---- Onglet HISTORIQUE : rachat + suppression ----
+   .commerce-history-buy : sans fond → rendu clair → vert (achat).
+   .commerce-remove-rebuy : reste ROUGE danger, ravivé pour le sombre
+   (le #b03030 d'origine manquait de contraste sur fond sombre).      */
+.theme-dark .sbe-window-shop .commerce-history-buy,
+.theme-dark .sbe-window-merchant-config .commerce-history-buy {
+  background: #2e7d46; color: #fff; border: none;
+}
+.theme-dark .sbe-window-shop .commerce-history-buy:hover,
+.theme-dark .sbe-window-merchant-config .commerce-history-buy:hover {
+  background: #379a55;
+}
+.theme-dark .sbe-window-shop .commerce-remove-rebuy,
+.theme-dark .sbe-window-merchant-config .commerce-remove-rebuy {
+  background: transparent;
+  border: 1px solid #e05a4f;
+  color: #e05a4f;
+}
+.theme-dark .sbe-window-shop .commerce-remove-rebuy:hover,
+.theme-dark .sbe-window-merchant-config .commerce-remove-rebuy:hover {
+  background: #c0392b; color: #fff; border-color: #c0392b;
+}
+
+/* ============================================================ */
+/* MODE « CADRE MASQUÉ » (manager de thème)                      */
+/* ------------------------------------------------------------ */
+/* Activé par la classe body.sbe-titlebar-hidden (posée par le   */
+/* ThemeManager). Défini ICI, APRÈS les règles de barre ci-      */
+/* dessus : à spécificité et !important égaux, l'ordre dans la   */
+/* même feuille garantit la victoire — aucune guerre d'injection.*/
+/* La barre garde sa place (le titre et les boutons restent à    */
+/* leur position, rien ne chevauche les onglets) : seul son      */
+/* CADRE disparaît — fond, bordure, ombre. L'image d'en-tête et  */
+/* le décor de la fenêtre se voient donc dessous.                */
+/* ============================================================ */
+
+body.sbe-titlebar-hidden .application:not(.sbe-window):not(.faded-ui) .window-header {
+  background: none !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* ============================================================
+ * MENUS CONTEXTUELS — thème étendu (couleur + police)
+ * ------------------------------------------------------------
+ * Couvre les deux familles de menus de Foundry v14 :
+ * - le ContextMenu générique (clic droit des listes, sidebars…) ;
+ * - le menu ⋮ des en-têtes de fenêtres ApplicationV2
+ *   (menu.controls-dropdown).
+ * Le fond a son PROPRE jeton (--sbe-ctx-bg) réglable dans le
+ * manager de thème, indépendant des surfaces.
+ * ============================================================ */
+
+#context-menu,
+nav.context-menu,
+.application .controls-dropdown {
+  background: var(--sbe-ctx-bg) !important;
+  border: 1px solid var(--sbe-surf-4) !important;
+  border-radius: 6px !important;
+  color: var(--sbe-text) !important;
+  font-family: var(--sbe-font-primary, inherit) !important;
+  box-shadow: 0 4px 18px var(--sbe-shadow, rgba(0, 0, 0, 0.55)) !important;
+}
+
+#context-menu li.context-item,
+nav.context-menu li.context-item,
+.application .controls-dropdown .header-control > button {
+  background: none !important;
+  color: var(--sbe-text) !important;
+  font-family: var(--sbe-font-primary, inherit) !important;
+  text-shadow: none !important;
+}
+
+#context-menu li.context-item > i,
+nav.context-menu li.context-item > i,
+.application .controls-dropdown .header-control > button i {
+  color: var(--sbe-accent-text) !important;
+}
+
+#context-menu li.context-item:hover,
+nav.context-menu li.context-item:hover,
+.application .controls-dropdown .header-control > button:hover {
+  background: var(--sbe-raised) !important;
+  color: var(--sbe-text-strong) !important;
+}
+
+/* ============================================================ */
+/* INTERFACE FOUNDRY : textes, liens, tableaux, formulaires de   */
+/* réglages. La barre latérale, la barre de macros et les icônes */
+/* se règlent dans le manager (Couleurs → Interface de Foundry).  */
+/* ------------------------------------------------------------ */
+/* Foundry redéfinit ces variables sur les éléments eux-mêmes    */
+/* (.themed.theme-*, .app .standard-form, .ui-control) : elles   */
+/* sont donc posées ici en !important sur ces mêmes éléments.    */
+/* Tout vient de la palette : le thème du MJ s'applique partout. */
+/* ============================================================ */
+
+/* Les fiches qui ont LEUR thème (.sbe-window) n'en reçoivent rien :
+   seul le body (hérité, donc battu par leurs propres valeurs) est visé. */
+body,
+.themed:not(.sbe-window):not(.sbe-window *),
+.app:not(.sbe-window):not(.sbe-window *) .standard-form {
+  /* Textes (Foundry les relit selon le mode : on les fixe). */
+  --color-text-emphatic: var(--sbe-text-strong) !important;
+  --color-text-primary: var(--sbe-text) !important;
+  --color-text-secondary: var(--sbe-text-2) !important;
+  --color-text-subtle: var(--sbe-text-dim) !important;
+  --color-text-selection: var(--sbe-text-max) !important;
+  --color-text-selection-bg: var(--sbe-accent) !important;
+
+  /* Liens de contenu. */
+  --content-link-background: var(--sbe-surf-3) !important;
+  --content-link-border-color: var(--sbe-surf-5) !important;
+  --content-link-icon-color: var(--sbe-text-dim) !important;
+  --content-link-text-color: var(--sbe-content-link) !important;
+
+  /* Tableaux. */
+  --table-header-bg-color: var(--sbe-surf-3) !important;
+  --table-header-border-color: var(--sbe-surf-5) !important;
+  --table-row-color-even: var(--sbe-overlay, rgba(127, 127, 127, 0.08)) !important;
+}
+
+/* Fenêtres de réglages (formulaires standard de Foundry). */
+.app:not(.sbe-window):not(.sbe-window *) .standard-form,
+.application:not(.sbe-window):not(.sbe-window *) .standard-form {
+  --background: var(--sbe-surf-2) !important;
+  --color-header-background: var(--sbe-surf-3) !important;
+  --color-border: var(--sbe-surf-4) !important;
+  --color-tabs-border: var(--sbe-surf-5) !important;
+  --color-fieldset-border: var(--sbe-surf-4) !important;
+  --color-form-label: var(--sbe-text) !important;
+  --color-form-label-hover: var(--sbe-text-strong) !important;
+  --color-form-hint: var(--sbe-text-dim) !important;
+  --color-form-hint-hover: var(--sbe-text-2) !important;
+  --color-select-option-bg: var(--sbe-surf-1) !important;
+  --color-data-border: var(--sbe-surf-4) !important;
+  --color-data-background: var(--sbe-surf-1) !important;
+}
+
+/* Thème CLAIR de Foundry : il écrit ses textes avec la gamme
+   --color-dark-* → elle suit les textes de la palette. */
+body.theme-light,
+.theme-light:not(.sbe-window):not(.sbe-window *) {
+  --color-dark-1: var(--sbe-text-strong) !important;
+  --color-dark-2: var(--sbe-text) !important;
+  --color-dark-3: var(--sbe-text-2) !important;
+  --color-dark-4: var(--sbe-text-dim) !important;
+  --color-dark-5: var(--sbe-text-dim) !important;
+  --color-dark-6: var(--sbe-text-dim) !important;
+}
+
+/* ============================================================ */
+/* FICHES AU THÈME PROPRE (.sbe-window) : elles reprennent les   */
+/* couleurs NATIVES de Foundry que le thème général remplace     */
+/* ailleurs (gamme sombre du mode clair, teintes froides). Sans  */
+/* ça, ces valeurs héritées de la page coloraient leurs champs.  */
+/* ============================================================ */
+.sbe-window {
+  --color-dark-1: #111 !important;
+  --color-dark-2: #222 !important;
+  --color-dark-3: #333 !important;
+  --color-dark-4: #444 !important;
+  --color-dark-5: #555 !important;
+  --color-dark-6: #666 !important;
+  --color-cool-3: #584a75 !important;
+  --color-cool-4: #302831 !important;
+  --color-cool-5: #0b0a13 !important;
+  --color-cool-5-25: rgba(11, 10, 19, 0.25) !important;
+  --color-cool-5-50: rgba(11, 10, 19, 0.5) !important;
+  --color-cool-5-75: rgba(11, 10, 19, 0.75) !important;
+  --color-cool-5-90: rgba(11, 10, 19, 0.9) !important;
+  /* Textes : ceux de la palette propre à la fiche (neutralisée dans
+     item.css, ou celle du thème du modèle). */
+  --color-text-emphatic: var(--sbe-text-strong) !important;
+  --color-text-primary: var(--sbe-text) !important;
+  --color-text-secondary: var(--sbe-text-2) !important;
+  --color-text-subtle: var(--sbe-text-dim) !important;
+  --input-text-color: var(--sbe-text) !important;
+}
+
+/* Visée (attaque, lancer, zone) : un curseur de cible sur le plateau —
+   on sait qu'on est prêt à tirer. Contour sombre + cœur clair : lisible
+   sur une carte claire comme sombre. */
+body.sbe-aiming #board,
+body.sbe-aiming canvas#board {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill='none' stroke-linecap='round'%3E%3Cg stroke='%23000' stroke-opacity='.75' stroke-width='4'%3E%3Ccircle cx='16' cy='16' r='10'/%3E%3Cpath d='M16 1v8M16 23v8M1 16h8M23 16h8'/%3E%3C/g%3E%3Cg stroke='%23ff3b2f' stroke-width='2'%3E%3Ccircle cx='16' cy='16' r='10'/%3E%3Cpath d='M16 1v8M16 23v8M1 16h8M23 16h8'/%3E%3C/g%3E%3Ccircle cx='16' cy='16' r='1.6' fill='%23ff3b2f'/%3E%3C/g%3E%3C/svg%3E") 16 16, crosshair !important;
+}

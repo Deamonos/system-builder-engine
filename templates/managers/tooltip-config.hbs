@@ -1,0 +1,148 @@
+<div class="sbe-tooltip-root">
+
+{{!-- Onglet « Info-bulles » de la fenêtre du thème : l'aperçu part en
+     haut de la fenêtre, les réglages dans l'onglet (voir TooltipPanel).
+     Aperçu en direct de la bulle (texte d'exemple neutre, en anglais),
+     basculable entre thème sombre et clair --}}
+<div class="sbe-chatc-ptheme sbe-tooltip-ptheme">
+  <span>{{localize "SBE.Chat.PreviewTheme"}}</span>
+  <button type="button" data-ptheme="dark" class="{{#unless previewLight}}active{{/unless}}"><i class="fa-solid fa-moon"></i> {{localize "SBE.Theme.ColumnDark"}}</button>
+  <button type="button" data-ptheme="light" class="{{#if previewLight}}active{{/if}}"><i class="fa-solid fa-sun"></i> {{localize "SBE.Theme.ColumnLight"}}</button>
+</div>
+<div class="sbe-tooltip-preview-wrap {{#if previewLight}}theme-light{{else}}theme-dark{{/if}}">
+  <div class="sbe-tt-preview" style="position:relative;">
+    <div class="sbe-tt">
+      Strength — raw physical power. Value: 123
+      <div class="sbe-tt-formula">&fnof; str + str_bonus</div>
+      <div><span style="color:#5cb85c;font-weight:700">+2</span> <span class="sbe-tt-src">bonus</span></div>
+      <div><span style="color:#e57373;font-weight:700">-1</span> <span class="sbe-tt-src">max</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="sbe-tooltip-body">
+
+  <p class="hint">{{localize "SBE.Tooltip.Intro"}}</p>
+
+  <details open data-sync>
+    <summary><span class="sbe-section-title">{{localize "SBE.Tooltip.LookSection"}}</span></summary>
+    <div class="sbe-section-body">
+
+      <p class="hint"><i class="fa-solid fa-circle-half-stroke"></i> {{localize "SBE.Chat.PairHint"}}</p>
+      <p class="hint"><i class="fa-solid fa-palette"></i> {{localize "SBE.Tooltip.ThemeColorsHint"}}</p>
+      <div class="form-group stacked">
+        <label>{{localize "SBE.Tooltip.Bg"}}</label>
+        <div class="sbe-chatc-pair">
+          <label><span><i class="fa-solid fa-moon"></i> {{localize "SBE.Theme.ColumnDark"}}</span><color-picker name="bg.dark" value="{{config.bg.dark}}"></color-picker></label>
+          <label><span><i class="fa-solid fa-sun"></i> {{localize "SBE.Theme.ColumnLight"}}</span><color-picker name="bg.light" value="{{config.bg.light}}"></color-picker></label>
+        </div>
+      </div>
+
+      <div class="form-group stacked">
+        <label>{{localize "SBE.Tooltip.Text"}}</label>
+        <div class="sbe-chatc-pair">
+          <label><span><i class="fa-solid fa-moon"></i> {{localize "SBE.Theme.ColumnDark"}}</span><color-picker name="text.dark" value="{{config.text.dark}}"></color-picker></label>
+          <label><span><i class="fa-solid fa-sun"></i> {{localize "SBE.Theme.ColumnLight"}}</span><color-picker name="text.light" value="{{config.text.light}}"></color-picker></label>
+        </div>
+        <p class="hint">{{localize "SBE.Tooltip.TextHint"}}</p>
+      </div>
+
+      <div class="form-group stacked">
+        <label>{{localize "SBE.Tooltip.Border"}}</label>
+        <div class="sbe-chatc-pair">
+          <label><span><i class="fa-solid fa-moon"></i> {{localize "SBE.Theme.ColumnDark"}}</span><color-picker name="borderColor.dark" value="{{config.borderColor.dark}}"></color-picker></label>
+          <label><span><i class="fa-solid fa-sun"></i> {{localize "SBE.Theme.ColumnLight"}}</span><color-picker name="borderColor.light" value="{{config.borderColor.light}}"></color-picker></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>{{localize "SBE.Tooltip.BorderWidth"}}</label>
+        <div class="form-fields">
+          <input type="number" name="borderWidth" value="{{config.borderWidth}}" min="0" max="12" step="1" style="width:70px;">
+          <span>px</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>{{localize "SBE.Tooltip.Radius"}}</label>
+        <div class="form-fields">
+          <input type="number" name="radius" value="{{config.radius}}" min="0" max="40" step="1" style="width:70px;">
+          <span>px</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>{{localize "SBE.Tooltip.Padding"}}</label>
+        <div class="form-fields">
+          <input type="number" name="padding" value="{{config.padding}}" min="0" max="40" step="1" style="width:70px;">
+          <span>px</span>
+        </div>
+        <p class="hint">{{localize "SBE.Tooltip.ZeroDefault"}}</p>
+      </div>
+
+      <div class="form-group">
+        <label>{{localize "SBE.Tooltip.Shadow"}}</label>
+        <div class="form-fields">
+          <select name="shadow">
+            {{#each shadowChoices}}
+              <option value="{{@key}}" {{#if (eq @key @root.config.shadow)}}selected{{/if}}>{{localize this}}</option>
+            {{/each}}
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>{{localize "SBE.Tooltip.Font"}}</label>
+        <div class="form-fields">
+          <select name="font">
+            <option value="">{{localize "SBE.Tooltip.FontDefault"}}</option>
+            {{#each fontFamilies}}
+              <option value="{{this}}" style="font-family:'{{this}}';" {{#if (eq this @root.config.font)}}selected{{/if}}>{{this}}</option>
+            {{/each}}
+          </select>
+          <input type="number" name="size" value="{{config.size}}" min="0" max="40" step="1" style="width:70px;">
+          <span>px</span>
+        </div>
+        <p class="hint">{{localize "SBE.Tooltip.ZeroDefault"}}</p>
+      </div>
+
+      <div class="form-group">
+        <label>{{localize "SBE.Tooltip.MaxWidth"}}</label>
+        <div class="form-fields">
+          <input type="number" name="maxWidth" value="{{config.maxWidth}}" min="0" max="800" step="10" style="width:80px;">
+          <span>px</span>
+        </div>
+        <p class="hint">{{localize "SBE.Tooltip.ZeroDefault"}}</p>
+      </div>
+
+    </div>
+  </details>
+
+  <details open data-sync>
+    <summary><span class="sbe-section-title">{{localize "SBE.Tooltip.BgImgSection"}}</span></summary>
+    <div class="sbe-section-body">
+      <div class="form-group">
+        <label>{{localize "SBE.Tooltip.BgPath"}}</label>
+        <div class="form-fields">
+          <file-picker name="bgPath" type="image" value="{{config.bgPath}}"></file-picker>
+        </div>
+      </div>
+      <div class="form-group stacked">
+        <label>{{localize "SBE.Tooltip.BgCode"}}</label>
+        <p class="hint">{{localize "SBE.Tooltip.BgCodeHint"}}</p>
+        <textarea name="bgCode" rows="5">{{config.bgCode}}</textarea>
+      </div>
+    </div>
+  </details>
+
+  <details open data-sync>
+    <summary><span class="sbe-section-title">{{localize "SBE.Tooltip.CssSection"}}</span></summary>
+    <div class="sbe-section-body">
+      <p class="hint">{{localize "SBE.Tooltip.CssHint"}}</p>
+      <textarea name="customCss" rows="7" placeholder="@bulle { backdrop-filter: blur(3px); }&#10;@bulle .sbe-tt-formula { color: #d2622c; }">{{config.customCss}}</textarea>
+    </div>
+  </details>
+
+</div>
+
+</div>

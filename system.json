@@ -1,0 +1,85 @@
+{
+  "id": "system-builder-engine",
+  "title": "SBE — System Builder Engine",
+  "description": "Create your own tabletop RPG system — structures, rules, mechanics and automations — without writing a single line of code.",
+  "version": "0.9.0",
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14.370"
+  },
+  "authors": [
+    {
+      "name": "Deamonos"
+    }
+  ],
+  "background": "systems/system-builder-engine/assets/sbe-background.webp",
+  "documentTypes": {
+    "Item": {
+      "template": {},
+      "objet": {}
+    },
+    "Actor": {
+      "template": {},
+      "personnage": {},
+      "groupe": {},
+      "prop": {}
+    },
+    "RegionBehavior": {
+      "zone": {},
+      "sbeTraces": {},
+      "sbeStation": {}
+    },
+    "JournalEntryPage": {
+      "quete": {}
+    }
+  },
+  "esmodules": [
+    "module/sbe-main.mjs"
+  ],
+  "styles": [
+    "styles/sbe.css"
+  ],
+  "languages": [
+    {
+      "lang": "fr",
+      "name": "Français",
+      "path": "lang/fr.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "socket": true,
+  "url": "https://github.com/Deamonos/system-builder-engine",
+  "manifest": "https://github.com/Deamonos/system-builder-engine/releases/latest/download/system.json",
+  "download": "https://github.com/Deamonos/system-builder-engine/releases/download/v0.9.0/system-builder-engine.zip",
+  "bugs": "https://github.com/Deamonos/system-builder-engine/issues",
+  "readme": "https://github.com/Deamonos/system-builder-engine#readme",
+  "license": "LICENSE",
+  "packs": [
+    {
+      "name": "demo-fr",
+      "label": "Brumeval — démo (FR)",
+      "path": "packs/demo-fr",
+      "type": "Adventure",
+      "system": "system-builder-engine",
+      "ownership": {
+        "PLAYER": "NONE",
+        "ASSISTANT": "OWNER"
+      }
+    },
+    {
+      "name": "demo-en",
+      "label": "Brumeval — demo (EN)",
+      "path": "packs/demo-en",
+      "type": "Adventure",
+      "system": "system-builder-engine",
+      "ownership": {
+        "PLAYER": "NONE",
+        "ASSISTANT": "OWNER"
+      }
+    }
+  ]
+}

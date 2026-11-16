@@ -1,0 +1,63 @@
+/**
+ * SBE — Modes de vision (managers/vision)
+ * Gestionnaire « Modes de vision », grain d'image sur la scène.
+ */
+
+/* ---------- Gestionnaire ---------- */
+.sbe-vmodes .window-content { padding: 8px; }
+.sbe-vmodes-body { display: flex; gap: 10px; height: 100%; min-height: 0; }
+.sbe-vmodes-list { flex: 0 0 220px; display: flex; flex-direction: column; gap: 6px; min-height: 0; }
+.sbe-vmodes-list ol { list-style: none; margin: 0; padding: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 3px; }
+.sbe-vmodes-list li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border: 1px solid var(--sbe-surf-4);
+  border-radius: 6px;
+  background: var(--sbe-surf-2);
+  cursor: pointer;
+}
+.sbe-vmodes-list li:hover { border-color: var(--sbe-accent); }
+.sbe-vmodes-list li.is-sel { border-color: var(--sbe-accent); background: var(--sbe-surf-3); }
+.sbe-vmodes-ic { flex: 0 0 22px; text-align: center; }
+.sbe-vmodes-ic img { width: 20px; height: 20px; border: none; }
+.sbe-vmodes-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbe-vmodes-lock { color: var(--sbe-text-dim); font-size: 0.8em; }
+.sbe-vmodes-list > button { width: auto; }
+.sbe-vmodes-edit { flex: 1 1 auto; min-width: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding-right: 4px; }
+.sbe-vmodes-edit h3 { margin: 6px 0 0; }
+.sbe-vmodes-edit .form-group { margin: 0; }
+.sbe-vmodes-edit .notes { margin: 0; }
+.sbe-vmodes-tools { display: flex; gap: 6px; justify-content: flex-end; }
+.sbe-vmodes-tools button { flex: 0 0 auto; width: auto; }
+.sbe-vmodes-del { color: var(--sbe-fail); }
+.sbe-vmodes-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px; }
+.sbe-vmodes-row > .form-group { flex: 1 1 160px; min-width: 0; }
+.sbe-vmodes-range { display: flex; align-items: center; gap: 6px; }
+.sbe-vmodes-range input { flex: 1 1 auto; }
+.sbe-vmodes-range span { flex: 0 0 36px; text-align: right; color: var(--sbe-text-dim); }
+.sbe-vmodes-check { display: flex; align-items: center; gap: 6px; flex: 1 1 160px; }
+.sbe-vmodes-id { color: var(--sbe-text-dim); font-size: 0.85em; }
+
+/* ---------- Grain d'image (au-dessus de la scène, sous l'interface) ---------- */
+#sbe-vision-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--sbe-grain, 0.1);
+  mix-blend-mode: overlay;
+  background-repeat: repeat;
+  animation: sbe-vision-grain 0.4s steps(4) infinite;
+}
+@keyframes sbe-vision-grain {
+  0% { background-position: 0 0; }
+  25% { background-position: -37px 21px; }
+  50% { background-position: 53px -42px; }
+  75% { background-position: -19px -61px; }
+  100% { background-position: 0 0; }
+}
+.sbe-vmodes-io { display: flex; gap: 6px; }
+.sbe-vmodes-io button { flex: 1 1 0; }
+.sbe-vmodes-h4 { margin: 4px 0 0; font-size: 1em; }

@@ -1,0 +1,61 @@
+/**
+ * SBE — Retour en arrière des actions (managers/undo)
+ * Barre « Annuler / Rétablir » des cartes du chat, carte annulée,
+ * fenêtre Historique.
+ */
+
+/* ---------- Carte du chat ---------- */
+.sbe-undo-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--sbe-surf-4);
+}
+.sbe-undo-bar button {
+  flex: 0 0 auto;
+  width: auto;
+  min-height: 0;
+  padding: 2px 10px;
+  line-height: 1.6;
+  font-size: 0.9em;
+}
+.sbe-undo-bar .sbe-undo-hist { margin-left: auto; color: var(--sbe-text-dim); cursor: pointer; }
+.sbe-undo-bar .sbe-undo-hist:hover { color: var(--sbe-accent-text, var(--sbe-accent)); }
+.sbe-undo-ask { margin: 0; width: 100%; font-weight: 700; }
+.sbe-undo-list { margin: 0 0 2px; padding-left: 18px; width: 100%; font-size: 0.9em; color: var(--sbe-text-dim); }
+.sbe-undo-btns { display: flex; gap: 6px; }
+.sbe-undo-tag { color: var(--sbe-fail); font-weight: 700; font-size: 0.9em; }
+
+/* Carte d'une action annulée : estompée, son titre barré. */
+.sbe-undone .message-content > :not(.sbe-undo-bar) { opacity: 0.55; }
+.sbe-undone .message-header .flavor-text,
+.sbe-undone .message-content h3,
+.sbe-undone .message-content header { text-decoration: line-through; }
+
+/* ---------- Fenêtre Historique ---------- */
+.sbe-undo-history .window-content { display: flex; flex-direction: column; gap: 8px; }
+.sbe-undo-head { display: flex; flex-wrap: wrap; gap: 6px; }
+.sbe-undo-head button { flex: 1 1 auto; width: auto; }
+.sbe-undo-history .notes { margin: 0; }
+.sbe-undo-rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
+.sbe-undo-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid var(--sbe-surf-4);
+  border-radius: 6px;
+  background: var(--sbe-surf-2);
+}
+.sbe-undo-row > img { width: 32px; height: 32px; object-fit: cover; border: none; border-radius: 4px; flex: 0 0 auto; }
+.sbe-undo-row > i { width: 32px; text-align: center; color: var(--sbe-text-dim); }
+.sbe-undo-txt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+.sbe-undo-txt b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sbe-undo-txt small { color: var(--sbe-text-dim); }
+.sbe-undo-row button { flex: 0 0 auto; width: auto; padding: 2px 10px; }
+.sbe-undo-row.is-undone { opacity: 0.6; }
+.sbe-undo-row.is-undone .sbe-undo-txt b { text-decoration: line-through; }
+.sbe-undo-empty { color: var(--sbe-text-dim); text-align: center; margin: 20px 0; }

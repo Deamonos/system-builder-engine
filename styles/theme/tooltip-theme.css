@@ -1,0 +1,12 @@
+/**
+ * SBE — Info-bulles de Foundry en thème clair.
+ * Foundry les dessine toujours en sombre ; quand elles suivent le thème
+ * clair de l'interface (réglage « Info-bulles au thème du joueur »,
+ * helpers/ui-theme.mjs), elles prennent la palette claire de SBE.
+ */
+#tooltip.theme-light {
+  background: color-mix(in srgb, var(--sbe-surf-1) 96%, transparent);
+  color: var(--sbe-text);
+  border: 1px solid var(--sbe-surf-4);
+  box-shadow: 0 2px 8px var(--sbe-shadow-primary);
+}

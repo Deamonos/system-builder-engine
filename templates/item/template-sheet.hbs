@@ -1,0 +1,325 @@
+<div class="sbe-tpl-root">
+
+  {{!-- En-tête : image + nom. Modèle de PERSONNAGE : ces deux champs
+       sont les éléments NATIFS — indestructibles, sans clé, mais
+       configurables (taille/style) via leurs crayons. --}}
+  {{#if isActor}}
+  <header class="sbe-tpl-header sbe-tpl-header--native">
+    {{#unless nativeImgInTree}}
+    <span class="sbe-native-wrap">
+      <img class="sbe-tpl-img {{nativeImgCls}}" src="{{item.img}}" data-action="pickImage"
+           {{#if nativeImgCssId}}data-sbe-el="{{nativeImgCssId}}"{{/if}} style="{{nativeImgCss}}" alt="" title="{{localize "SBE.Common.Image"}}">
+      <span class="sbe-native-drag" data-native="img" title="{{localize "SBE.Native.DragHint"}}">⠿</span>
+      <a class="sbe-native-edit" data-action="editNativeImg"
+         title="{{localize "SBE.Native.EditImg"}}"><i class="fa-solid fa-pen"></i></a>
+    </span>
+    {{/unless}}
+    {{#unless nativeNameInTree}}
+    <span class="sbe-native-wrap sbe-native-wrap--name">
+      <span class="sbe-native-namebox">
+        <input type="text" name="name" value="{{item.name}}" {{#if nativeNameCssId}}data-sbe-el="{{nativeNameCssId}}"{{/if}} style="{{nativeNameCss}}"
+               placeholder="{{localize "SBE.Template.NamePh"}}">
+        {{#if nativeNameSub}}<span class="sbe-native-sub">{{nativeNameSub}}</span>{{/if}}
+      </span>
+      <span class="sbe-native-drag" data-native="name" title="{{localize "SBE.Native.DragHint"}}">⠿</span>
+      <a class="sbe-native-edit" data-action="editNativeName"
+         title="{{localize "SBE.Native.EditName"}}"><i class="fa-solid fa-pen"></i></a>
+    </span>
+    {{/unless}}
+  </header>
+  {{else}}
+  <header class="sbe-tpl-header">
+    <img class="sbe-tpl-img" src="{{item.img}}" data-action="pickImage"
+         alt="" title="{{localize "SBE.Common.Image"}}">
+    <input type="text" name="name" value="{{item.name}}"
+           placeholder="{{localize "SBE.Template.NamePh"}}">
+  </header>
+  {{/if}}
+
+  {{!-- Structure : sauvegarder / reprendre un modèle sans tout
+       ressaisir à la souris. L'import AJOUTE, il ne remplace jamais. --}}
+  <div class="sbe-tpl-io">
+    <button type="button" data-action="exportTemplate" title="{{localize "SBE.IO.ExportHint"}}">
+      <i class="fa-solid fa-file-export"></i> {{localize "SBE.IO.Export"}}
+    </button>
+    <button type="button" data-action="importTemplate" title="{{localize "SBE.IO.ImportHint"}}">
+      <i class="fa-solid fa-file-import"></i> {{localize "SBE.IO.Import"}}
+    </button>
+  </div>
+
+  {{!-- Options fixes du modèle (objets uniquement) --}}
+  {{#unless isActor}}
+  <details class="sbe-tpl-opts" open data-sync>
+    <summary>{{localize "SBE.Template.ModelOptions"}}</summary>
+    <div class="sbe-tpl-opts-rows">
+      <label>
+        <input type="checkbox" name="system.opts.stackable" {{checked sys.opts.stackable}}>
+        {{localize "SBE.Template.OptStackable"}}
+        <button type="button" data-action="editStackOpts"
+                title="{{localize "SBE.Stack.CfgTitle"}}">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+        {{#if sys.opts.stackMax}}<span class="sbe-opt-badge">{{localize "SBE.Stack.MaxBadge"}} {{sys.opts.stackMax}}</span>{{/if}}
+      </label>
+      <label>
+        <input type="checkbox" name="system.opts.marks" {{checked sys.opts.marks}}>
+        {{localize "SBE.Marks.Opt"}}
+        <button type="button" data-action="editIconMarks"
+                title="{{localize "SBE.Marks.Title"}}">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+        {{#if marksCount}}<span class="sbe-opt-badge">{{marksCount}}</span>{{/if}}
+      </label>
+      <label>
+        <input type="checkbox" name="system.opts.droppable" {{checked sys.opts.droppable}}>
+        {{localize "SBE.Template.OptDroppable"}}
+        <i class="fa-solid fa-circle-question sbe-help" data-tooltip-text="{{localize "SBE.Template.OptDroppableHint"}}"></i>
+      </label>
+      <label>
+        <input type="checkbox" name="system.opts.playerVisible" {{checked sys.opts.playerVisible}}>
+        {{localize "SBE.Template.OptPlayerVisible"}}
+        <i class="fa-solid fa-circle-question sbe-help" data-tooltip-text="{{localize "SBE.Template.OptPlayerVisibleHint"}}"></i>
+      </label>
+      <label>
+        <input type="checkbox" name="system.opts.unid" {{checked sys.opts.unid}}>
+        {{localize "SBE.Unid.Opt"}}
+        <button type="button" data-action="editUnidOpts"
+                title="{{localize "SBE.Unid.CfgTitle"}}">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+        {{#if sys.opts.unid}}<span class="sbe-opt-badge">{{sys.opts.unidKey}}</span>{{/if}}
+      </label>
+      <label>
+        <input type="checkbox" name="system.opts.inactive" {{checked sys.opts.inactive}}>
+        {{localize "SBE.Inactive.Opt"}}
+        <button type="button" data-action="editInactiveOpts"
+                title="{{localize "SBE.Inactive.CfgTitle"}}">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+        {{#if sys.opts.inactive}}<span class="sbe-opt-badge">{{sys.opts.inactiveIf}}</span>{{/if}}
+      </label>
+      <label>
+        <input type="checkbox" name="system.opts.prop" {{checked sys.opts.prop}}>
+        {{localize "SBE.Prop.Opt"}}
+        <button type="button" data-action="editPropOpts"
+                title="{{localize "SBE.Prop.CfgTitle"}}">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+      </label>
+    </div>
+  </details>
+  {{/unless}}
+
+  {{!-- Les deux onglets de la future fiche : Description (fixe) + Fiche (renommable).
+       Modèle de personnage : AUCUNE barre — page vierge, le MJ pose des
+       éléments Navigation s'il veut des onglets. --}}
+  {{#unless isActor}}
+  {{!-- Onglets en DOSSIERS, comme la fiche d'objet : 1re ligne = onglets
+       fixes (Description, Panneau, Médias, Effets conférés), 2e ligne =
+       onglets ajoutés par le modèle. --}}
+  <nav class="sbe-obj-tabs sbe-folder-tabs sbe-wtabs">
+    <div class="sbe-ftab-row sbe-ftab-native">
+      <a class="{{#if isDescTab}}active{{/if}}" data-action="switchWorkshopTab" data-tab="desc">
+        <i class="fa-solid fa-book-open"></i> {{localize "SBE.Objet.TabDescription"}}
+      </a>
+      {{#if hasPanelTab}}
+      <a class="sbe-wtab-fixed {{#if isPanelTab}}active{{/if}}" data-action="switchWorkshopTab" data-tab="panel">
+        <i class="fa-solid fa-table-cells-large"></i> {{localize "SBE.Panel.Tab"}}
+      </a>
+      {{/if}}
+      {{!-- Onglets FIXES du modèle (réglages, pas de la fiche). --}}
+      <a class="sbe-wtab-fixed {{#if isMediaTab}}active{{/if}}" data-action="switchWorkshopTab" data-tab="media">
+        <i class="fa-solid fa-volume-high"></i> {{localize "SBE.Media.Tab"}}{{#if mediaDefs.length}} <span class="sbe-opt-badge">{{mediaDefs.length}}</span>{{/if}}
+      </a>
+      <a class="sbe-wtab-fixed {{#if isGrantsTab}}active{{/if}}" data-action="switchWorkshopTab" data-tab="grants">
+        <i class="fa-solid fa-wand-sparkles"></i> {{localize "SBE.Grants.Tab"}}{{#if grants.length}} <span class="sbe-opt-badge">{{grants.length}}</span>{{/if}}
+      </a>
+    </div>
+    <div class="sbe-ftab-row sbe-ftab-extra">
+      {{#each extraTabs}}
+        <a class="sbe-wtab-sheet sbe-wtab-extra {{#if this.active}}active{{/if}}"
+           data-action="switchWorkshopTab" data-tab="{{this.id}}" data-tab-id="{{this.id}}">
+          {{#unless this.playerVisible}}<i class="fa-solid fa-eye-slash sbe-tpl-hidden-badge"></i>{{/unless}}
+          <input type="text" class="sbe-wtab-extra-input" value="{{this.name}}"
+                 placeholder="{{localize "SBE.Template.NewTabName"}}">
+          {{!-- ⚠ Ces deux boutons sont des SPAN, pas des liens : un lien
+               dans un lien est interdit en HTML, et le navigateur ferme
+               alors l'onglet parent avant eux — ils se retrouvaient hors
+               de l'élément porteur de data-tab-id, donc sans effet. --}}
+          <span class="sbe-wtab-tools">
+            <span class="sbe-wtab-act" data-action="toggleWorkshopTabVis"
+                  title="{{localize "SBE.Template.ElPlayerVisible"}}"><i class="fa-solid fa-eye"></i></span>
+            <span class="sbe-wtab-act {{#if this.visibleIf}}is-on{{/if}}" data-action="workshopTabCond"
+                  title="{{localize "SBE.Template.TabVisibleIf"}}{{#if this.visibleIf}} : {{this.visibleIf}}{{/if}}"><i class="fa-solid fa-filter"></i></span>
+            <span class="sbe-wtab-act" data-action="deleteWorkshopTab"
+                  title="{{localize "SBE.Template.DeleteTabTitle"}}"><i class="fa-solid fa-trash"></i></span>
+          </span>
+        </a>
+      {{/each}}
+      <button type="button" class="sbe-tpl-plus sbe-tpl-plus--small sbe-wtab-add" data-action="addWorkshopTab"
+              title="{{localize "SBE.Template.AddTab"}}">+</button>
+    </div>
+  </nav>
+  {{/unless}}
+
+  {{!-- MÉDIAS DÉCLARÉS : le modèle réclame des noms, chaque objet pose
+       son propre fichier derrière chacun (onglet Médias de l'objet). --}}
+  {{#if isMediaTab}}
+  <section class="sbe-tpl-canvas sbe-tpl-fixedtab">
+    <h3 class="sbe-tpl-fixedtab-title">{{localize "SBE.Media.Declared"}}</h3>
+    <div class="sbe-mediadefs">
+      <p class="notes">{{localize "SBE.Media.DeclaredHint"}}</p>
+      {{#each mediaDefs}}
+      <div class="sbe-mediadef" data-def-id="{{this.id}}">
+        <input type="text" class="sbe-mdef-name" value="{{this.name}}"
+               placeholder="{{localize "SBE.Media.NamePh"}}">
+        <input type="text" class="sbe-mdef-hint" value="{{this.hint}}"
+               placeholder="{{localize "SBE.Media.HintPh"}}">
+        <span class="sbe-mdef-del" data-action="deleteMediaDef" data-def-id="{{this.id}}"
+              title="{{localize "SBE.Common.Delete"}}"><i class="fa-solid fa-trash"></i></span>
+      </div>
+      {{/each}}
+      <button type="button" class="sbe-mdef-add" data-action="addMediaDef">
+        <i class="fa-solid fa-plus"></i> {{localize "SBE.Media.Add"}}
+      </button>
+    </div>
+  </section>
+  {{/if}}
+
+  {{!-- EFFETS CONFÉRÉS : tant que l'objet est porté, ou équipé (dans
+       un slot de la fiche), son porteur a l'effet. --}}
+  {{#if isGrantsTab}}
+  <section class="sbe-tpl-canvas sbe-tpl-fixedtab">
+    <h3 class="sbe-tpl-fixedtab-title">{{localize "SBE.Grants.Title"}}</h3>
+    <div class="sbe-mediadefs">
+      <p class="notes">{{localize "SBE.Grants.Hint"}}</p>
+      <datalist id="sbe-grant-keys">{{#each effectKeys}}<option value="{{key}}">{{label}}</option>{{/each}}</datalist>
+      {{#each grants}}
+      <div class="sbe-mediadef sbe-grant" data-grant-id="{{id}}">
+        <input type="text" class="sbe-grant-effect" list="sbe-grant-keys" value="{{effect}}"
+               placeholder="{{localize "SBE.Grants.EffectPh"}}">
+        <select class="sbe-grant-when">
+          <option value="equipped" {{#if equipped}}selected{{/if}}>{{localize "SBE.Grants.Equipped"}}</option>
+          <option value="carried" {{#unless equipped}}selected{{/unless}}>{{localize "SBE.Grants.Carried"}}</option>
+        </select>
+        <input type="text" class="sbe-grant-if" value="{{onlyIf}}"
+               placeholder="{{localize "SBE.ItemFx.OnlyIfPh"}}" data-tooltip-text="{{localize "SBE.ItemFx.OnlyIfHint"}}">
+        <span class="sbe-mdef-del" data-action="deleteGrant" data-grant-id="{{id}}"
+              title="{{localize "SBE.Common.Delete"}}"><i class="fa-solid fa-trash"></i></span>
+      </div>
+      {{/each}}
+      <button type="button" class="sbe-mdef-add" data-action="addGrant">
+        <i class="fa-solid fa-plus"></i> {{localize "SBE.Grants.Add"}}
+      </button>
+    </div>
+  </section>
+  {{/if}}
+
+  {{#if isSheetTab}}
+  {{!-- Onglet Fiche : zone de construction WYSIWYG --}}
+  <section class="sbe-tpl-canvas">
+    {{!-- « + » du haut = ajout au DÉBUT ; « + » du bas = à la fin. --}}
+    <div class="sbe-tpl-addbar">
+      <button type="button" class="sbe-tpl-plus" data-action="addElement" data-parent="" data-pos="start"
+              title="{{localize "SBE.Template.AddElTitle"}}">+</button>
+    </div>
+
+    {{#unless hasElements}}
+      <p class="sbe-tpl-empty">{{localize "SBE.Template.EmptyHint"}}</p>
+    {{/unless}}
+
+    {{{workshopHTML}}}
+
+    <div class="sbe-tpl-addbar">
+      <button type="button" class="sbe-tpl-plus" data-action="addElement" data-parent=""
+              title="{{localize "SBE.Template.AddElTitle"}}">+</button>
+    </div>
+  </section>
+  {{/if}}
+
+  {{#if isDescTab}}
+  {{!-- Onglet Description des OBJETS : le texte vit sur chaque objet,
+       tout ce qu'on construit ici s'affiche EN DESSOUS. Il n'y a plus
+       d'onglet « Fiche » : le MJ met tout à la suite, ou répartit dans
+       ses propres onglets. --}}
+  <section class="sbe-tpl-canvas sbe-tpl-canvas--desc">
+    <div class="sbe-desc-placeholder">
+      <i class="fa-solid fa-align-left"></i> {{localize "SBE.Template.DescTextPlaceholder"}}
+    </div>
+
+    <div class="sbe-tpl-addbar">
+      <button type="button" class="sbe-tpl-plus" data-action="addElement" data-parent="" data-pos="start"
+              title="{{localize "SBE.Template.AddElTitle"}}">+</button>
+    </div>
+
+    {{#unless hasElements}}
+      <p class="sbe-tpl-empty">{{localize "SBE.Template.EmptyHint"}}</p>
+    {{/unless}}
+
+    {{{descWorkshopHTML}}}
+
+    <div class="sbe-tpl-addbar">
+      <button type="button" class="sbe-tpl-plus" data-action="addElement" data-parent=""
+              title="{{localize "SBE.Template.AddElTitle"}}">+</button>
+    </div>
+    {{!-- Pas de « ? » ici : il tombait seul en bas de la zone, loin du
+         texte d'en tête qui dit déjà la même chose. --}}
+  </section>
+  {{/if}}
+
+  {{#if isPanelTab}}
+  {{!-- PANNEAU UNE FOIS POSÉ : ce que montre le double-clic sur l'objet
+       posé. Mêmes composants que la fiche ; « Composant du modèle »
+       affiche un composant déjà posé ailleurs (même clé, même valeur). --}}
+  <section class="sbe-tpl-canvas">
+    <div class="sbe-panel-cfg">
+      <p class="notes">{{localize "SBE.Panel.Hint"}}</p>
+      <div class="sbe-panel-cfg-row">
+        <div class="form-group">
+          <label>{{localize "SBE.Panel.Mode"}}</label>
+          <select name="system.propCfg.panelMode">
+            <option value="window" {{#if (eq panelMode "window")}}selected{{/if}}>{{localize "SBE.Panel.Mode_window"}}</option>
+            <option value="bubble" {{#if (eq panelMode "bubble")}}selected{{/if}}>{{localize "SBE.Panel.Mode_bubble"}}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>{{localize "SBE.Panel.Width"}}</label>
+          <input type="number" name="system.propCfg.panelWidth" value="{{panelWidth}}" min="160" step="10" placeholder="320">
+        </div>
+      </div>
+      <label class="sbe-panel-cfg-check">
+        <input type="checkbox" name="system.propCfg.panelHead" {{checked panelHead}}>
+        {{localize "SBE.Panel.HeadOpt"}}
+      </label>
+    </div>
+    <div class="sbe-tpl-addbar">
+      <button type="button" class="sbe-tpl-plus" data-action="addElement" data-parent="" data-zone="{{panelZone}}" data-pos="start"
+              title="{{localize "SBE.Template.AddElTitle"}}">+</button>
+    </div>
+    {{#unless hasPanelElements}}
+      <p class="sbe-tpl-empty">{{localize "SBE.Panel.Empty"}}</p>
+    {{/unless}}
+    {{{panelWorkshopHTML}}}
+    <div class="sbe-tpl-addbar">
+      <button type="button" class="sbe-tpl-plus" data-action="addElement" data-parent="" data-zone="{{panelZone}}"
+              title="{{localize "SBE.Template.AddElTitle"}}">+</button>
+    </div>
+  </section>
+  {{/if}}
+
+  {{#if isExtraTab}}
+  {{!-- Onglet personnalisé : même atelier que Fiche, zone dédiée --}}
+  <section class="sbe-tpl-canvas">
+    <div class="sbe-tpl-addbar">
+      <button type="button" class="sbe-tpl-plus" data-action="addElement" data-parent="" data-zone="{{activeExtraId}}" data-pos="start"
+              title="{{localize "SBE.Template.AddElTitle"}}">+</button>
+    </div>
+    {{{extraWorkshopHTML}}}
+    <div class="sbe-tpl-addbar">
+      <button type="button" class="sbe-tpl-plus" data-action="addElement" data-parent="" data-zone="{{activeExtraId}}"
+              title="{{localize "SBE.Template.AddElTitle"}}">+</button>
+    </div>
+  </section>
+  {{/if}}
+
+</div>

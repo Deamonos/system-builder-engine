@@ -1,0 +1,32 @@
+Sons météo de System Builder Engine
+====================================
+
+Freesound (https://freesound.org) — licence Creative Commons 0 (domaine public).
+Sons retravaillés (boucles, niveau, découpe). Merci aux auteurs :
+
+pluie.ogg                      hz37             Steady rain in Zeist                       https://freesound.org/s/393728/
+pluie-legere.ogg               Ryding           Light rain                                 https://freesound.org/s/96729/
+vent-fort.ogg                  keirofinch       Strong Wind (Soundfield, Manchester)       https://freesound.org/s/376533/
+vent-blizzard.ogg              TRP              wind howl window, slow 08                  https://freesound.org/s/575243/
+vent-ouragan.ogg               Vrymaa           Wind - Hurricane Typhoon Storm             https://freesound.org/s/735350/
+vent-desert.ogg                dhallcomposer    Looping Gentle Wind Ambience (desert)      https://freesound.org/s/697217/
+vent-neige.ogg                 janbezouska      Soft Tonal Wind_02                         https://freesound.org/s/397092/
+grele.ogg                      misternormmedia  hail in the city                           https://freesound.org/s/685618/
+tempete-sable.ogg              gbayles          Sandstorm Looping                          https://freesound.org/s/632771/
+tempete-mana.ogg               Alien_I_Trust    Dystopian Winds                            https://freesound.org/s/785818/
+emission.ogg                   lennartgreen     Low Rumble - loopable ambiance             https://freesound.org/s/638914/
+brume-maudite.ogg              IanStarGem       Muffled Eerie Wind                         https://freesound.org/s/269591/
+brume-toxique.ogg              lollosound       FUMO                                       https://freesound.org/s/386995/
+radiations.ogg                 JustLaz          Geiger_Tick_Erratic                        https://freesound.org/s/616511/
+                               BeaconStudio     Noise#2 hum                                https://freesound.org/s/861227/
+electricite.ogg                felix.blume      Electricity crackling (electrical post)    https://freesound.org/s/152706/
+anomalie-gravitationnelle.ogg  metrostock99     Earthquake or distant space shuttle rumble https://freesound.org/s/203281/
+feu.ogg                        NomadApe         Fire crackling in fireplace                https://freesound.org/s/444920/
+explosions-lointaines.ogg      Kostrava         distant explosions                         https://freesound.org/s/320788/
+tonnerre-1..4.ogg              Wax_vibe         Thunders                                   https://freesound.org/s/682472/
+meteore.ogg                    humanoide9000    meteor flyby                               https://freesound.org/s/329029/
+
+La Sonothèque (https://lasonotheque.org) — sons libres de droits, crédit de courtoisie.
+Merci à Joseph Sardin :
+
+pluie-orage.ogg, tonnerre-proche-1..4.ogg, tonnerre-lointain-1..4.ogg

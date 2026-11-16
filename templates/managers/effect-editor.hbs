@@ -1,0 +1,390 @@
+{{!-- Éditeur d'UNE définition d'effet : partagé entre le gestionnaire
+     d'effets et l'onglet Effets d'un objet (mode « local » : pas de nom,
+     d'icône ni de clé — repris de l'objet). --}}
+      <datalist id="sbe-fx-keys">{{#each keys}}<option value="{{key}}">{{label}}</option>{{/each}}</datalist>
+      <datalist id="sbe-fx-vkeys">{{#each valueKeys}}<option value="{{key}}">{{label}}</option>{{/each}}</datalist>
+      <datalist id="sbe-fx-rkeys">{{#each rollKeys}}<option value="{{key}}">{{label}}</option>{{/each}}</datalist>
+
+      {{#if local}}
+      <input type="hidden" class="sbe-fx-key" value="{{def.key}}">
+      {{else}}
+      <div class="sbe-fx-head">
+        <div class="sbe-fx-iconcol">
+          <a class="sbe-fx-iconpick" data-action="pickIcon" data-tooltip-text="{{localize "SBE.Effects.Icon"}}">
+            <img src="{{#if iconShown}}{{iconShown}}{{else}}icons/svg/aura.svg{{/if}}" data-raw="{{iconRaw}}" data-color="{{def.iconColor}}" alt="">
+          </a>
+          <label class="sbe-fx-check" data-tooltip-text="{{localize "SBE.Effects.IconColorHint"}}"><input type="checkbox" class="sbe-fx-iconcolor-on" {{#if def.iconColor}}checked{{/if}}> {{localize "SBE.Effects.IconColor"}}</label>
+          <input type="color" class="sbe-fx-iconcolor" value="{{#if def.iconColor}}{{def.iconColor}}{{else}}#ff5050{{/if}}">
+        </div>
+        <div class="sbe-fx-headfields">
+          <label>{{localize "SBE.Effects.Label"}}</label>
+          <input type="text" class="sbe-fx-label" value="{{def.label}}">
+          <label>{{localize "SBE.Effects.Key"}}{{sbeTip "SBE.Effects.KeyHint"}}</label>
+          <input type="text" class="sbe-fx-key" value="{{def.key}}" placeholder="{{localize "SBE.Ph.EffectKey"}}" {{#if def.native}}disabled{{/if}}>
+          {{#if def.native}}<p class="notes">{{localize "SBE.Effects.NativeEditHint"}}</p>{{/if}}
+        </div>
+      </div>
+      <input type="hidden" class="sbe-fx-icon" value="{{def.icon}}">
+      {{/if}}
+
+      <label>{{localize "SBE.Effects.Description"}}</label>
+      <textarea class="sbe-fx-desc" rows="2">{{def.description}}</textarea>
+
+      <label>{{localize "SBE.Effects.Category"}}{{sbeTip "SBE.Effects.CategoryHint"}}</label>
+      <input type="text" class="sbe-fx-category" list="sbe-fx-cats" value="{{def.category}}" placeholder="{{localize "SBE.Effects.CategoryPh"}}">
+      <datalist id="sbe-fx-cats">{{#each categories}}<option value="{{this}}"></option>{{/each}}</datalist>
+
+      {{!-- TOUT EN PHASES : dès qu'il y a des phases, la durée et les
+           modifications du haut deviennent la phase 1 (début). --}}
+      {{#if def.phases.length}}
+      <fieldset class="sbe-fx-phasesbox">
+        <legend>{{localize "SBE.Effects.Phases.Title"}}{{sbeTip "SBE.Effects.Phases.HintOn"}}</legend>
+        <div class="sbe-fx-phase0">
+          <div class="sbe-fx-row">
+            <span class="sbe-fx-tiernum">1</span>
+            <span class="sbe-fx-grow sbe-fx-phase0-name">{{localize "SBE.Effects.Phases.Start"}}</span>
+          </div>
+          <div class="sbe-fx-row">
+            <label>{{localize "SBE.Effects.Rounds"}}</label>
+            <input type="number" class="sbe-fx-rounds" value="{{def.duration.rounds}}" min="0" step="1">
+            <label>{{localize "SBE.Effects.Time"}}</label>
+            <input type="number" class="sbe-fx-time" value="{{time.amount}}" min="0" step="1">
+            <select class="sbe-fx-unit">
+              {{#each units}}<option value="{{value}}" {{#if (eq value ../time.unit)}}selected{{/if}}>{{label}}</option>{{/each}}
+            </select>
+          </div>
+          {{#each def.changes}}
+          <div class="sbe-fx-change sbe-fx-mchange">
+            <input type="text" class="sbe-fx-ckey" list="sbe-fx-keys" value="{{key}}" placeholder="{{localize "SBE.Effects.ChangeKeyPh"}}">
+            <select class="sbe-fx-cmode">
+              {{#each ../modes}}<option value="{{value}}" {{#if (eq value ../mode)}}selected{{/if}}>{{label}}</option>{{/each}}
+            </select>
+            <input type="text" class="sbe-fx-cval" value="{{value}}" placeholder="{{localize "SBE.Effects.ChangeValPh"}}">
+            <a data-action="delChange" data-tooltip-text="{{localize "SBE.Effects.DelChange"}}"><i class="fa-solid fa-trash"></i></a>
+          </div>
+          {{/each}}
+          <button type="button" class="sbe-fx-add" data-action="addChange"><i class="fa-solid fa-plus"></i> {{localize "SBE.Effects.AddChange"}}</button>
+        </div>
+        {{#each def.phases}}
+        <div class="sbe-fx-tier sbe-fx-phase">
+          <div class="sbe-fx-row">
+            <span class="sbe-fx-tiernum">{{num}}</span>
+            <input type="text" class="sbe-fx-ph-label sbe-fx-grow" value="{{label}}" placeholder="{{localize "SBE.Effects.Phases.Label"}}">
+            <input type="text" class="sbe-fx-ph-icon sbe-fx-grow" value="{{icon}}" placeholder="{{localize "SBE.Effects.Esc.TierIcon"}}">
+            <a data-action="delPhase" data-tooltip-text="{{localize "SBE.Effects.Phases.Del"}}"><i class="fa-solid fa-trash"></i></a>
+          </div>
+          <div class="sbe-fx-row">
+            <label>{{localize "SBE.Effects.Rounds"}}</label>
+            <input type="number" class="sbe-fx-ph-rounds" value="{{rounds}}" min="0" step="1">
+            <label>{{localize "SBE.Effects.Time"}}</label>
+            <input type="number" class="sbe-fx-ph-time" value="{{time.amount}}" min="0" step="1">
+            <select class="sbe-fx-ph-unit">
+              {{#each ../units}}<option value="{{value}}" {{#if (eq value ../time.unit)}}selected{{/if}}>{{label}}</option>{{/each}}
+            </select>
+          </div>
+          {{#each changes}}
+          <div class="sbe-fx-change sbe-fx-pchange">
+            <input type="text" class="sbe-fx-ckey" list="sbe-fx-keys" value="{{key}}" placeholder="{{localize "SBE.Effects.ChangeKeyPh"}}">
+            <select class="sbe-fx-cmode">
+              {{#each ../../modes}}<option value="{{value}}" {{#if (eq value ../mode)}}selected{{/if}}>{{label}}</option>{{/each}}
+            </select>
+            <input type="text" class="sbe-fx-cval" value="{{value}}" placeholder="{{localize "SBE.Effects.ChangeValPh"}}">
+            <a data-action="delChange" data-tooltip-text="{{localize "SBE.Effects.DelChange"}}"><i class="fa-solid fa-trash"></i></a>
+          </div>
+          {{/each}}
+          <button type="button" class="sbe-fx-add" data-action="addPhaseChange" data-phase="{{@index}}"><i class="fa-solid fa-plus"></i> {{localize "SBE.Effects.AddChange"}}</button>
+        </div>
+        {{/each}}
+        <button type="button" class="sbe-fx-add" data-action="addPhase"><i class="fa-solid fa-plus"></i> {{localize "SBE.Effects.Phases.Add"}}</button>
+      </fieldset>
+      {{else}}
+      <fieldset>
+        <legend>{{localize "SBE.Effects.Changes"}}{{sbeTip "SBE.Effects.ChangesHint"}}</legend>
+        {{#each def.changes}}
+        <div class="sbe-fx-change sbe-fx-mchange">
+          <input type="text" class="sbe-fx-ckey" list="sbe-fx-keys" value="{{key}}" placeholder="{{localize "SBE.Effects.ChangeKeyPh"}}">
+          <select class="sbe-fx-cmode">
+            {{#each ../modes}}<option value="{{value}}" {{#if (eq value ../mode)}}selected{{/if}}>{{label}}</option>{{/each}}
+          </select>
+          <input type="text" class="sbe-fx-cval" value="{{value}}" placeholder="{{localize "SBE.Effects.ChangeValPh"}}">
+          <a data-action="delChange" data-tooltip-text="{{localize "SBE.Effects.DelChange"}}"><i class="fa-solid fa-trash"></i></a>
+        </div>
+        {{/each}}
+        <button type="button" class="sbe-fx-add" data-action="addChange"><i class="fa-solid fa-plus"></i> {{localize "SBE.Effects.AddChange"}}</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>{{localize "SBE.Effects.Duration"}}{{sbeTip "SBE.Effects.DurationHint"}}</legend>
+        <div class="sbe-cf-grid">
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Rounds"}}</label>
+            <input type="number" class="sbe-fx-rounds" value="{{def.duration.rounds}}" min="0" step="1"></div>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Time"}}</label>
+            <div class="sbe-cf-inline">
+              <input type="number" class="sbe-fx-time" value="{{time.amount}}" min="0" step="1">
+              <select class="sbe-fx-unit">
+                {{#each units}}<option value="{{value}}" {{#if (eq value ../time.unit)}}selected{{/if}}>{{label}}</option>{{/each}}
+              </select>
+            </div></div>
+        </div>
+      </fieldset>
+      {{/if}}
+
+      <fieldset>
+        <legend>{{localize "SBE.Effects.Stacking"}}{{sbeTip "SBE.Effects.StackHint"}}</legend>
+        <div class="sbe-cf-grid">
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-stack" {{#if def.stack.enabled}}checked{{/if}}> <span>{{localize "SBE.Effects.StackOn"}}</span></label>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.StackMax"}}</label>
+            <input type="number" class="sbe-fx-stackmax" value="{{def.stack.max}}" min="1" step="1"></div>
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-scale" {{#if def.stack.scale}}checked{{/if}}> <span>{{localize "SBE.Effects.StackScale"}}</span></label>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Group"}}{{sbeTip "SBE.Effects.GroupHint"}}</label>
+            <input type="text" class="sbe-fx-group" value="{{def.group}}" placeholder="{{localize "SBE.Effects.GroupPh"}}"></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>{{localize "SBE.Effects.Combat"}}</legend>
+        <div class="sbe-cf-grid">
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-nodef" {{#if def.noDefense}}checked{{/if}}> <span>{{localize "SBE.Effects.NoDefense"}}</span>{{sbeTip "SBE.Effects.NoDefenseHint"}}</label>
+          {{#if foundryStatuses.length}}
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.FoundryStatus"}}{{sbeTip "SBE.Effects.FoundryStatusHint"}}</label>
+            <select class="sbe-fx-fstatus">
+              <option value="">{{localize "SBE.Effects.FoundryStatusNone"}}</option>
+              {{#each foundryStatuses}}<option value="{{value}}" {{#if (eq value ../def.foundryStatus)}}selected{{/if}}>{{label}}</option>{{/each}}
+            </select></div>
+          {{/if}}
+        </div>
+      </fieldset>
+
+      {{!-- ===== DÉCLENCHEUR ===== --}}
+      <details class="sbe-fx-sec" data-sec="trigger" {{#if open.trigger}}open{{/if}}>
+        <summary>{{localize "SBE.Effects.Trigger.Title"}} {{#if def.trigger.enabled}}<span class="sbe-fx-on">●</span>{{/if}}</summary>
+        <div class="sbe-cf-grid">
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-t-on" {{#if def.trigger.enabled}}checked{{/if}}> <span>{{localize "SBE.Effects.Enabled"}}</span>{{sbeTip "SBE.Effects.Trigger.Hint"}}</label>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Trigger.Conditions"}}{{sbeTip "SBE.Effects.Trigger.ConditionsHint"}}</label>
+            <select class="sbe-fx-t-logic">
+              <option value="and" {{#if (eq def.trigger.logic "and")}}selected{{/if}}>{{localize "SBE.Effects.Trigger.And"}}</option>
+              <option value="or" {{#if (eq def.trigger.logic "or")}}selected{{/if}}>{{localize "SBE.Effects.Trigger.Or"}}</option>
+            </select></div>
+        </div>
+        <div class="sbe-fx-conds">
+          {{#each def.trigger.conditions}}
+          <div class="sbe-fx-cond"><input type="text" class="sbe-fx-t-cond" value="{{this}}" placeholder='pv <= maxOf("pv") * 0.25'>
+            <a data-action="delRow" data-tooltip-text="{{localize "SBE.Effects.DelRow"}}"><i class="fa-solid fa-trash"></i></a></div>
+          {{/each}}
+        </div>
+        <button type="button" class="sbe-fx-add" data-action="addCond"><i class="fa-solid fa-plus"></i> {{localize "SBE.Effects.Trigger.AddCond"}}</button>
+        <h4 class="sbe-cf-h">{{localize "SBE.Effects.Trigger.Events"}}{{sbeTip "SBE.Effects.Trigger.EventsHint"}}</h4>
+        <div class="sbe-cf-grid">
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-t-combat" {{#if def.trigger.onCombatStart}}checked{{/if}}> <span>{{localize "SBE.Effects.Trigger.OnCombatStart"}}</span></label>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Trigger.OnDecrease"}}</label>
+            <input type="text" class="sbe-fx-t-dec" list="sbe-fx-vkeys" value="{{def.trigger.onDecrease}}" placeholder="{{localize "SBE.Ph.EffectWatch"}}"></div>
+        </div>
+      </details>
+
+      {{!-- ===== PÉRIODIQUE ===== --}}
+      <details class="sbe-fx-sec" data-sec="periodic" {{#if open.periodic}}open{{/if}}>
+        <summary>{{localize "SBE.Effects.Periodic.Title"}} {{#if def.periodic.enabled}}<span class="sbe-fx-on">●</span>{{/if}}</summary>
+        <div class="sbe-cf-grid sbe-fx-p-src">
+          <label class="sbe-cf-cell is-check is-wide"><input type="checkbox" class="sbe-fx-p-on" {{#if def.periodic.enabled}}checked{{/if}}> <span>{{localize "SBE.Effects.Enabled"}}</span>{{sbeTip "SBE.Effects.Periodic.Hint"}}</label>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Cadence"}}</label>
+            <select class="sbe-fx-p-timing">{{#each timings}}<option value="{{value}}" {{#if (eq value ../def.periodic.timing)}}selected{{/if}}>{{label}}</option>{{/each}}</select></div>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Interval"}}</label>
+            <input type="number" class="sbe-fx-p-int" value="{{def.periodic.interval}}" min="1" step="1"></div>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Periodic.Key"}}</label>
+            <input type="text" class="sbe-fx-p-key" list="sbe-fx-vkeys" value="{{def.periodic.key}}" placeholder="{{localize "SBE.Ph.EffectPeriodic"}}"></div>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Periodic.Amount"}}</label>
+            <input type="text" class="sbe-fx-p-amount" value="{{def.periodic.amount}}" placeholder="-2"></div>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Periodic.TargetLabel"}}{{sbeTip "SBE.Effects.Periodic.TargetHint"}}</label>
+            <select class="sbe-fx-p-target">{{#each periodicTargets}}<option value="{{value}}" {{#if (eq value ../def.periodic.target)}}selected{{/if}}>{{label}}</option>{{/each}}</select></div>
+          <div class="sbe-cf-cell sbe-fx-p-zerocell"><label>{{localize "SBE.Effects.Periodic.ZeroLabel"}}</label>
+            <select class="sbe-fx-p-zero">{{#each zeroModes}}<option value="{{value}}" {{#if (eq value ../def.periodic.onZero)}}selected{{/if}}>{{label}}</option>{{/each}}</select></div>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Periodic.Reduce"}}{{sbeTip "SBE.Effects.Periodic.ReduceHint"}}</label>
+            <input type="text" class="sbe-fx-p-reduce" list="sbe-fx-keys" value="{{def.periodic.reduceKey}}"></div>
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-p-chat" {{#if def.periodic.chat}}checked{{/if}}> <span>{{localize "SBE.Effects.Periodic.Chat"}}</span></label>
+        </div>
+      </details>
+
+      {{!-- ===== RÉSISTANCE ===== --}}
+      <details class="sbe-fx-sec" data-sec="resist" {{#if open.resist}}open{{/if}}>
+        <summary>{{localize "SBE.Effects.Resist.Title"}} {{#if def.resist.enabled}}<span class="sbe-fx-on">●</span>{{/if}}</summary>
+        <div class="sbe-cf-grid">
+          <label class="sbe-cf-cell is-check is-wide"><input type="checkbox" class="sbe-fx-r-on" {{#if def.resist.enabled}}checked{{/if}}> <span>{{localize "SBE.Effects.Enabled"}}</span>{{sbeTip "SBE.Effects.Resist.Hint"}}</label>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Resist.Key"}}</label>
+            <input type="text" class="sbe-fx-r-key" list="sbe-fx-rkeys" value="{{def.resist.key}}"></div>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Resist.Difficulty"}}</label>
+            <input type="text" class="sbe-fx-r-diff" value="{{def.resist.difficulty}}" placeholder="0"></div>
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-r-apply" {{#if def.resist.onApply}}checked{{/if}}> <span>{{localize "SBE.Effects.Resist.OnApply"}}</span></label>
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-r-round" {{#if def.resist.onRound}}checked{{/if}}> <span>{{localize "SBE.Effects.Resist.OnRound"}}</span></label>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Resist.Result"}}</label>
+            <select class="sbe-fx-r-result">
+              <option value="cancel" {{#if (eq def.resist.result "cancel")}}selected{{/if}}>{{localize "SBE.Effects.Resist.Cancel"}}</option>
+              <option value="reduce" {{#if (eq def.resist.result "reduce")}}selected{{/if}}>{{localize "SBE.Effects.Resist.Reduce"}}</option>
+            </select></div>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Resist.ReduceBy"}}</label>
+            <input type="number" class="sbe-fx-r-by" value="{{def.resist.reduceBy}}" min="1" step="1"></div>
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-r-crit" {{#if def.resist.crit}}checked{{/if}}> <span>{{localize "SBE.Effects.Resist.Crit"}}</span></label>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Resist.CritMult"}}</label>
+            <input type="number" class="sbe-fx-r-mult" value="{{def.resist.critMult}}" min="1" step="0.5"></div>
+        </div>
+      </details>
+
+      {{!-- ===== ESCALADE ===== --}}
+      <details class="sbe-fx-sec" data-sec="escalation" {{#if open.escalation}}open{{/if}}>
+        <summary>{{localize "SBE.Effects.Esc.Title"}} {{#if def.escalation.enabled}}<span class="sbe-fx-on">●</span>{{/if}}</summary>
+        <div class="sbe-cf-grid">
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-e-on" {{#if def.escalation.enabled}}checked{{/if}}> <span>{{localize "SBE.Effects.Enabled"}}</span>{{sbeTip "SBE.Effects.Esc.Hint"}}</label>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Esc.Rise"}}{{sbeTip "SBE.Effects.Esc.RiseHint"}}</label>
+            <select class="sbe-fx-e-rise">
+              <option value="auto" {{#unless (eq def.escalation.rise "manual")}}selected{{/unless}}>{{localize "SBE.Effects.Esc.Rise_auto"}}</option>
+              <option value="manual" {{#if (eq def.escalation.rise "manual")}}selected{{/if}}>{{localize "SBE.Effects.Esc.Rise_manual"}}</option>
+            </select></div>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Cadence"}}</label>
+            <select class="sbe-fx-e-timing">{{#each timings}}<option value="{{value}}" {{#if (eq value ../def.escalation.timing)}}selected{{/if}}>{{label}}</option>{{/each}}</select></div>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Interval"}}</label>
+            <input type="number" class="sbe-fx-e-int" value="{{def.escalation.interval}}" min="1" step="1"></div>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Esc.Step"}}</label>
+            <input type="number" class="sbe-fx-e-step" value="{{def.escalation.step}}" min="1" step="1"></div>
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-e-decay" {{#if def.escalation.decay}}checked{{/if}}> <span>{{localize "SBE.Effects.Esc.Decay"}}</span></label>
+        </div>
+        <h4 class="sbe-cf-h">{{localize "SBE.Effects.Esc.Tiers"}}{{sbeTip "SBE.Effects.Esc.TiersHint"}}</h4>
+        <div class="sbe-fx-tiers">
+          {{#each def.escalation.tiers}}
+          <div class="sbe-fx-tier">
+            <div class="sbe-fx-row">
+              <span class="sbe-fx-tiernum">{{num}}</span>
+              <input type="text" class="sbe-fx-tier-label sbe-fx-grow" value="{{label}}" placeholder="{{localize "SBE.Effects.Esc.TierLabel"}}">
+              <input type="text" class="sbe-fx-tier-icon sbe-fx-grow" value="{{icon}}" placeholder="{{localize "SBE.Effects.Esc.TierIcon"}}">
+              <a data-action="delTier" data-tooltip-text="{{localize "SBE.Effects.Esc.DelTier"}}"><i class="fa-solid fa-trash"></i></a>
+            </div>
+            <label>{{localize "SBE.Effects.Esc.TierAmount"}}</label>
+            <input type="text" class="sbe-fx-tier-amount" value="{{amount}}" placeholder="{{localize "SBE.Effects.Esc.TierAmountPh"}}">
+            {{#each changes}}
+            <div class="sbe-fx-change sbe-fx-tchange">
+              <input type="text" class="sbe-fx-ckey" list="sbe-fx-keys" value="{{key}}" placeholder="{{localize "SBE.Effects.ChangeKeyPh"}}">
+              <select class="sbe-fx-cmode">
+                {{#each ../../modes}}<option value="{{value}}" {{#if (eq value ../mode)}}selected{{/if}}>{{label}}</option>{{/each}}
+              </select>
+              <input type="text" class="sbe-fx-cval" value="{{value}}" placeholder="{{localize "SBE.Effects.ChangeValPh"}}">
+              <a data-action="delChange" data-tooltip-text="{{localize "SBE.Effects.DelChange"}}"><i class="fa-solid fa-trash"></i></a>
+            </div>
+            {{/each}}
+            <button type="button" class="sbe-fx-add" data-action="addTierChange" data-tier="{{@index}}"><i class="fa-solid fa-plus"></i> {{localize "SBE.Effects.AddChange"}}</button>
+          </div>
+          {{/each}}
+        </div>
+        <button type="button" class="sbe-fx-add" data-action="addTier"><i class="fa-solid fa-plus"></i> {{localize "SBE.Effects.Esc.AddTier"}}</button>
+      </details>
+
+      {{!-- ===== PHASES (pas encore de phase : de quoi en ajouter) ===== --}}
+      {{#unless def.phases.length}}
+      <details class="sbe-fx-sec" data-sec="phases" {{#if open.phases}}open{{/if}}>
+        <summary>{{localize "SBE.Effects.Phases.Title"}}{{sbeTip "SBE.Effects.Phases.Hint"}}</summary>
+        <button type="button" class="sbe-fx-add" data-action="addPhase"><i class="fa-solid fa-plus"></i> {{localize "SBE.Effects.Phases.Add"}}</button>
+      </details>
+      {{/unless}}
+
+      {{!-- ===== OBJETS DONNÉS (tant que l'effet dure) ===== --}}
+      <details class="sbe-fx-sec" data-sec="gives" {{#if open.gives}}open{{/if}}>
+        <summary>{{localize "SBE.Effects.Gives.Title"}}{{sbeTip "SBE.Effects.Gives.Hint"}} {{#if givesOn}}<span class="sbe-fx-on">●</span>{{/if}}</summary>
+        <datalist id="sbe-fx-pkeys">{{#each placeKeys}}<option value="{{key}}">{{label}}</option>{{/each}}</datalist>
+        <div class="sbe-fx-gives">
+          {{#each gives}}
+          <div class="sbe-fx-give{{#if gone}} is-gone{{/if}}" data-uuid="{{uuid}}">
+            <img src="{{img}}" alt="">
+            <span class="sbe-fx-give-name">{{name}}</span>
+            <div class="sbe-fx-give-field"><label>{{localize "SBE.Effects.Gives.Where"}}{{sbeTip "SBE.Effects.Gives.WhereHint"}}</label>
+              <input type="text" class="sbe-fx-g-where" list="sbe-fx-pkeys" value="{{where}}" placeholder="{{localize "SBE.Ph.GiveWhere"}}"></div>
+            <div class="sbe-fx-give-field"><label>{{localize "SBE.Effects.Gives.End"}}</label>
+              <select class="sbe-fx-g-end">{{#each ../giveEnds}}<option value="{{value}}" {{#if (eq value ../end)}}selected{{/if}}>{{label}}</option>{{/each}}</select></div>
+            <label class="sbe-fx-check" data-tooltip-text="{{localize "SBE.Effects.Gives.LockHint"}}"><input type="checkbox" class="sbe-fx-g-lock" {{#if lock}}checked{{/if}}> {{localize "SBE.Effects.Gives.Lock"}}</label>
+            <a data-action="delGive" data-tooltip-text="{{localize "SBE.Effects.Gives.Del"}}"><i class="fa-solid fa-trash"></i></a>
+          </div>
+          {{/each}}
+          <div class="sbe-fx-gives-drop"><i class="fa-solid fa-hand-holding-hand"></i> {{localize "SBE.Effects.Gives.Drop"}}</div>
+        </div>
+      </details>
+
+      {{!-- ===== APPARENCE ET SON ===== --}}
+      <details class="sbe-fx-sec" data-sec="look" {{#if open.look}}open{{/if}}>
+        <summary>{{localize "SBE.Effects.Look.Title"}} {{#if lookOn}}<span class="sbe-fx-on">●</span>{{/if}}</summary>
+        <div class="sbe-cf-grid">
+          <div class="sbe-cf-cell is-wide"><label>{{localize "SBE.Effects.Look.Sound"}}{{sbeTip "SBE.Effects.Look.SoundHint" (sbeAudioFormats)}}</label>
+            <div class="sbe-cf-inline">
+              <input type="text" class="sbe-fx-l-sound" value="{{def.look.sound}}" placeholder="sounds/…">
+              <button type="button" class="sbe-fx-pick" data-action="pickSound"><i class="fa-solid fa-file-audio"></i></button>
+            </div></div>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Media.Volume"}}</label>
+            <input type="number" class="sbe-fx-l-volume" value="{{def.look.volume}}" min="0" max="100" step="5"></div>
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-l-loop" {{#if def.look.loop}}checked{{/if}}> <span>{{localize "SBE.Effects.Look.Loop"}}</span></label>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Media.Audience"}}</label>
+            <select class="sbe-fx-l-aud">{{#each audiences}}<option value="{{value}}" {{#if (eq value ../def.look.audience)}}selected{{/if}}>{{label}}</option>{{/each}}</select></div>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Media.Range"}}</label>
+            <input type="number" class="sbe-fx-l-range" value="{{def.look.range}}" min="0" step="1"></div>
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-l-falloff" {{#if def.look.falloff}}checked{{/if}}> <span>{{localize "SBE.Media.Falloff"}}</span>{{sbeTip "SBE.Media.FalloffHint"}}</label>
+        </div>
+
+        <h4 class="sbe-cf-h">{{localize "SBE.Effects.Look.Token"}}{{sbeTip "SBE.Effects.Look.TokenHint"}}</h4>
+        <div class="sbe-cf-grid">
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-l-tinton" {{#if def.look.tint}}checked{{/if}}> <span>{{localize "SBE.Effects.Look.Tint"}}</span>
+            <input type="color" class="sbe-fx-l-tint" value="{{#if def.look.tint}}{{def.look.tint}}{{else}}#ff8080{{/if}}"></label>
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-l-big" {{#if def.look.bigIcon}}checked{{/if}}> <span>{{localize "SBE.Effects.Look.BigIcon"}}</span></label>
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-l-discreet" {{#if def.look.discreet}}checked{{/if}}> <span>{{localize "SBE.Effects.Look.Discreet"}}</span></label>
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-l-thermal" {{#if def.look.thermalMask}}checked{{/if}}> <span>{{localize "SBE.Effects.Look.ThermalMask"}}</span></label>
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-l-blind" {{#if def.look.blind}}checked{{/if}}> <span>{{localize "SBE.Effects.Look.Blind"}}</span></label>
+        </div>
+
+        <h4 class="sbe-cf-h">{{localize "SBE.Effects.Look.Anim"}}{{sbeTip "SBE.Effects.Look.AnimHint"}}</h4>
+        <div class="sbe-cf-grid">
+          <div class="sbe-cf-cell is-wide"><div class="sbe-cf-inline">
+            <input type="text" class="sbe-fx-l-anim" value="{{def.look.anim.file}}" placeholder="…/aura.webm">
+            <button type="button" class="sbe-fx-pick" data-action="pickAnim"><i class="fa-solid fa-film"></i></button>
+          </div></div>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Media.AnimSize"}}</label>
+            <input type="number" class="sbe-fx-l-animsize" value="{{def.look.anim.size}}" min="0.1" step="0.1"></div>
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-l-animscreen" {{#if def.look.anim.screen}}checked{{/if}}> <span>{{localize "SBE.Media.AnimScreen"}}</span>{{sbeTip "SBE.Media.AnimScreenHint"}}</label>
+        </div>
+
+        {{!-- Lumière : chaque champ = un nombre, une formule (fiche du porteur) ou « @clé » (lu sur l'objet) --}}
+        <div class="sbe-fx-light">
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-l-light" {{#if def.look.light.enabled}}checked{{/if}}> <span>{{localize "SBE.Effects.Look.Light"}}</span>{{sbeTip "SBE.Effects.Look.LightHint"}}</label>
+          <div class="sbe-fx-light-body">
+            {{{lightFieldsHTML}}}
+          </div>
+        </div>
+
+        {{!-- Mode de vision : portée et angle = nombre, formule (fiche du porteur) ou « @clé » ; vides = ceux du pion --}}
+        <div class="sbe-fx-sight">
+          <label class="sbe-cf-cell is-check"><input type="checkbox" class="sbe-fx-l-sight" {{#if def.look.sight.enabled}}checked{{/if}}> <span>{{localize "SBE.Effects.Look.Sight"}}</span>{{sbeTip "SBE.Effects.Look.SightHint"}}</label>
+          <div class="sbe-cf-grid">
+            <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Look.SightMode"}}</label>
+              <select class="sbe-fx-l-sightmode">{{#each sightModes}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}</select></div>
+            <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Look.SightRange"}}</label>
+              <input type="text" class="sbe-fx-l-sightrange" list="sbe-fx-keys" value="{{def.look.sight.range}}" placeholder="—"></div>
+            <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Look.SightAngle"}}</label>
+              <input type="text" class="sbe-fx-l-sightangle" list="sbe-fx-keys" value="{{def.look.sight.angle}}" placeholder="—"></div>
+          </div>
+        </div>
+
+      </details>
+
+      {{!-- ===== REPOS ===== --}}
+      <details class="sbe-fx-sec" data-sec="rest" {{#if open.rest}}open{{/if}}>
+        <summary>{{localize "SBE.Effects.Rest.Title"}} {{#if restOn}}<span class="sbe-fx-on">●</span>{{/if}}</summary>
+        <div class="sbe-cf-grid">
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Rest.Title"}}{{sbeTip "SBE.Effects.Rest.Hint"}}</label>
+            <select class="sbe-fx-h-mode">
+              {{#each restModes}}<option value="{{value}}" {{#if (eq value ../def.restHeal.mode)}}selected{{/if}}>{{label}}</option>{{/each}}
+            </select></div>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Resist.ReduceBy"}}</label>
+            <input type="number" class="sbe-fx-h-by" value="{{def.restHeal.reduceBy}}" min="1" step="1"></div>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Resist.Key"}}</label>
+            <input type="text" class="sbe-fx-h-key" list="sbe-fx-rkeys" value="{{def.restHeal.key}}"></div>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Resist.Difficulty"}}</label>
+            <input type="text" class="sbe-fx-h-diff" value="{{def.restHeal.difficulty}}" placeholder="0"></div>
+          <div class="sbe-cf-cell"><label>{{localize "SBE.Effects.Rest.OnSuccess"}}</label>
+            <select class="sbe-fx-h-success">
+              <option value="remove" {{#if (eq def.restHeal.onSuccess "remove")}}selected{{/if}}>{{localize "SBE.Effects.Resist.Cancel"}}</option>
+              <option value="reduce" {{#if (eq def.restHeal.onSuccess "reduce")}}selected{{/if}}>{{localize "SBE.Effects.Resist.Reduce"}}</option>
+            </select></div>
+        </div>
+      </details>

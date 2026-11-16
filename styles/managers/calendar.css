@@ -1,0 +1,380 @@
+/**
+ * SBE — Calendrier, horloge et météo
+ * Le ciel dessiné (.sbe-sky et ses couches), l'horloge flottante
+ * (.sbe-ck), la fenêtre du calendrier (.sbe-cal) et la fenêtre de
+ * réglage (.sbe-calendar-editor). Les couleurs de la météo viennent
+ * des variables posées par weather-sky.mjs (--sbe-wx-…) ; le reste du
+ * thème.
+ */
+
+/* ============================================================ */
+/*  Le ciel                                                      */
+/* ============================================================ */
+.sbe-sky { position: relative; height: 52px; background: var(--sbe-sky); transition: background .6s; overflow: hidden; cursor: grab; }
+.sbe-sky:active { cursor: grabbing; }
+.sbe-sky-arc { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sbe-sky-arc path { stroke: rgb(255 255 255 / .16); }
+.sbe-sky-stars i { position: absolute; width: 1.5px; height: 1.5px; border-radius: 50%; background: #fff; opacity: var(--sbe-st, 0); animation: sbe-tw 2.4s ease-in-out infinite; transition: opacity .6s; }
+@keyframes sbe-tw { 50% { transform: scale(.3); } }
+.sbe-sky-sun, .sbe-sky-moon { position: absolute; transform: translate(-50%, -50%); transition: left .6s, top .6s, opacity .6s, filter .6s, background .6s, box-shadow .6s; z-index: 1; }
+.sbe-sky-sun { width: 15px; height: 15px; border-radius: 50%; background: radial-gradient(circle, #fffbe6 0 35%, #ffd35c 60%, #f29b2c); box-shadow: 0 0 10px 4px rgb(255 190 80 / .55), 0 0 30px 10px rgb(255 160 60 / .2); }
+.sbe-sky-moon { width: 12px; height: 12px; border-radius: 50%; background: #efe9d8; box-shadow: 0 0 9px 2px rgb(220 215 200 / .35); overflow: hidden; }
+.sbe-sky-moon b { position: absolute; inset: 0; border-radius: 50%; background: #1b2347; transition: transform .6s; }
+.sbe-sky-hills { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 13px; z-index: 6; }
+.sbe-sky-hills path { fill: var(--sbe-surf-1); }
+
+/* Couches : chacune s'allume selon les mots de data-w. */
+.sbe-wl { position: absolute; inset: 0; opacity: 0; transition: opacity .8s; pointer-events: none; z-index: 2; }
+.sbe-sky[data-w~="clouds"] .sbe-wl-clouds, .sbe-sky[data-w~="fog"] .sbe-wl-fog, .sbe-sky[data-w~="rain"] .sbe-wl-rain,
+.sbe-sky[data-w~="fall"] .sbe-wl-fall, .sbe-sky[data-w~="wind"] .sbe-wl-wind, .sbe-sky[data-w~="flash"] .sbe-wl-flash,
+.sbe-sky[data-w~="em"] .sbe-wl-flash, .sbe-sky[data-w~="spark"] .sbe-wl-spark, .sbe-sky[data-w~="aurora"] .sbe-wl-aurora,
+.sbe-sky[data-w~="haze"] .sbe-wl-haze, .sbe-sky[data-w~="dust"] .sbe-wl-dust, .sbe-sky[data-w~="float"] .sbe-wl-float,
+.sbe-sky[data-w~="meteor"] .sbe-wl-meteor, .sbe-sky[data-w~="heat"] .sbe-wl-heat, .sbe-sky[data-w~="eclipse"] .sbe-wl-corona { opacity: 1; }
+.sbe-sky[data-w~="dim"] .sbe-sky-sun, .sbe-sky[data-w~="dim"] .sbe-sky-moon { filter: blur(1.5px) brightness(.75); }
+
+/* Nuages : deux tons, bords nets. */
+/* Le nuage glisse par transformation (calculée par la carte graphique) : pas de saccade. */
+.sbe-wl-clouds i { position: absolute; left: 0; width: 100%; height: 100%; animation: sbe-cloud 30s linear infinite; will-change: transform; }
+.sbe-wl-clouds svg { display: block; width: 110px; transform: scale(var(--s)); transform-origin: left top; }
+@keyframes sbe-cloud { from { transform: translate3d(-120px, 0, 0); } to { transform: translate3d(100%, 0, 0); } }
+/* Brume : nappes floues. */
+.sbe-wl-fog { background: linear-gradient(transparent, color-mix(in srgb, var(--sbe-wx-fog) 35%, transparent) 55%, color-mix(in srgb, var(--sbe-wx-fog) 60%, transparent)); }
+.sbe-wl-fog i { position: absolute; left: -60%; width: 220%; height: 22px; border-radius: 50%; z-index: 5; filter: blur(5px); animation: sbe-fog 30s ease-in-out infinite alternate;
+  background: radial-gradient(ellipse at 25% 50%, color-mix(in srgb, var(--sbe-wx-fog) 95%, transparent), transparent 62%), radial-gradient(ellipse at 70% 50%, color-mix(in srgb, var(--sbe-wx-fog) 85%, transparent), transparent 55%); }
+@keyframes sbe-fog { to { transform: translateX(22%); } }
+/* Pluie : traits inclinés, éclaboussures (bulles si acide). */
+.sbe-wl-rain i { position: absolute; top: -16px; width: 1px; background: linear-gradient(transparent, color-mix(in srgb, var(--sbe-wx-rain) 90%, transparent)); box-shadow: 0 0 1px color-mix(in srgb, var(--sbe-wx-rain) 40%, transparent); transform: rotate(14deg); animation: sbe-rain .6s linear infinite; }
+@keyframes sbe-rain { to { transform: translate(-16px, 72px) rotate(14deg); } }
+.sbe-wl-splash { position: absolute; left: 0; right: 0; bottom: 6px; height: 6px; }
+.sbe-wl-splash b { position: absolute; bottom: 0; width: 6px; height: 3px; border: 1px solid color-mix(in srgb, var(--sbe-wx-rain) 70%, transparent); border-top: 0; border-radius: 0 0 6px 6px; opacity: 0; animation: sbe-splash .9s ease-out infinite; }
+@keyframes sbe-splash { 0% { opacity: .9; transform: scale(.3); } 60% { opacity: 0; transform: scale(1.2); } 100% { opacity: 0; } }
+.sbe-sky[data-w~="acid"] .sbe-wl-splash b { height: 4px; border-radius: 50%; border-top: 1px solid color-mix(in srgb, var(--sbe-wx-rain) 70%, transparent); animation-name: sbe-bubble; }
+@keyframes sbe-bubble { 0% { opacity: .8; transform: translateY(0) scale(.4); } 100% { opacity: 0; transform: translateY(-14px) scale(1); } }
+/* Chute : neige, grêle (rapide), cendres (lente). */
+.sbe-wl-fall { --sbe-wx-fd: 4s; --sbe-wx-fz: 3px; }
+.sbe-wl-fall i { position: absolute; top: -6px; width: calc(var(--sbe-wx-fz) * var(--k)); height: calc(var(--sbe-wx-fz) * var(--k)); border-radius: 50%; background: var(--sbe-wx-fall); box-shadow: 0 0 3px color-mix(in srgb, var(--sbe-wx-fall) 80%, transparent); animation: sbe-snow var(--sbe-wx-fd) linear infinite; }
+@keyframes sbe-snow { 25% { transform: translate(5px, 16px); } 50% { transform: translate(-3px, 32px); } 75% { transform: translate(4px, 48px); } to { transform: translate(-2px, 64px); } }
+.sbe-sky[data-w~="fast"] .sbe-wl-fall { --sbe-wx-fd: 1s; }
+.sbe-sky[data-w~="fast"] .sbe-wl-fall i { animation-name: sbe-hail; border-radius: 40%; box-shadow: inset -1px -1px 1px rgb(0 0 0 / .3); }
+@keyframes sbe-hail { to { transform: translate(-6px, 64px); } }
+.sbe-sky[data-w~="slow"] .sbe-wl-fall { --sbe-wx-fd: 9s; --sbe-wx-fz: 2.5px; }
+.sbe-sky[data-w~="slow"] .sbe-wl-fall i { animation-name: sbe-ash; border-radius: 30% 60% 40% 50%; box-shadow: none; }
+@keyframes sbe-ash { 33% { transform: translate(8px, 22px) rotate(90deg); } 66% { transform: translate(-6px, 44px) rotate(200deg); } to { transform: translate(5px, 66px) rotate(300deg); } }
+/* Vent : feuilles ou flocons emportés ; sable : traits. */
+.sbe-wl-wind i { position: absolute; left: -10px; width: calc(7px * var(--k)); height: calc(3px * var(--k)); border-radius: 60% 40%; background: var(--sbe-wx-wind); opacity: .8; animation: sbe-wind 2s linear infinite; }
+@keyframes sbe-wind { 0% { transform: translate(0, 0) rotate(0); } 50% { transform: translate(180px, -8px) rotate(200deg); } 100% { transform: translate(380px, 4px) rotate(380deg); } }
+.sbe-sky[data-w~="sand"] .sbe-wl-wind i { height: 1px; border-radius: 0; width: calc(18px * var(--k)); opacity: .55; }
+/* Éclairs, arcs électriques, teinte rouge. */
+.sbe-wl-flash { animation: sbe-flash 5s infinite; }
+.sbe-sky[data-w~="em"] .sbe-wl-flash, .sbe-sky[data-w~="meteor"] .sbe-wl-flash { animation: none; }
+.sbe-bolt { position: absolute; top: 0; width: 11px; opacity: 0; filter: drop-shadow(0 0 4px #cfe3ff); }
+.sbe-sky[data-w~="bolts"] .sbe-bolt { animation: sbe-bolt 5s infinite; }
+.sbe-bolt svg, .sbe-arc svg { display: block; width: 100%; }
+.sbe-bolt path { fill: #f4f8ff; }
+.sbe-bolt.b1 { left: 28%; } .sbe-bolt.b2 { left: 71%; width: 8px; animation-delay: 2.3s; }
+.sbe-sky[data-w~="red"] .sbe-wl-flash { animation-name: sbe-flashr; }
+.sbe-sky[data-w~="red"] .sbe-bolt path { fill: #ffd2b8; }
+.sbe-sky[data-w~="red"] .sbe-bolt { filter: drop-shadow(0 0 5px #ff5a28); }
+@keyframes sbe-flash { 0%, 89%, 93%, 100% { background: transparent; } 90%, 94% { background: rgb(230 240 255 / .4); } }
+@keyframes sbe-flashr { 0%, 84%, 89%, 100% { background: transparent; } 85%, 90% { background: rgb(255 90 40 / .4); } }
+@keyframes sbe-bolt { 0%, 89%, 92%, 93%, 96%, 100% { opacity: 0; } 90%, 94% { opacity: 1; } }
+.sbe-arc { position: absolute; width: 34px; opacity: 0; filter: drop-shadow(0 0 3px #7fb6ff); }
+.sbe-arc path { stroke: #d8ecff; }
+.sbe-sky[data-w~="em"] .sbe-arc { animation: sbe-arc 1.6s infinite; }
+.sbe-arc.a1 { left: 12%; top: 30%; } .sbe-arc.a2 { left: 48%; top: 10%; animation-delay: .5s; } .sbe-arc.a3 { left: 74%; top: 45%; animation-delay: 1.1s; }
+@keyframes sbe-arc { 0%, 80%, 86%, 90%, 100% { opacity: 0; } 82%, 88% { opacity: 1; } }
+/* Halo, poussières montantes, flotteurs, étoiles filantes. */
+.sbe-wl-haze i { position: absolute; left: -20%; width: 140%; height: 70%; top: 20%; border-radius: 50%; filter: blur(10px); mix-blend-mode: screen; animation: sbe-haze 3.2s ease-in-out infinite alternate;
+  background: radial-gradient(ellipse at 50% 60%, color-mix(in srgb, var(--sbe-wx-dust) 55%, transparent), color-mix(in srgb, var(--sbe-wx-dust) 20%, transparent) 50%, transparent 70%); }
+.sbe-wl-haze i:nth-child(2) { top: 40%; left: 10%; width: 80%; animation-duration: 2.1s; animation-delay: -1s; background: radial-gradient(ellipse, color-mix(in srgb, var(--sbe-wx-dust) 45%, transparent), transparent 65%); }
+@keyframes sbe-haze { from { opacity: .45; transform: scaleX(.9); } to { opacity: 1; transform: scaleX(1.08); } }
+.sbe-wl-dust i { position: absolute; bottom: -4px; width: var(--z); height: var(--z); border-radius: 50%; background: var(--sbe-wx-dust); box-shadow: 0 0 4px 1px color-mix(in srgb, var(--sbe-wx-dust) 80%, transparent); animation: sbe-dust 9s linear infinite; }
+@keyframes sbe-dust { 0% { opacity: 0; transform: translate(0, 0); } 15% { opacity: 1; } 50% { transform: translate(6px, -28px); } 85% { opacity: .8; } 100% { opacity: 0; transform: translate(-4px, -56px); } }
+.sbe-wl-float i { position: absolute; width: var(--z); height: var(--z); border-radius: 50%; background: radial-gradient(circle, var(--sbe-wx-float), transparent 70%); animation: sbe-float 6s ease-in-out infinite alternate; }
+@keyframes sbe-float { from { transform: translate(-6px, 4px) scale(.8); opacity: .5; } to { transform: translate(8px, -6px) scale(1.2); opacity: 1; } }
+.sbe-wl-meteor i { position: absolute; width: 50px; height: 1.5px; background: linear-gradient(90deg, transparent, var(--sbe-wx-meteor)); border-radius: 2px; transform: rotate(25deg); opacity: 0; animation: sbe-meteor 6s ease-in infinite; box-shadow: 0 0 4px var(--sbe-wx-meteor); }
+@keyframes sbe-meteor { 0%, 20%, 100% { opacity: 0; } 2% { opacity: 1; } 18% { opacity: 0; transform: translate(-80px, 40px) rotate(25deg); } }
+/* Aurores, étincelles, chaleur, éclipse. */
+.sbe-wl-aurora i { position: absolute; left: -10%; width: 120%; height: 18px; border-radius: 50%; filter: blur(6px); mix-blend-mode: screen; animation: sbe-aur 7s ease-in-out infinite alternate; }
+.sbe-wl-aurora i:nth-child(1) { top: 4px; background: linear-gradient(90deg, transparent, var(--sbe-wx-aurora1), var(--sbe-wx-aurora2), transparent); }
+.sbe-wl-aurora i:nth-child(2) { top: 14px; background: linear-gradient(90deg, transparent, var(--sbe-wx-aurora2), var(--sbe-wx-aurora1), transparent); animation-duration: 9s; animation-delay: -3s; }
+.sbe-wl-aurora i:nth-child(3) { top: 0; background: linear-gradient(90deg, transparent 20%, var(--sbe-wx-aurora2) 50%, transparent 80%); opacity: .6; animation-duration: 5s; }
+@keyframes sbe-aur { from { transform: translateX(-6%) skewX(-12deg) scaleY(.8); } to { transform: translateX(6%) skewX(12deg) scaleY(1.3); } }
+.sbe-wl-spark i { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: var(--sbe-wx-spark); box-shadow: 0 0 5px 2px color-mix(in srgb, var(--sbe-wx-spark) 70%, #8040ff); animation: sbe-spark 1.8s ease-in-out infinite; }
+@keyframes sbe-spark { 0%, 100% { opacity: 0; transform: translateY(3px); } 50% { opacity: 1; transform: translateY(-3px); } }
+.sbe-wl-heat { top: 55%; background: repeating-linear-gradient(90deg, transparent 0 6px, rgb(255 255 255 / .12) 6px 8px); filter: blur(2px); animation: sbe-heat 1.4s ease-in-out infinite alternate; mask-image: linear-gradient(transparent, #000); }
+@keyframes sbe-heat { from { transform: skewX(-6deg) translateX(-3px); } to { transform: skewX(6deg) translateX(3px); } }
+.sbe-sky[data-w~="eclipse"] .sbe-sky-sun { background: radial-gradient(circle, #0b0b14 0 55%, #3a3040 62%, transparent 70%); box-shadow: 0 0 10px 6px rgb(255 240 200 / .5), 0 0 26px 12px rgb(255 200 120 / .25); }
+.sbe-sky[data-w~="eclipse"] .sbe-sky-moon { opacity: 0 !important; }
+.sbe-wl-corona { background: radial-gradient(circle at 50% 20%, rgb(255 230 180 / .18), transparent 40%); animation: sbe-haze 3s ease-in-out infinite alternate; }
+
+/* ============================================================ */
+/*  L'horloge                                                    */
+/* ============================================================ */
+.sbe-clock { background: none; border: 0; box-shadow: none; padding: 0; overflow: visible; z-index: var(--z-index-app, 100); }
+.sbe-ck { position: relative; font-family: var(--sbe-font-primary); color: var(--sbe-text); }
+.sbe-ck-full { position: relative; width: 280px; border-radius: 14px; overflow: hidden; background: color-mix(in srgb, var(--sbe-surf-1) 94%, transparent); border: 1px solid var(--sbe-edge-soft); box-shadow: var(--sbe-shadow), inset 0 1px 0 rgb(255 255 255 / .06); }
+.sbe-ck-info { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 8px; padding: 6px 10px 7px; }
+.sbe-ck-time span { display: block; font: 600 26px/1 var(--sbe-font-heading); color: var(--sbe-text-max); text-shadow: 0 0 12px color-mix(in srgb, var(--sbe-accent) 45%, transparent); }
+.sbe-ck-time small { display: block; margin-top: 2px; font-size: 10px; color: var(--sbe-text-2); text-transform: uppercase; letter-spacing: .12em; }
+.sbe-ck-date { display: flex; flex-direction: column; min-width: 0; gap: 2px; }
+/* Ligne 1 : la date en grand, la saison à côté. Ligne 2 : la lune, la pastille météo au bout. */
+.sbe-ck-dline { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
+.sbe-ck-dline b { flex: 0 1 auto; min-width: 0; font-size: 14px; line-height: 1.25; color: var(--sbe-text-max); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sbe-ck-dline span { flex: none; font-size: 11px; color: var(--sbe-text-dim); white-space: nowrap; }
+.sbe-ck-last { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 2px 6px; }
+.sbe-ck-last > span { flex: 1 0 auto; font-size: 11px; line-height: 1.25; color: var(--sbe-text-2); white-space: nowrap; }
+/* Les lunes l'une sous l'autre ; une ligne trop longue se coupe sur « … », le texte entier au survol. */
+.sbe-ck-last > span[data-ck="sub"] { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; }
+/* La température, au bout de la ligne de la lune. */
+.sbe-ck-temp { flex: none; margin-left: auto; font-size: 11px; line-height: 1.25; color: var(--sbe-text-2); white-space: nowrap; }
+/* La météo, posée en haut à gauche du ciel : icône et nom. Pour le MJ,
+   un bouton transparent qui n'apparaît qu'au survol (il change la
+   météo) ; pour un joueur, une simple information. */
+.sbe-ck-wx { position: absolute; top: 5px; left: 2px; z-index: 2; display: inline-flex; align-items: center; gap: 4px; max-width: calc(100% - 50px);
+  padding: 1px 7px; margin: 0; border-radius: 999px; background: transparent; border: 1px solid transparent; color: #fff;
+  font: inherit; line-height: 1.3; height: auto; width: auto;
+  /* Contour noir : lisible sur un ciel clair comme sombre. */
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 0 3px #000; transition: background .15s, border-color .15s; }
+button.sbe-ck-wx { cursor: pointer; }
+button.sbe-ck-wx:hover, button.sbe-ck-wx:focus-visible { background: color-mix(in srgb, var(--sbe-surf-1) 80%, transparent); border-color: var(--sbe-accent-light); color: var(--sbe-text); text-shadow: none; }
+.sbe-ck-wx span { flex: none; font-size: 13px; line-height: 1; text-shadow: none; }
+.sbe-ck-wx small { min-width: 0; font-size: 11px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sbe-ck-ctl { display: flex; flex-direction: column; align-items: center; gap: 4px; border-top: 1px solid var(--sbe-edge-soft); max-height: 0; opacity: 0; overflow: hidden; transition: max-height .25s, opacity .25s, padding .25s; padding: 0 8px; }
+.sbe-ck-row { display: flex; align-items: center; justify-content: center; gap: 2px; }
+/* Ouvert au survol ; reste ouvert tant qu'une liste (pas, vitesse) est déroulée. */
+.sbe-ck-full:hover .sbe-ck-ctl, .sbe-ck-ctl:has(select:focus) { max-height: 90px; opacity: 1; padding-block: 6px; }
+/* Touches : petites, arrondies, un relief léger, l'accent au survol. */
+.sbe-ck-ctl button, .sbe-ck-ctl select, .sbe-ck-mini button {
+  display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 26px; padding: 0; line-height: 1;
+  border-radius: 8px; color: var(--sbe-text); font: inherit; font-size: 13px; cursor: pointer;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--sbe-surf-5) 55%, var(--sbe-surf-3)), var(--sbe-surf-2));
+  border: 1px solid var(--sbe-surf-5); box-shadow: inset 0 1px 0 rgb(255 255 255 / .08), 0 1px 2px rgb(0 0 0 / .4);
+  transition: border-color .15s, box-shadow .15s, transform .15s, background .15s; }
+.sbe-ck-ctl button:hover, .sbe-ck-mini button:hover { border-color: var(--sbe-accent-light); box-shadow: inset 0 1px 0 rgb(255 255 255 / .1), 0 0 8px color-mix(in srgb, var(--sbe-accent) 45%, transparent); transform: translateY(-1px); }
+.sbe-ck-ctl button:active { transform: translateY(0); box-shadow: inset 0 1px 3px rgb(0 0 0 / .5); }
+.sbe-ck-ctl button.on, .sbe-ck-mini button.on { background: linear-gradient(180deg, var(--sbe-accent-light), var(--sbe-accent)); border-color: var(--sbe-accent-light); color: var(--sbe-accent-text); }
+/* Listes : couleurs du thème, y compris la liste déroulée. */
+.sbe-ck-ctl select option { background: var(--sbe-surf-2); color: var(--sbe-text); }
+.sbe-ck-ctl select option:checked { background: var(--sbe-accent); color: var(--sbe-accent-text); }
+.sbe-ck-ctl select { width: 74px; max-width: 74px; min-width: 0; padding-inline: 4px 14px; font-size: 11px; justify-content: flex-start; }
+.sbe-ck-ctl .sbe-ck-speed { width: 66px; max-width: 66px; }
+.sbe-ck-ctl select:hover { border-color: var(--sbe-accent-light); }
+.sbe-ck-sep { width: 1px; height: 16px; background: var(--sbe-edge-soft); margin: 0 2px; }
+.sbe-ck-mini { display: none; align-items: center; gap: 10px; padding: 5px 12px 5px 5px; border-radius: 999px; background: color-mix(in srgb, var(--sbe-surf-1) 94%, transparent); border: 1px solid var(--sbe-edge-soft); box-shadow: var(--sbe-shadow); cursor: grab; }
+.sbe-ck-mini-sky { width: 26px; height: 26px; border-radius: 50%; background: var(--sbe-sky); box-shadow: inset 0 0 0 1px rgb(255 255 255 / .15); position: relative; overflow: hidden; transition: background .6s; }
+.sbe-ck-mini-sky i { position: absolute; width: 9px; height: 9px; border-radius: 50%; left: 8px; top: calc(var(--y, 50%) * .4 + 4px); background: #ffd35c; box-shadow: 0 0 6px #ffd35c; transition: top .6s; }
+.sbe-ck-mini-sky.is-night i { background: #efe9d8; box-shadow: 0 0 6px #efe9d8; }
+.sbe-ck-mini b { font: 600 18px var(--sbe-font-heading); color: var(--sbe-text-max); }
+.sbe-ck-mini span { font-size: 12px; color: var(--sbe-text-2); }
+.sbe-ck.is-mini .sbe-ck-full { display: none; }
+.sbe-ck.is-mini .sbe-ck-mini { display: inline-flex; }
+.sbe-ck-toggle { position: absolute; top: -10px; right: -10px; width: 24px; height: 24px; padding: 0; border-radius: 50%; background: var(--sbe-surf-3); border: 1px solid var(--sbe-surf-4); color: var(--sbe-text); cursor: pointer; font-size: 12px; z-index: 5; line-height: 1; }
+.sbe-ck-toggle:hover { background: var(--sbe-accent); color: var(--sbe-accent-text); }
+/* Menu de météo du MJ. */
+.sbe-ck-pop { position: fixed; z-index: calc(var(--z-index-app, 100) + 50); color: var(--sbe-text); font-family: var(--sbe-font-primary); width: 340px; max-width: calc(100vw - 16px); background: var(--sbe-ctx-bg); border: 1px solid var(--sbe-surf-4); border-radius: 10px; box-shadow: var(--sbe-shadow); padding: 8px; display: flex; flex-direction: column; gap: 6px; overflow: hidden; }
+.sbe-ck-pop[hidden] { display: none; }
+.sbe-ck-pop-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; padding-right: 2px; }
+.sbe-ck-pop-cat { margin-top: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--sbe-accent-light); }
+.sbe-ck-pop-head { font-weight: 600; font-size: 12px; color: var(--sbe-text-2); }
+.sbe-ck-pop-list { display: flex; flex-wrap: wrap; gap: 4px; }
+.sbe-ck-pop-list button { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px 3px 6px; border-radius: 999px; background: var(--sbe-surf-1); border: 1px solid var(--sbe-surf-4); color: var(--sbe-text); font: inherit; font-size: 12px; cursor: pointer; width: auto; height: auto; line-height: 1.3; }
+.sbe-ck-pop-list button span { font-size: 14px; }
+.sbe-ck-pop-list button:hover { border-color: var(--sbe-accent-light); }
+.sbe-ck-pop-list button.on { background: var(--sbe-accent); border-color: var(--sbe-accent-light); color: var(--sbe-accent-text); }
+.sbe-ck-pop-foot { flex: none; display: flex; flex-direction: column; gap: 4px; border-top: 1px solid var(--sbe-edge-soft); padding-top: 6px; font-size: 12px; }
+.sbe-ck-pop-foot label { display: flex; flex-direction: column; gap: 2px; }
+.sbe-ck-pop-foot label > span { font-weight: 600; }
+.sbe-ck-pop-check { flex-direction: row !important; align-items: center; gap: 6px !important; }
+.sbe-ck-pop-foot input[type="number"] { width: 100px; }
+/* Régler la date. */
+.sbe-cal-setdate { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
+.sbe-cal-setdate label { display: flex; flex-direction: column; gap: 2px; }
+.sbe-cal-setdate label > span { font-weight: 600; font-size: .9em; }
+
+/* ============================================================ */
+/*  Le calendrier                                                */
+/* ============================================================ */
+.sbe-calendar-app .window-content { padding: 0; overflow: visible; }
+.sbe-cal { position: relative; color: var(--sbe-text); }
+.sbe-cal-empty { padding: 12px; }
+.sbe-cal-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; padding: 12px 16px 10px; border-bottom: 1px solid var(--sbe-edge-soft);
+  background: radial-gradient(ellipse at 85% 0%, color-mix(in srgb, var(--sbe-accent) 35%, transparent), transparent 60%), var(--sbe-header-grad); }
+.sbe-cal-hero h3 { margin: 0; font: 600 26px/1 var(--sbe-font-heading); letter-spacing: .02em; border: 0; color: var(--sbe-text-max); }
+.sbe-cal-year { font: 600 12px monospace; color: var(--sbe-accent-light); letter-spacing: .2em; }
+.sbe-cal-hero small { color: var(--sbe-text-dim); font-size: 12px; }
+.sbe-cal-nav { display: flex; gap: 4px; }
+.sbe-cal-nav button, .sbe-cal-mh button { padding: 4px 10px; background: var(--sbe-raised); border: 1px solid var(--sbe-edge-soft); border-radius: 8px; color: var(--sbe-text); font: inherit; cursor: pointer; width: auto; height: auto; line-height: 1.3; }
+.sbe-cal-nav button:hover, .sbe-cal-mh button:hover { background: color-mix(in srgb, var(--sbe-accent) 30%, var(--sbe-raised)); }
+.sbe-cal-nav .sbe-cal-today { font-size: 12px; }
+.sbe-cal-body { display: grid; grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr); gap: 12px; padding: 12px; }
+.sbe-cal-grid { display: grid; grid-template-columns: repeat(var(--n, 7), minmax(0, 1fr)); gap: 4px; align-content: start; }
+.sbe-cal-dh { text-align: center; font-size: 10px; color: var(--sbe-text-dim); text-transform: uppercase; letter-spacing: .08em; padding-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbe-cal-cd { position: relative; min-height: 54px; display: flex; flex-direction: column; gap: 2px; padding: 4px 5px; background: var(--sbe-surf-3); border: 1px solid transparent; border-radius: 8px;
+  color: var(--sbe-text); font: inherit; font-size: 12px; cursor: pointer; text-align: left; transition: border-color .15s, background .15s; min-width: 0; height: auto; width: auto; line-height: 1.3; }
+.sbe-cal-cd:hover { border-color: var(--sbe-surf-5); background: var(--sbe-raised); }
+.sbe-cal-cd.off { background: transparent; cursor: default; border: 0; }
+.sbe-cal-cd.past { opacity: .55; }
+.sbe-cal-top { display: flex; justify-content: space-between; align-items: center; }
+.sbe-cal-top i { font-style: normal; font-size: 11px; opacity: .85; }
+.sbe-cal-cd.today { background: linear-gradient(160deg, color-mix(in srgb, var(--sbe-accent) 45%, transparent), color-mix(in srgb, var(--sbe-accent) 12%, transparent)); border-color: var(--sbe-accent-light); opacity: 1; }
+.sbe-cal-cd.today .sbe-cal-top b { background: var(--sbe-accent); color: var(--sbe-accent-text); border-radius: 50%; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; }
+.sbe-cal-cd.sel { border-color: var(--sbe-warn); box-shadow: 0 0 0 1px var(--sbe-warn); }
+.sbe-cal-ev { font-size: 10px; padding: 1px 4px; border-radius: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-left: 3px solid var(--ec); background: color-mix(in srgb, var(--ec) 22%, transparent); }
+.sbe-cal-more { font-size: 10px; color: var(--sbe-text-dim); }
+.sbe-cal-day { display: flex; flex-direction: column; gap: 8px; padding: 12px; background: var(--sbe-surf-3); border-radius: 12px; border: 1px solid var(--sbe-edge-soft); min-width: 0; align-self: start; }
+.sbe-cal-dayhead { display: flex; align-items: center; gap: 10px; }
+.sbe-cal-dayhead > b { font: 600 40px/1 var(--sbe-font-heading); color: var(--sbe-text-max); }
+.sbe-cal-dayhead span { display: block; font-weight: 600; }
+.sbe-cal-dayhead small { color: var(--sbe-text-dim); font-size: 11px; }
+.sbe-cal-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.sbe-cal-facts span { font-size: 11px; padding: 3px 6px; background: var(--sbe-surf-2); border-radius: 6px; color: var(--sbe-text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbe-cal-list { display: flex; flex-direction: column; gap: 4px; }
+.sbe-cal-none { margin: 0; font-size: 12px; color: var(--sbe-text-dim); }
+.sbe-cal-evrow { position: relative; display: flex; flex-direction: column; padding: 5px 8px; border-left: 3px solid var(--ec); background: color-mix(in srgb, var(--ec) 14%, var(--sbe-surf-2)); border-radius: 6px; font-size: 12px; }
+.sbe-cal-evrow small { color: var(--sbe-text-dim); }
+.sbe-cal-evrow p { margin: 4px 0 0; font-size: 11px; white-space: pre-wrap; }
+.sbe-cal-evact { position: absolute; top: 4px; right: 4px; display: flex; gap: 2px; opacity: 0; transition: opacity .15s; }
+.sbe-cal-evrow:hover .sbe-cal-evact { opacity: 1; }
+.sbe-cal-evact button { width: 22px; height: 22px; padding: 0; font-size: 10px; line-height: 1; background: var(--sbe-raised); border: 1px solid var(--sbe-edge-soft); border-radius: 4px; color: var(--sbe-text); cursor: pointer; }
+.sbe-cal-add { font-size: 12px; }
+/* Compact. */
+.sbe-cal-mini { display: none; width: 236px; padding: 10px; }
+.sbe-cal-mh { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.sbe-cal-mh div { text-align: center; }
+.sbe-cal-mh b { display: block; font: 600 18px var(--sbe-font-heading); color: var(--sbe-text-max); }
+.sbe-cal-mh small { font-size: 10px; color: var(--sbe-accent-light); letter-spacing: .2em; }
+.sbe-cal-mh button { background: none; border: 0; font-size: 18px; padding: 0 6px; }
+.sbe-cal-grid-mini { gap: 2px; }
+.sbe-cal-grid-mini .sbe-cal-cd { min-height: 0; aspect-ratio: 1; align-items: center; justify-content: center; padding: 0; border-radius: 50%; background: transparent; font-size: 11px; }
+.sbe-cal-grid-mini .sbe-cal-cd b { font-weight: 400; }
+.sbe-cal-grid-mini .sbe-cal-cd.today { background: var(--sbe-accent); color: var(--sbe-accent-text); }
+.sbe-cal-grid-mini .sbe-cal-cd em { position: absolute; bottom: 1px; width: 4px; height: 4px; border-radius: 50%; background: var(--ec); }
+.sbe-cal-mfoot { margin-top: 6px; text-align: center; font-size: 11px; color: var(--sbe-text-dim); }
+.sbe-cal.is-mini .sbe-cal-full { display: none; }
+.sbe-cal.is-mini .sbe-cal-mini { display: block; }
+.sbe-cal .sbe-ck-toggle { top: 4px; right: 4px; }
+@media (max-width: 600px) { .sbe-cal-body { grid-template-columns: 1fr; } }
+/* Fiche d'un événement. */
+.sbe-cal-evform { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
+.sbe-cal-evform label { display: flex; flex-direction: column; gap: 2px; }
+.sbe-cal-evform label > span { font-weight: 600; font-size: .9em; }
+.sbe-cal-evform .wide { grid-column: 1 / -1; }
+.sbe-cal-check { flex-direction: row !important; align-items: center; gap: 6px !important; }
+.sbe-cal-check input { flex: none; }
+.sbe-cal-iconf { display: flex; gap: 4px; }
+/* Élément fourni par SBE : nom, icône et clé verrouillés. */
+.sbe-cal-lock { font-size: 9px; opacity: .55; margin-left: 4px; }
+.sbe-cal-tabbody input:disabled, .sbe-cal-tabbody button:disabled { opacity: .55; cursor: not-allowed; }
+.sbe-cal-iconf input { flex: 1; min-width: 0; }
+.sbe-cal-iconf button { flex: none; width: 32px; }
+
+/* ============================================================ */
+/*  Réglage                                                      */
+/* ============================================================ */
+.sbe-calendar-editor .sbe-zed-main { display: flex; flex-direction: column; min-height: 0; }
+.sbe-cal-tabs { display: flex; flex-wrap: wrap; gap: 2px; border-bottom: 1px solid var(--sbe-surf-4); margin-bottom: 8px; flex: none; }
+.sbe-cal-tab { background: none; border: 0; border-bottom: 2px solid transparent; border-radius: 0; color: var(--sbe-text-2); padding: 5px 10px; font: inherit; cursor: pointer; width: auto; height: auto; line-height: 1.3; }
+.sbe-cal-tab.on { color: var(--sbe-accent-light); border-bottom-color: var(--sbe-accent); font-weight: 600; }
+.sbe-cal-tab.world { margin-left: auto; }
+.sbe-cal-tab.world ~ .sbe-cal-tab.world { margin-left: 0; }
+.sbe-cal-tab:disabled { opacity: .4; cursor: default; }
+.sbe-cal-tabbody { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: 4px; }
+.sbe-cal-props { margin-bottom: 6px; }
+.sbe-cal-wide { grid-column: 1 / -1; }
+.sbe-cal-pair { display: flex; gap: 4px; }
+.sbe-cal-pair > * { flex: 1; min-width: 0; }
+.sbe-cal-sum { font-size: 12px; color: var(--sbe-text-dim); margin: 6px 0; }
+.sbe-cal-h4 { margin: 10px 0 4px; font-size: .95em; border: 0; display: flex; align-items: center; gap: 6px; }
+.sbe-cal-table { display: flex; flex-direction: column; gap: 3px; }
+.sbe-cal-row { display: grid; align-items: center; gap: 4px; }
+.sbe-cal-months .sbe-cal-row { grid-template-columns: 24px 1fr 80px 70px 70px 90px; }
+.sbe-cal-days .sbe-cal-row { grid-template-columns: 24px 1fr 90px 90px; }
+.sbe-cal-phlist { display: flex; flex-direction: column; gap: 4px; container-type: inline-size; }
+.sbe-cal-phrow { display: grid; grid-template-columns: 110px minmax(0, 1fr) minmax(0, 1fr) 96px minmax(150px, 1.4fr) minmax(0, 1fr) 58px; gap: 4px; align-items: center; }
+.sbe-cal-phrow.is-rare { padding: 2px 0 2px 6px; border-left: 3px solid var(--sbe-accent, #b5471f); }
+.sbe-cal-phrow .sbe-cal-iconf input { width: 60px; }
+/* Fenêtre étroite : sur une seule ligne, le nom, la clé et l'effet
+   n'avaient plus de place (colonnes écrasées à zéro). Chaque phase passe
+   sur deux lignes ; l'en-tête suit la même grille, ses titres restent
+   au-dessus de leur champ. */
+@container (max-width: 699px) {
+  .sbe-cal-phrow {
+    grid-template-columns: 110px minmax(0, 1fr) minmax(0, 1fr) 58px;
+    grid-template-areas: "icon name key btns" "color len eff eff";
+  }
+  .sbe-cal-phrow:not(.sbe-cal-head) { padding-bottom: 4px; border-bottom: 1px solid var(--sbe-border, rgba(127,127,127,.3)); }
+  .sbe-cal-phrow > :nth-child(1) { grid-area: icon; }
+  .sbe-cal-phrow > :nth-child(2) { grid-area: name; }
+  .sbe-cal-phrow > :nth-child(3) { grid-area: key; }
+  .sbe-cal-phrow > :nth-child(4) { grid-area: color; }
+  .sbe-cal-phrow > :nth-child(5) { grid-area: len; }
+  .sbe-cal-phrow > :nth-child(6) { grid-area: eff; }
+  .sbe-cal-phrow > :nth-child(7) { grid-area: btns; }
+}
+.sbe-cal-phlen input { width: 64px; }
+.sbe-cal-rare { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-size: .85em; }
+.sbe-cal-rare select { flex: 1 1 100%; min-width: 0; }
+.sbe-cal-rare input { width: 48px; height: 22px; }
+.sbe-cal-colopt { display: inline-flex; align-items: center; gap: 4px; }
+.sbe-cal-colopt input[type="color"] { width: 34px; height: 24px; padding: 0; }
+.sbe-cal-colopt button { width: 22px; height: 22px; padding: 0; font-size: 10px; }
+.sbe-cal-colopt small { opacity: .7; }
+.sbe-ck-moon { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sbe-cal-row > b { text-align: center; font-size: .85em; color: var(--sbe-text-dim); }
+.sbe-cal-head > b { text-align: left; font-size: .85em; color: var(--sbe-text-2); }
+.sbe-cal-rowbtns { display: flex; gap: 2px; justify-content: flex-end; }
+.sbe-cal-rowbtns button, .sbe-cal-wrow button, .sbe-cal-cardel { width: 26px; height: 26px; padding: 0; font-size: 11px; line-height: 1; }
+.sbe-cal-addrow { margin-top: 6px; font-size: 12px; width: auto; }
+.sbe-cal-card { border: 1px solid var(--sbe-surf-4); border-radius: 8px; padding: 6px 10px; margin-bottom: 8px; background: var(--sbe-surf-2); }
+.sbe-cal-card > summary { display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-weight: 600; list-style: none; }
+.sbe-cal-card > summary::before { content: "▸"; margin-right: 6px; display: inline-block; transition: transform .15s; }
+.sbe-cal-card[open] > summary::before { transform: rotate(90deg); }
+.sbe-cal-card > summary span { flex: 1; }
+.sbe-cal-wlist { display: flex; flex-direction: column; gap: 3px; }
+.sbe-cal-wrow { display: grid; grid-template-columns: 1fr 80px 30px; gap: 4px; align-items: center; }
+.sbe-cal-time { width: 100%; }
+.sbe-cal-wxwrap { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 10px; min-height: 0; }
+.sbe-cal-wxaside { display: flex; flex-direction: column; gap: 4px; }
+.sbe-cal-wxlist { max-height: 420px; }
+.sbe-cal-wxlist li span { width: 18px; text-align: center; }
+.sbe-cal-wxlist li.sbe-cal-wxcat { display: flex; align-items: center; gap: 4px; cursor: default; background: var(--sbe-surf-2); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--sbe-accent-light); padding-block: 3px; }
+.sbe-cal-wxlist li.sbe-cal-wxcat > span { flex: 1; min-width: 0; }
+/* L'œil : la catégorie est-elle proposée dans le menu de météo de l'horloge ? */
+.sbe-cal-wxlist li.sbe-cal-wxcat > button { flex: none; width: 22px; height: 18px; min-height: 0; padding: 0; line-height: 1; font-size: 10px; background: none; border: 0; color: inherit; cursor: pointer; }
+.sbe-cal-wxlist li.sbe-cal-wxcat.is-off { color: var(--sbe-text-dim); }
+.sbe-cal-wxlist li.sbe-cal-wxcat.is-off > span { text-decoration: line-through; }
+.sbe-cal-wxmain .sbe-sky { border-radius: 10px; margin-bottom: 8px; cursor: default; }
+.sbe-cal-layers { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 2px 10px; margin-bottom: 6px; }
+.sbe-cal-layer { display: flex; align-items: center; gap: 4px; font-size: .9em; }
+.sbe-cal-layer input { flex: none; margin: 0; }
+.sbe-cal-colors input[type="color"] { height: 26px; padding: 0 2px; }
+.sbe-cal-wxbtns { display: flex; gap: 6px; margin-top: 8px; }
+.sbe-cal-wxbtns button { width: auto; font-size: 12px; }
+.sbe-cal-seg { display: flex; flex-wrap: wrap; }
+.sbe-cal-seg button { flex: 1; padding: 4px 8px; background: var(--sbe-surf-1); border: 1px solid var(--sbe-surf-4); color: var(--sbe-text-2); font: inherit; font-size: 12px; cursor: pointer; white-space: nowrap; width: auto; height: auto; line-height: 1.3; border-radius: 0; }
+.sbe-cal-seg button:first-child { border-radius: 6px 0 0 6px; }
+.sbe-cal-seg button:last-child { border-radius: 0 6px 6px 0; }
+.sbe-cal-seg button + button { border-left: 0; }
+/* Le choix en cours se voit quel que soit l'habillage des boutons du thème. */
+.sbe-calendar-editor .sbe-cal-seg > button.on { background: var(--sbe-accent) !important; border-color: var(--sbe-accent-light) !important; color: var(--sbe-accent-text) !important; font-weight: 700; box-shadow: inset 0 0 0 1px var(--sbe-accent-light), 0 0 8px color-mix(in srgb, var(--sbe-accent) 50%, transparent) !important; }
+.sbe-calendar-editor .sbe-cal-seg > button.on::before { content: "✓ "; }
+.sbe-calendar-editor .sbe-cal-seg > button:not(.on) { opacity: .75; }
+.sbe-calendar-editor .sbe-cal-seg > button:not(.on):hover { opacity: 1; }
+
+/* Emplacement visé pendant le glisser de l'horloge. */
+.sbe-ck-slot { position: fixed; z-index: calc(var(--z-index-app, 100) - 1); pointer-events: none; border: 2px dashed color-mix(in srgb, var(--sbe-text) 45%, transparent); border-radius: 14px; background: color-mix(in srgb, var(--sbe-surf-1) 25%, transparent); transition: border-color .15s, background .15s; }
+.sbe-ck-slot.is-near { border-color: var(--sbe-accent-light); background: color-mix(in srgb, var(--sbe-accent) 18%, transparent); }
+
+/* Effet sur la scène : une ligne par couche. */
+.sbe-cal-sclist { display: flex; flex-direction: column; gap: 4px; }
+.sbe-cal-scrow { display: grid; grid-template-columns: minmax(0, 1fr) 34px 34px minmax(140px, 180px) 28px; gap: 6px; align-items: center; }
+.sbe-cal-scrow input[type="color"] { height: 26px; padding: 0 2px; }
+.sbe-cal-scrow > button { width: 28px; height: 26px; padding: 0; font-size: 11px; }
+.sbe-cal-sdrow { display: grid; grid-template-columns: minmax(0, 1fr) 28px 110px minmax(130px, 170px) minmax(110px, auto) 28px 28px; gap: 6px; align-items: center; }
+.sbe-cal-sdrow > button { width: 28px; height: 26px; padding: 0; font-size: 11px; }
+.sbe-cal-sdgap { display: flex; align-items: center; gap: 3px; font-size: .85em; }
+.sbe-cal-sdgap input { width: 44px; height: 24px; text-align: center; }
+.sbe-cal-sdfar select { width: auto; max-width: 130px; height: 24px; }
+.sbe-cal-scamt { display: grid; grid-template-columns: auto 1fr 34px; align-items: center; gap: 4px; font-size: .85em; }
+.sbe-cal-scamt b { text-align: right; font-weight: 600; }

@@ -1,0 +1,45 @@
+/* ============================================================
+ * SBE — GROUPE (feuille du MJ) : membres, sauvegardes, réglages.
+ * Variables du thème uniquement ; libellés au-dessus des champs.
+ * ============================================================ */
+
+.sbe-group-sheet .window-content { display: flex; flex-direction: column; min-height: 0; }
+.sbe-group { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; min-height: 0; flex: 1 1 auto; }
+.sbe-group .notes { margin: 0; color: var(--sbe-text-dim); }
+.sbe-group-head { display: flex; align-items: center; gap: 8px; }
+.sbe-group-img { width: 48px; height: 48px; object-fit: cover; border: 1px solid var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); cursor: pointer; }
+.sbe-group-name { flex: 1 1 auto; min-width: 0; font-size: 1.2em; }
+.sbe-group-title { margin: 8px 0 0; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--sbe-tone-3); }
+
+.sbe-group-members { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.sbe-group-member { display: flex; align-items: center; gap: 8px; padding: 4px 6px; background: var(--sbe-surf-2); border: 1px solid var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); }
+.sbe-group-member img { width: 36px; height: 36px; object-fit: cover; border-radius: 3px; flex: 0 0 auto; }
+.sbe-group-mname { flex: 1 1 auto; min-width: 0; color: var(--sbe-text); overflow-wrap: anywhere; }
+.sbe-group-member.is-missing .sbe-group-mname { color: var(--sbe-fail); font-style: italic; }
+.sbe-group-x { color: var(--sbe-text-dim); }
+.sbe-group-x:hover { color: var(--sbe-fail); }
+.sbe-group-empty { padding: 8px; text-align: center; border: 1px dashed var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); }
+
+.sbe-group-slots { display: flex; flex-direction: column; gap: 4px; }
+.sbe-group-slot { display: flex; align-items: center; gap: 8px; padding: 6px; background: var(--sbe-surf-2); border: 1px solid var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); }
+.sbe-group-slot.is-auto { border-style: dashed; }
+.sbe-group-slot-info { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+.sbe-group-slot-btns { flex: 0 0 auto; display: flex; gap: 4px; }
+.sbe-group-slot-btns button { white-space: nowrap; }
+
+.sbe-group-active { align-self: flex-start; }
+.sbe-group-active.is-on { color: var(--sbe-ok); }
+.sbe-group-check { display: flex; align-items: center; gap: 6px; }
+.sbe-group-field { display: flex; flex-direction: column; gap: 2px; }
+.sbe-group-row { display: flex; gap: 4px; align-items: center; }
+.sbe-group-row input { flex: 1 1 auto; min-width: 0; }
+.sbe-group-icon { flex: 0 0 auto; width: var(--input-height, 28px); min-width: var(--input-height, 28px); height: var(--input-height, 28px); padding: 0; display: flex; align-items: center; justify-content: center; }
+.sbe-group-icon i { margin: 0; }
+
+.sbe-group-volume { flex: 1 1 auto; min-width: 0; }
+.sbe-group-volout { flex: 0 0 3.5em; text-align: right; }
+
+/* Police du thème SBE, champs compris. */
+.sbe-group-sheet .window-content,
+.sbe-group-sheet .window-content :is(input, select, textarea, button, label, a, li, p, span):not([class*="fa-"]) { font-family: var(--sbe-font-primary); }
+.sbe-group-sheet .window-content :is(h1, h2, h3, h4) { font-family: var(--sbe-font-heading); }

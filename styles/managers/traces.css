@@ -1,0 +1,76 @@
+/* ============================================================
+ * SBE — Configuration des TRACES (managers/traces/trace-config.mjs)
+ * ============================================================ */
+.sbe-trace-config .window-content { padding: 0; display: flex; flex-direction: column; min-height: 0; }
+.sbe-tc { display: flex; flex: 1 1 auto; min-height: 0; }
+.sbe-tc-list { flex: 0 0 210px; min-height: 0; overflow-y: auto; padding: 8px; border-right: 1px solid var(--sbe-tone-3); display: flex; flex-direction: column; gap: 6px; }
+.sbe-tc-list > * { flex-shrink: 0; }
+.sbe-tc-list > button { height: auto; min-height: var(--button-size, 28px); padding-block: 4px; line-height: 1.2; white-space: normal; }
+.sbe-tc-list ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.sbe-tc-list li { display: flex; align-items: center; gap: 6px; padding: 4px 6px; border-radius: var(--sbe-radius, 4px); cursor: pointer; }
+.sbe-tc-list li:hover { background: var(--sbe-surf-2); }
+.sbe-tc-list li.active { background: var(--sbe-surf-2); outline: 1px solid var(--sbe-accent); }
+.sbe-tc-list li.is-off { opacity: 0.55; }
+.sbe-tc-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--sbe-tone-3); flex: 0 0 auto; }
+.sbe-tc-name { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
+.sbe-tc-edit { flex: 1 1 auto; min-width: 0; min-height: 0; overflow-y: auto; padding: 8px 12px; display: flex; flex-direction: column; gap: 6px; }
+.sbe-tc-edit > * { flex-shrink: 0; }
+.sbe-tc-edit h3, .sbe-tc-list h3 { margin: 8px 0 0; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--sbe-tone-3); font-size: 1.05em; }
+.sbe-tc-row { display: flex; align-items: flex-end; gap: 8px; flex-wrap: wrap; }
+.sbe-tc-wrap { align-items: center; }
+.sbe-tc-field { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sbe-tc-field input[type="number"] { width: 6.5em; }
+.sbe-tc-grow { flex: 1 1 180px; }
+.sbe-tc-check { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; padding-bottom: 4px; }
+.sbe-tc-del { margin-left: auto; padding-bottom: 6px; color: var(--sbe-text-dim); }
+.sbe-tc-del:hover { color: var(--sbe-fail); }
+.sbe-tc .notes { margin: 0; color: var(--sbe-text-dim); }
+.sbe-tc-images { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.sbe-tc-img { position: relative; display: inline-block; }
+.sbe-tc-img img { width: 40px; height: 40px; object-fit: contain; border: 1px solid var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); background: var(--sbe-surf-2); }
+.sbe-tc-img a { position: absolute; top: -6px; right: -6px; font-size: 11px; }
+.sbe-tc-images button, .sbe-tc-list button { width: auto; }
+.sbe-tc input[type="color"] { width: 48px; height: 28px; padding: 0; }
+.sbe-trace-config .window-content :is(input, select, button, label, a, li, p, span):not([class*="fa-"]) { font-family: var(--sbe-font-primary); }
+.sbe-tc-rm { flex: 0 0 auto; color: var(--sbe-text-dim); opacity: 0; transition: opacity 120ms; }
+.sbe-tc-list li:hover .sbe-tc-rm, .sbe-tc-list li.active .sbe-tc-rm { opacity: 1; }
+.sbe-tc-rm:hover { color: var(--sbe-fail); }
+.sbe-tc-cond select { width: auto; }
+.sbe-tc-fp { align-items: flex-end; }
+.sbe-tc-fp button { width: auto; }
+.sbe-tc-fpimg { width: 36px; height: 36px; object-fit: contain; border: 1px solid var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); background: var(--sbe-surf-2); }
+/* Aperçu des empreintes : une case par empreinte, à la couleur du type. */
+.sbe-tc-fplabel { font-weight: 600; }
+.sbe-tc-fpgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 6px; }
+.sbe-tc-fpcell { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 4px; border: 1px solid var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); background: var(--sbe-surf-2); color: var(--fp, var(--sbe-text)); cursor: pointer; text-align: center; }
+.sbe-tc-fpcell svg, .sbe-tc-fpcell img { width: 48px; height: 48px; object-fit: contain; }
+.sbe-tc-fpcell i { font-size: 28px; line-height: 48px; color: var(--sbe-text-dim); }
+.sbe-tc-fpcell span { font-size: 0.85em; color: var(--sbe-text); line-height: 1.1; }
+.sbe-tc-fpcell small { font-family: monospace; font-size: 0.75em; color: var(--sbe-text-dim); }
+.sbe-tc-fpcell:hover { border-color: var(--sbe-accent); }
+.sbe-tc-fpcell.active { outline: 2px solid var(--sbe-accent); }
+
+/* Section « Empreintes » : règles critère → empreinte. */
+.sbe-tc-fpentry { border-top: 1px solid var(--sbe-tone-3); padding-top: 4px !important; }
+.sbe-tc-fpentry i { width: 12px; text-align: center; color: var(--sbe-accent); }
+.sbe-tc-rule { display: flex; gap: 8px; align-items: flex-start; padding: 6px; margin-bottom: 6px; border: 1px solid var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); background: var(--sbe-surf-2); }
+.sbe-tc-rule-prev { flex: 0 0 44px; display: flex; align-items: center; justify-content: center; height: 44px; color: var(--sbe-accent); }
+.sbe-tc-rule-prev svg, .sbe-tc-rule-prev img { width: 40px; height: 40px; object-fit: contain; }
+.sbe-tc-rule-body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.sbe-tc-rule-img { width: auto; align-self: flex-end; }
+.sbe-tc-rule-tools { display: flex; flex-direction: column; gap: 4px; }
+.sbe-tc-rule-tools a { cursor: pointer; color: var(--sbe-text-dim); }
+.sbe-tc-rule-tools a:hover { color: var(--sbe-accent); }
+.sbe-tc-rule-tools a.is-off { opacity: 0.3; pointer-events: none; }
+
+/* Info-bulle d'âge d'une trace (survol du plateau). */
+.sbe-trace-tip { position: fixed; z-index: 10000; display: none; pointer-events: none; padding: 3px 8px; border-radius: 4px;
+  background: rgba(15, 15, 18, 0.88); color: #f2f2f2; font-size: 12px; line-height: 1.3; white-space: nowrap; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5); }
+
+/* Effets qui déclenchent l'impact ou la traînée : cases compactes à icône. */
+.sbe-tc-effs { flex: 1 1 100%; }
+.sbe-tc-effgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 2px 8px; max-height: 150px; overflow-y: auto; padding: 4px 6px; border: 1px solid var(--sbe-tone-3); border-radius: var(--sbe-radius, 4px); background: var(--sbe-surf-1); }
+.sbe-tc-eff { display: flex; align-items: center; gap: 4px; min-width: 0; padding-bottom: 0; }
+.sbe-tc-eff img { width: 18px; height: 18px; border: 0; flex: none; }
+.sbe-tc-eff span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbe-tc-effmode { margin-top: 4px; max-width: 260px; }

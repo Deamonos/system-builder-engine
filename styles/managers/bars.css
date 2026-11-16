@@ -1,0 +1,97 @@
+/* SBE — Barres de jetons : fenêtre, éditeur, encart du jeton, HUD. */
+.sbe-token-bars .window-content { display: flex; flex-direction: column; gap: 8px; padding: 8px; min-height: 0; }
+.sbe-bars-root { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: 210px 340px 1fr; gap: 8px; }
+.sbe-bars-scopes, .sbe-bars-mid, .sbe-bars-edit { min-height: 0; overflow-y: auto; border: 1px solid var(--sbe-tone-3); border-radius: 8px; background: var(--sbe-surf-1); }
+.sbe-bars-scopes { display: flex; flex-direction: column; gap: 2px; padding: 6px; }
+.sbe-bars-scope { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; cursor: pointer; }
+.sbe-bars-scope:hover { background: var(--sbe-surf-2); }
+.sbe-bars-scope.is-on { background: color-mix(in srgb, var(--sbe-accent) 18%, transparent); box-shadow: inset 3px 0 0 var(--sbe-accent); font-weight: 600; }
+.sbe-bars-scope img { width: 28px; height: 28px; object-fit: cover; border: 0; border-radius: 4px; flex: none; }
+.sbe-bars-scope > i { width: 28px; text-align: center; color: var(--sbe-accent); flex: none; }
+.sbe-bars-scope > span { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbe-bars-scope > em { font-size: 0.75em; opacity: 0.7; flex: none; }
+.sbe-bars-dirty { color: var(--sbe-accent); flex: none; }
+
+.sbe-bars-mid { display: flex; flex-direction: column; gap: 6px; padding: 8px; }
+.sbe-bars-mid h3 { margin: 0; border: 0; color: var(--sbe-text-strong); }
+.sbe-bars-opts { display: flex; flex-direction: column; gap: 6px; padding: 6px 8px; border: 1px solid var(--sbe-tone-3); border-radius: 6px; }
+.sbe-bars-num { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.sbe-bars-num input, .sbe-bars-num select { width: auto; max-width: 160px; }
+.sbe-bars-list { display: flex; flex-direction: column; gap: 4px; }
+.sbe-bars-item { display: flex; align-items: center; gap: 4px; padding: 4px 6px; border: 1px solid var(--sbe-tone-3); border-radius: 6px; }
+.sbe-bars-item.is-on { border-color: var(--sbe-accent); background: color-mix(in srgb, var(--sbe-accent) 10%, transparent); }
+.sbe-bars-pick { flex: 1 1 auto; min-width: 0; display: grid; grid-template-columns: 26px 1fr; grid-template-rows: auto auto; column-gap: 8px; align-items: center; cursor: pointer; }
+.sbe-bars-swatch { grid-row: span 2; width: 26px; height: 10px; border-radius: 5px; border: 1px solid var(--sbe-tone-4, var(--sbe-tone-3)); }
+.sbe-bars-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbe-bars-meta { font-size: 0.78em; opacity: 0.75; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbe-bars-tools { display: flex; gap: 2px; flex: none; }
+.sbe-bars-tools button, .sbe-bar-step-tools button { width: 26px; height: 24px; padding: 0; justify-content: center; flex: none; }
+.sbe-bars-add { align-self: flex-start; width: auto; }
+.sbe-bar-empty { opacity: 0.7; font-style: italic; margin: 4px 0; }
+.sbe-bars-foot { display: flex; justify-content: flex-end; gap: 6px; }
+.sbe-bars-foot button { width: auto; }
+.sbe-bars-warn { display: flex; gap: 8px; align-items: flex-start; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--sbe-fail); background: color-mix(in srgb, var(--sbe-fail) 14%, transparent); }
+.sbe-bars-warn i { color: var(--sbe-fail); margin-top: 2px; }
+
+/* Aperçu vivant (reste visible en haut de l'éditeur) */
+.sbe-bar-preview { position: sticky; top: -8px; z-index: 2; display: flex; flex-direction: column; gap: 4px; margin: -8px -10px 0; padding: 6px 10px; background: var(--sbe-surf-1); border-bottom: 1px solid var(--sbe-tone-3); }
+.sbe-bar-preview-stage { height: 190px; border-radius: 6px; background:
+  repeating-conic-gradient(color-mix(in srgb, var(--sbe-text) 6%, transparent) 0 25%, transparent 0 50%) 0 0 / 20px 20px; }
+.sbe-bar-preview-stage canvas { display: block; width: 100% !important; }
+.sbe-bar-preview-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.sbe-bar-preview-tools label { display: inline-flex; align-items: center; gap: 6px; }
+.sbe-bar-preview-tools input[type="range"] { width: 140px; }
+.sbe-bar-preview-tools select { width: auto; }
+.sbe-bar-preview-tools button { width: 30px; height: 26px; padding: 0; justify-content: center; flex: none; }
+.sbe-bar-pv-out { min-width: 42px; }
+
+/* Éditeur d'une barre */
+.sbe-bars-edit { padding: 8px 10px; }
+.sbe-bar-ed { display: flex; flex-direction: column; gap: 8px; }
+.sbe-bar-tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid var(--sbe-tone-3); padding-bottom: 6px; }
+.sbe-bar-tabs a { padding: 4px 10px; border-radius: 6px 6px 0 0; cursor: pointer; opacity: 0.8; }
+.sbe-bar-tabs a:hover { opacity: 1; background: var(--sbe-surf-2); }
+.sbe-bar-tabs a.is-on { opacity: 1; font-weight: 600; box-shadow: inset 0 -2px 0 var(--sbe-accent); }
+.sbe-bar-pane { display: none; flex-direction: column; gap: 8px; }
+.sbe-bar-pane.is-on { display: flex; }
+.sbe-bar-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.sbe-bar-row > .sbe-bar-field { flex: 1 1 140px; }
+.sbe-bar-field { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sbe-bar-field > label { font-weight: 600; }
+.sbe-bar-field .notes { margin: 0; }
+.sbe-bar-field--check { justify-content: flex-end; }
+.sbe-bar-inline { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.sbe-bar-inline > select, .sbe-bar-inline > input[type="number"] { width: auto; min-width: 70px; flex: 1 1 70px; }
+.sbe-bar-check { display: inline-flex; align-items: center; gap: 6px; font-weight: normal; }
+.sbe-bar-ed input[type="color"] { width: 46px; height: 26px; padding: 0; flex: none; }
+.sbe-bar-file { display: flex; gap: 4px; }
+.sbe-bar-file input { flex: 1 1 auto; min-width: 0; }
+.sbe-bar-file button { flex: none; width: 30px; padding: 0; justify-content: center; }
+.sbe-bar-ed fieldset { border: 1px solid var(--sbe-tone-3); border-radius: 6px; padding: 4px 8px 8px; display: flex; flex-direction: column; gap: 6px; }
+.sbe-bar-steps { display: flex; flex-direction: column; gap: 8px; }
+.sbe-bar-step { display: flex; flex-direction: column; gap: 6px; padding: 6px 8px 8px; border: 1px solid var(--sbe-tone-3); border-left: 3px solid var(--sbe-accent); border-radius: 6px; background: var(--sbe-surf-2); }
+.sbe-bar-step-head { display: flex; align-items: center; justify-content: space-between; }
+.sbe-bar-step-tools { display: flex; gap: 2px; }
+.sbe-bar-ed > button, .sbe-bar-pane > button { align-self: flex-start; width: auto; }
+
+/* Encart de la configuration du jeton */
+.sbe-bars-tokenbox { display: flex; flex-direction: column; gap: 6px; }
+.sbe-bars-tlist { display: flex; flex-direction: column; gap: 4px; }
+.sbe-bars-trow { display: grid; grid-template-columns: 26px 1fr auto auto auto; grid-template-rows: auto auto; column-gap: 8px; align-items: center; padding: 4px 6px; border: 1px solid var(--sbe-tone-3); border-radius: 6px; }
+.sbe-bars-trow .sbe-bars-tools { grid-row: span 2; grid-column: 5; }
+.sbe-bars-trow .sbe-bars-chip { grid-row: span 2; }
+.sbe-bars-trow.is-off { opacity: 0.5; }
+.sbe-bars-chip { font-size: 0.75em; padding: 1px 6px; border-radius: 8px; border: 1px solid var(--sbe-tone-3); white-space: nowrap; }
+.sbe-bars-chip.is-mod { border-color: var(--sbe-accent); color: var(--sbe-accent); }
+.sbe-bars-tfoot { display: flex; gap: 6px; flex-wrap: wrap; }
+.sbe-bars-tfoot button { width: auto; }
+
+/* Fenêtre de surcharge des prototypes de Foundry */
+.sbe-bars-ovr { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--color-border, #666); }
+.sbe-bars-ovr button { align-self: flex-start; width: auto; }
+
+/* HUD du jeton : champs des barres modifiables */
+/* Position calculée par le code (après les barres posées dehors). */
+.sbe-bars-hud { position: absolute; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 3px; pointer-events: all; z-index: 1; }
+.sbe-bars-hudf { display: flex; align-items: center; gap: 6px; padding: 2px 6px; border-radius: 6px; background: rgb(0 0 0 / 0.6); color: #fff; font-size: 12px; white-space: nowrap; }
+.sbe-bars-hudf input { width: 64px; height: 22px; text-align: center; background: rgb(0 0 0 / 0.5); color: #fff; border: 1px solid #888; }

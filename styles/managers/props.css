@@ -1,0 +1,110 @@
+/* SBE — Panneau d'un objet de scène (double-clic sur le pion). */
+.sbe-prop-panel .window-content { display: flex; flex-direction: column; gap: 8px; padding: 10px; }
+.sbe-prop-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 8px; border-radius: 8px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--sbe-accent) 16%, transparent), transparent);
+  border-left: 3px solid var(--sbe-accent);
+}
+.sbe-prop-head img { width: 48px; height: 48px; object-fit: contain; border: 0; flex: none; }
+.sbe-prop-name { font-weight: bold; font-size: 1.1em; color: var(--sbe-text-strong); }
+.sbe-prop-acts { display: flex; flex-direction: column; gap: 4px; }
+.sbe-prop-acts button { width: 100%; justify-content: flex-start; text-align: left; display: flex; align-items: center; gap: 6px; }
+.sbe-prop-acts .sbe-btn-icon { width: 20px; height: 20px; object-fit: contain; border: 0; }
+
+/* Pied : Reprendre, Fiche, Supprimer — en icônes, à droite. */
+.sbe-prop-foot { display: flex; align-items: center; justify-content: flex-end; gap: 4px; padding-top: 6px; border-top: 1px solid var(--sbe-tone-3); }
+.sbe-prop-foot button { flex: none; width: 30px; height: 28px; padding: 0; justify-content: center; }
+.sbe-prop-foot-name { flex: 1 1 auto; min-width: 0; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Panneau composé dans l'atelier : rendu comme la fiche, en plus serré ;
+   les boutons prennent toute la largeur de leur colonne. */
+.sbe-prop-custom { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.sbe-prop-custom .sbe-btn-row { padding: 2px 0; }
+.sbe-prop-custom .sbe-btn-face {
+  width: 100%; justify-content: center;
+  padding: 7px 12px; border-radius: 8px;
+  letter-spacing: 0.02em;
+  transition: background 0.12s, box-shadow 0.12s, transform 0.06s;
+}
+.sbe-prop-custom .sbe-btn-face:active:not(:disabled) { transform: translateY(1px); }
+/* Dans un cadre du panneau, les boutons se mettent CÔTE À CÔTE (retour
+   à la ligne s'il n'y a pas la place) ; le reste garde toute la largeur. */
+.sbe-prop-custom .sbe-frame-body { display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; gap: 6px; padding: 6px 8px; }
+.sbe-prop-custom .sbe-frame-body > * { flex: 1 1 100%; min-width: 0; }
+.sbe-prop-custom .sbe-frame-body > .sbe-btn-row { flex: 1 1 0; min-width: 110px; padding: 0; }
+/* Colonnes sans pointillés (comme sur la fiche) ; repères de l'atelier
+   (masqué, conditionnel) inutiles en jeu. */
+.sbe-prop-custom .sbe-col { border: none; padding: 0; }
+.sbe-prop-custom .sbe-tpl-hidden-badge { display: none; }
+
+/* Forme « bulle » : accrochée au pion, sans cadre de fenêtre. */
+.sbe-prop-panel.sbe-prop-bubble {
+  position: fixed; z-index: var(--z-index-window, 100);
+  display: flex; flex-direction: column; gap: 8px; padding: 10px;
+  max-height: 70vh; overflow-y: auto;
+  background: var(--sbe-surf-2); color: var(--sbe-text);
+  border: 1px solid var(--sbe-tone-3); border-radius: 10px;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.45);
+}
+.sbe-prop-bubble .sbe-prop-x { position: absolute; top: 4px; right: 4px; width: 24px; height: 24px; padding: 0; line-height: 1; z-index: 1; }
+.sbe-prop-bubble > .sbe-prop-head { padding-right: 26px; }
+
+/* Atelier : réglages de l'onglet « Panneau une fois posé ». */
+.sbe-panel-cfg { display: flex; flex-direction: column; gap: 6px; padding: 6px 8px; border: 1px solid var(--sbe-tone-3); border-radius: 6px; margin-bottom: 6px; }
+.sbe-panel-cfg-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.sbe-panel-cfg-row > .form-group { display: flex; flex-direction: column; gap: 2px; flex: 1 1 140px; margin: 0; }
+.sbe-panel-cfg-row label { font-weight: 600; }
+.sbe-panel-cfg-check { display: flex; align-items: center; gap: 6px; }
+
+/* Atelier : « Composant du modèle » (renvoi vers un composant posé ailleurs). */
+.sbe-ref-el { display: flex; align-items: center; gap: 6px; padding: 6px 8px; border: 1px dashed var(--sbe-tone-4, var(--sbe-tone-3)); border-radius: 6px; }
+
+/* Onglet « Scène » d'un objet */
+.sbe-scenetab { display: flex; flex-direction: column; gap: 8px; }
+.sbe-scenetab > fieldset { display: flex; flex-direction: column; gap: 6px; }
+.sbe-sc-row { display: flex; gap: 6px; align-items: center; }
+.sbe-sc-row > input { flex: 1 1 0; min-width: 0; }
+.sbe-sc-row > button { flex: none; width: auto; }
+.sbe-scenetab .sbe-sc-img { display: flex; gap: 8px; align-items: flex-start; }
+.sbe-scenetab .sbe-sc-img > img { width: 56px; height: 56px; object-fit: contain; border: 1px solid var(--sbe-tone-3); border-radius: 6px; flex: none; }
+.sbe-scenetab .sbe-sc-img > .sbe-cf-cell { flex: 1 1 auto; }
+.sbe-scenetab .sbe-sc-reset, .sbe-scenetab .sbe-sc-openmodel { align-self: flex-start; width: auto; }
+
+/* Configuration de tuile : encart « Objet interactif ». */
+.sbe-tile-box { display: flex; flex-direction: column; gap: 6px; }
+.sbe-tile-linked { display: flex; align-items: center; gap: 8px; }
+.sbe-tile-linked img { width: 36px; height: 36px; object-fit: contain; border: 0; flex: none; }
+.sbe-tile-linked .sbe-tile-name { flex: 1 1 auto; font-weight: 600; min-width: 0; }
+.sbe-tile-linked button { flex: none; width: auto; }
+.sbe-tile-drop { padding: 10px; text-align: center; border: 2px dashed var(--sbe-tone-4, #888); border-radius: 6px; opacity: 0.85; }
+.sbe-tile-drop.is-over { border-color: var(--sbe-accent); background: color-mix(in srgb, var(--sbe-accent) 12%, transparent); opacity: 1; }
+
+/* Réglages d'objet de scène (roue de l'atelier). */
+.sbe-prop-cfg { display: flex; flex-direction: column; gap: 8px; }
+
+/* Liens de scène d'un objet posé (MJ). */
+.sbe-prop-links .window-content { display: flex; flex-direction: column; gap: 8px; padding: 10px; }
+.sbe-link-list { display: flex; flex-direction: column; gap: 4px; }
+.sbe-link-row { display: flex; align-items: center; gap: 6px; }
+.sbe-link-row > i { flex: none; width: 18px; text-align: center; color: var(--sbe-accent); }
+.sbe-link-row .sbe-link-what { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbe-link-row .sbe-link-label { flex: 0 0 140px; }
+.sbe-link-row button { flex: none; width: 28px; height: 26px; padding: 0; justify-content: center; }
+.sbe-link-row.is-missing .sbe-link-what { color: var(--sbe-fail); font-style: italic; }
+.sbe-scene-which { display: flex; flex-direction: column; gap: 4px; }
+
+/* Pièges : groupe des réglages, message de chat */
+.sbe-prop-trap { display: flex; flex-direction: column; gap: 4px; }
+.sbe-trap-msg { display: flex; align-items: center; gap: 8px; }
+.sbe-trap-msg img { width: 36px; height: 36px; object-fit: contain; border: 0; flex: 0 0 auto; }
+
+/* Piège : état dans le panneau automatique ; recamoufler (qui le voit encore). */
+.sbe-prop-trapstate { margin: 0 0 6px; font-weight: 600; }
+.sbe-prop-trapstate.is-armed { color: var(--sbe-danger); }
+.sbe-prop-trapstate.is-off { color: var(--sbe-ok); }
+.sbe-prop-openable { cursor: pointer; }
+.sbe-trap-sharelist { display: flex; flex-direction: column; gap: 4px; max-height: 300px; overflow-y: auto; }
+.sbe-trap-share { display: flex; align-items: center; gap: 8px; }
+.sbe-trap-share input { width: auto; flex: none; margin: 0; }
+.sbe-trap-share img { width: 28px; height: 28px; object-fit: cover; border: 0; border-radius: 3px; flex: none; }

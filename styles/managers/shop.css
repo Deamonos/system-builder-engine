@@ -1,0 +1,89 @@
+/**
+ * SBE — Boutiques des marchands : fenêtre et composants (Étal, Caisse,
+ * Bourse de l'acheteur, Zone de vente), dans l'atelier et la boutique.
+ */
+
+.sbe-shop .window-content { display: flex; flex-direction: column; gap: 6px; padding: 8px; }
+.sbe-shop-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+.sbe-shop-closed { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border: 1px solid var(--sbe-warn); border-radius: 6px; color: var(--sbe-warn); font-weight: 600; }
+.sbe-shop-nobuyer { margin: 0; }
+
+/* ---------- Étal ---------- */
+.sbe-shop-stall { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.sbe-shop-head { font-weight: 700; color: var(--sbe-text-dim); }
+.sbe-shop-tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid var(--sbe-surf-4); }
+.sbe-shop-tabs a { padding: 3px 10px; border-radius: 4px 4px 0 0; cursor: pointer; color: var(--sbe-text-dim); }
+.sbe-shop-tabs a.active { color: var(--sbe-text-strong); background: var(--sbe-surf-3); border-bottom: 2px solid var(--sbe-accent); }
+.sbe-shop-list { display: grid; grid-template-columns: repeat(var(--sbe-shop-cols, 1), minmax(0, 1fr)); gap: 4px; }
+.sbe-shop-row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; padding: 4px 6px; border: 1px solid var(--sbe-surf-4); border-radius: 6px; background: var(--sbe-surf-2); min-width: 0; }
+.sbe-shop-row img { flex: 0 0 auto; width: 32px; height: 32px; object-fit: contain; border: 0; cursor: pointer; }
+.sbe-shop-name { flex: 1 1 5em; min-width: 5em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbe-shop-name small { color: var(--sbe-fail); }
+.sbe-shop-qty { flex: 0 0 auto; color: var(--sbe-text-dim); font-size: 0.9em; }
+.sbe-shop-price { flex: 0 0 auto; }
+.sbe-shop-row button { flex: 0 0 auto; width: 2.2em; padding: 0; }
+.sbe-shop-row.is-soldout, .sbe-shop-cell.is-soldout, .sbe-shop-piece.is-soldout { opacity: 0.45; }
+.sbe-shop-grid { display: grid; grid-template-columns: repeat(auto-fill, var(--sbe-grid-cell, 56px)); gap: 4px; }
+.sbe-shop-cell { position: relative; width: var(--sbe-grid-cell, 56px); height: var(--sbe-grid-cell, 56px); border: 1px solid var(--sbe-surf-4); border-radius: 4px; background: var(--sbe-surf-1); }
+.sbe-shop-cell img { width: 100%; height: 100%; object-fit: contain; border: 0; }
+.sbe-shop-cell[data-shop-buy], .sbe-shop-piece[data-shop-buy] { cursor: pointer; }
+.sbe-shop-cell[data-shop-buy]:hover, .sbe-shop-piece[data-shop-buy]:hover { border-color: var(--sbe-accent); }
+.sbe-shop-empty { text-align: center; }
+
+/* ---------- Caisse, bourse ---------- */
+.sbe-shop-money { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.sbe-shop-money > span:first-child { font-weight: 600; color: var(--sbe-text-dim); }
+.sbe-shop-unl { font-style: italic; }
+
+/* ---------- Zone de vente ---------- */
+.sbe-shop-sell { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border: 2px dashed var(--sbe-surf-5); border-radius: 8px; color: var(--sbe-text-dim); }
+.sbe-shop-sell.is-over { border-color: var(--sbe-accent); color: var(--sbe-text-strong); }
+.sbe-shop-sell.is-off { opacity: 0.6; border-style: dotted; }
+
+/* ---------- MJ : stock ---------- */
+.sbe-shop-gm { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; }
+.sbe-shop-gm .notes { margin: 0; }
+.sbe-shop-gm button { flex: 0 0 auto; width: auto; padding: 0 8px; }
+.sbe-shop-stall.is-gm { padding: 4px; border: 1px dashed var(--sbe-surf-4); border-radius: 6px; }
+
+/* ---------- Fenêtres : acheter, régler un article ---------- */
+.sbe-shopdlg { display: flex; flex-direction: column; gap: 8px; }
+.sbe-shopdlg-head { display: flex; align-items: center; gap: 8px; }
+.sbe-shopdlg-head img { width: 40px; height: 40px; object-fit: contain; border: 0; }
+.sbe-shopdlg-f { display: flex; flex-direction: column; gap: 2px; flex: 1 1 0; min-width: 0; }
+.sbe-shopdlg-f > span { font-weight: 600; color: var(--sbe-text-dim); }
+.sbe-shopdlg-row { display: flex; align-items: flex-end; gap: 8px; }
+.sbe-shopdlg-check { display: flex; align-items: center; gap: 4px; flex: 0 0 auto; }
+.sbe-shopdlg-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.sbe-shopdlg-line > span:first-child { font-weight: 600; color: var(--sbe-text-dim); }
+.sbe-shopdlg-total { font-size: 1.1em; }
+.sbe-shopdlg-restock { display: flex; flex-direction: column; gap: 6px; }
+.sbe-shopdlg .notes { margin: 0; }
+
+/* ---------- Historique ---------- */
+.sbe-shop-hist { display: flex; flex-direction: column; gap: 3px; }
+.sbe-shop-hrow { display: flex; align-items: center; gap: 8px; padding: 3px 6px; border: 1px solid var(--sbe-surf-4); border-radius: 6px; background: var(--sbe-surf-2); min-width: 0; }
+.sbe-shop-hrow img { flex: 0 0 auto; width: 24px; height: 24px; object-fit: contain; border: 0; }
+.sbe-shop-hdate { flex: 0 0 auto; color: var(--sbe-text-dim); font-size: 0.85em; }
+.sbe-shop-hkind { flex: 0 0 auto; padding: 0 6px; border-radius: 4px; font-size: 0.85em; font-weight: 600; background: var(--sbe-surf-3); }
+.sbe-shop-hkind.is-buy { color: var(--sbe-accent); }
+.sbe-shop-hkind.is-sell { color: var(--sbe-ok); }
+.sbe-shop-hkind.is-rebuy { color: var(--sbe-warn); }
+.sbe-shop-hrow .sbe-shop-name small { color: var(--sbe-text-dim); }
+.sbe-shop-hwho { font-style: italic; }
+.sbe-shop-hrow button { flex: 0 0 auto; width: 2em; padding: 0; }
+.sbe-shop-hrow button.is-on { color: var(--sbe-warn); }
+.sbe-shop-hfilter { display: flex; align-items: center; gap: 6px; }
+.sbe-shop-hfilter > span { font-weight: 600; color: var(--sbe-text-dim); }
+
+/* ---------- Négociation, barre du MJ ---------- */
+.sbe-shop-gmbar { display: flex; justify-content: flex-end; }
+.sbe-shop-gmbar button { width: auto; padding: 0 8px; }
+.sbe-shop-deal { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border: 1px solid var(--sbe-surf-4); border-left-width: 4px; border-radius: 6px; background: var(--sbe-surf-3); color: var(--sbe-text); font-weight: 600; }
+.sbe-shop-deal.is-good { border-left-color: var(--sbe-ok); }
+.sbe-shop-deal.is-good > i { color: var(--sbe-ok); }
+.sbe-shop-deal.is-bad { border-left-color: var(--sbe-warn); }
+.sbe-shop-deal.is-bad > i { color: var(--sbe-warn); }
+.sbe-shop-deal button { margin-left: auto; width: 2em; padding: 0; }
+.sbe-shopdlg-pick { flex: 0 0 auto; width: 2.4em; }
+.sbe-shopdlg-row > input[type="text"] { flex: 1 1 auto; min-width: 0; }

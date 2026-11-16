@@ -1,0 +1,41 @@
+# Publication d'une version : à chaque « Release » publiée sur GitHub (tag vX.Y.Z),
+# le system.json reçoit la version du tag et le lien de son zip, puis le zip
+# du système et le system.json sont joints à la release. Foundry lit le
+# manifeste de la dernière release pour proposer la mise à jour.
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Version et lien de téléchargement
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+          REPO: ${{ github.repository }}
+        run: |
+          VERSION="${TAG#v}"
+          jq --arg v "$VERSION" \
+             --arg d "https://github.com/$REPO/releases/download/$TAG/system-builder-engine.zip" \
+             '.version = $v | .download = $d' system.json > system.tmp
+          mv system.tmp system.json
+
+      - name: Zip du système (sans les outils de développement)
+        run: |
+          zip -r system-builder-engine.zip . \
+            -x ".git/*" ".github/*" ".gitignore" "tools/*"
+
+      - name: Joindre à la release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            system.json
+            system-builder-engine.zip
