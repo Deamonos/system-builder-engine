@@ -26,9 +26,22 @@
 
 ## 🇬🇧 English
 
-SBE is a system for Foundry VTT v14 that lets you build your own tabletop RPG system — sheets, rules, mechanics and automations — without writing a single line of code.
+### About SBE
 
-SBE ships no game rules. It gives you the tools: you design a template in the workshop, then characters and items are created from it and follow its changes.
+**SBE (System Builder Engine)** is a system for Foundry VTT v14 that lets you build your own tabletop RPG system — sheets, rules, mechanics and automations — without writing a single line of code.
+
+You have your own game in mind, homemade rules, or a system no one has adapted yet? SBE ships **no game rules at all**: it gives you the tools to create them. Everything is done in windows, with buttons, lists and plain-language steps — no scripts, no macros, no programming.
+
+**How it works**
+
+1. **You design a template** in the workshop: you place the components of the sheet (values, gauges, lists, buttons, tabs…) where you want them, and choose how they look.
+2. **You give it rules**: formulas that compute values, rolls launched with a click, buttons that chain actions (roll, check a condition, deal damage, apply an effect, play a sound).
+3. **Characters and items are created from that template** and follow its changes: edit the template, every sheet updates.
+4. **At the table**, SBE's modules take over: inventory, effects, combat, calendar and weather, quests, merchants, trades, locks, traps… Each one is optional and set up in its own window.
+
+**Who is it for?** Game masters who want to play *their* game in Foundry VTT, exactly the way they imagined it, without depending on someone else's system or learning to code. Your templates can be exported and shared with other tables.
+
+**The project**: SBE is developed by Deamonos and grows with its community. Ideas, bug reports and creations are welcome on the Discord.
 
 ### Installation
 
@@ -82,9 +95,22 @@ Requires Foundry VTT **v14**.
 
 ## 🇫🇷 Français
 
-SBE est un système pour Foundry VTT v14 qui permet de construire son propre système de jeu de rôle — fiches, règles, mécaniques et automatisations — sans écrire une ligne de code.
+### À propos de SBE
 
-SBE ne fournit aucune règle de jeu. Il fournit les outils : vous dessinez un modèle dans l'atelier, puis les personnages et les objets sont créés depuis ce modèle et suivent ses changements.
+**SBE (System Builder Engine)** est un système pour Foundry VTT v14 qui permet de construire son propre système de jeu de rôle — fiches, règles, mécaniques et automatisations — sans écrire une ligne de code.
+
+Vous avez votre propre jeu en tête, des règles maison, ou un système que personne n'a encore adapté ? SBE ne fournit **aucune règle de jeu** : il vous donne les outils pour créer les vôtres. Tout se fait dans des fenêtres, avec des boutons, des listes et des étapes en langage clair — pas de script, pas de macro, pas de programmation.
+
+**Comment ça marche**
+
+1. **Vous dessinez un modèle** dans l'atelier : vous placez les composants de la fiche (valeurs, jauges, listes, boutons, onglets…) où vous voulez, et vous choisissez leur apparence.
+2. **Vous lui donnez des règles** : des formules qui calculent les valeurs, des jets lancés d'un clic, des boutons qui enchaînent des actions (lancer un jet, vérifier une condition, infliger des dégâts, appliquer un effet, jouer un son).
+3. **Les personnages et les objets sont créés depuis ce modèle** et suivent ses changements : modifiez le modèle, toutes les fiches se mettent à jour.
+4. **À la table**, les modules de SBE prennent le relais : inventaire, effets, combat, calendrier et météo, quêtes, marchands, échanges, verrous, pièges… Chacun est facultatif et se règle dans sa propre fenêtre.
+
+**Pour qui ?** Les MJ qui veulent jouer à *leur* jeu dans Foundry VTT, exactement comme ils l'ont imaginé, sans dépendre du système de quelqu'un d'autre ni apprendre à coder. Vos modèles s'exportent et se partagent avec d'autres tables.
+
+**Le projet** : SBE est développé par Deamonos et grandit avec sa communauté. Idées, signalements de bugs et créations sont les bienvenus sur le Discord.
 
 ### Installation
 
