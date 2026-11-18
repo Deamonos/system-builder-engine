@@ -1,7 +1,7 @@
 {
   "id": "system-builder-engine",
   "title": "SBE — System Builder Engine",
-  "description": "Create your own tabletop RPG system — structures, rules, mechanics and automations — without writing a single line of code.",
+  "description": "Create your own tabletop RPG system — structures, rules, mechanics and automations — without writing a single line of code. Designed by Deamonos, developed with the help of Claude (Anthropic's AI).",
   "version": "0.9.0",
   "compatibility": {
     "minimum": "14",

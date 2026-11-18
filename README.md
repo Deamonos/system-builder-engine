@@ -17,6 +17,7 @@
 [![Roadmap](https://img.shields.io/badge/Roadmap-SBE-163d6b?logo=googlemaps&logoColor=white)](https://claude.ai/artifact/HWMjKciPgGM8A1DWJVFKNi)
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-lightgrey)](LICENSE)
 [![Languages](https://img.shields.io/badge/languages-EN%20%7C%20FR-informational)](#)
+[![Built with Claude](https://img.shields.io/badge/built%20with-Claude%20AI-D97757?logo=anthropic&logoColor=white)](https://claude.ai)
 
 **🇬🇧 [English](#-english)** · **🇫🇷 [Français](#-français)**
 
@@ -41,7 +42,7 @@ You have your own game in mind, homemade rules, or a system no one has adapted y
 
 **Who is it for?** Game masters who want to play *their* game in Foundry VTT, exactly the way they imagined it, without depending on someone else's system or learning to code. Your templates can be exported and shared with other tables.
 
-**The project**: SBE is developed by Deamonos and grows with its community. Ideas, bug reports and creations are welcome on the Discord.
+**The project**: SBE is designed by Deamonos and developed with the help of **Claude**, Anthropic's AI: Deamonos imagines the features, the mechanics and the look, tests everything at the table and decides; Claude writes the code and the documentation. The project grows with its community. Ideas, bug reports and creations are welcome on the Discord.
 
 ### Installation
 
@@ -110,7 +111,7 @@ Vous avez votre propre jeu en tête, des règles maison, ou un système que pers
 
 **Pour qui ?** Les MJ qui veulent jouer à *leur* jeu dans Foundry VTT, exactement comme ils l'ont imaginé, sans dépendre du système de quelqu'un d'autre ni apprendre à coder. Vos modèles s'exportent et se partagent avec d'autres tables.
 
-**Le projet** : SBE est développé par Deamonos et grandit avec sa communauté. Idées, signalements de bugs et créations sont les bienvenus sur le Discord.
+**Le projet** : SBE est conçu par Deamonos et développé avec l'aide de **Claude**, l'IA d'Anthropic : Deamonos imagine les fonctionnalités, les mécaniques et l'apparence, teste tout en jeu et décide ; Claude écrit le code et la documentation. Le projet grandit avec sa communauté. Idées, signalements de bugs et créations sont les bienvenus sur le Discord.
 
 ### Installation
 
