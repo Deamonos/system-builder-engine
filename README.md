@@ -11,11 +11,10 @@
 [![Release](https://img.shields.io/github/v/release/Deamonos/system-builder-engine?label=release&color=245d9b)](https://github.com/Deamonos/system-builder-engine/releases/latest)
 [![Last commit](https://img.shields.io/github/last-commit/Deamonos/system-builder-engine?label=last%20commit)](https://github.com/Deamonos/system-builder-engine/commits)
 [![Latest release](https://img.shields.io/github/release-date/Deamonos/system-builder-engine?label=latest%20release)](https://github.com/Deamonos/system-builder-engine/releases/latest)
-[![Downloads](https://img.shields.io/github/downloads/Deamonos/system-builder-engine/total?label=downloads&color=ff9a3c)](https://github.com/Deamonos/system-builder-engine/releases)
 <br>
 [![Discord](https://img.shields.io/badge/Discord-join-5865F2?logo=discord&logoColor=white)](https://discord.gg/kUY28T8rHj)
 [![Roadmap](https://img.shields.io/badge/Roadmap-SBE-163d6b?logo=googlemaps&logoColor=white)](https://claude.ai/artifact/HWMjKciPgGM8A1DWJVFKNi)
-[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-lightgrey)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Languages](https://img.shields.io/badge/languages-EN%20%7C%20FR-informational)](#)
 [![Built with Claude](https://img.shields.io/badge/built%20with-Claude%20AI-D97757?logo=anthropic&logoColor=white)](https://claude.ai)
 
@@ -90,7 +89,7 @@ Requires Foundry VTT **v14**.
 
 ### License
 
-[CC BY-NC-SA 4.0](LICENSE): free to use, share and adapt with credit, for non-commercial purposes only; adaptations must keep the same license.
+[MIT](LICENSE): free to use, copy, modify and share, for any purpose; just keep the copyright notice and the license.
 
 ---
 
@@ -159,4 +158,4 @@ Nécessite Foundry VTT **v14**.
 
 ### Licence
 
-[CC BY-NC-SA 4.0](LICENSE) : libre d'utiliser, de partager et d'adapter en citant l'auteur, uniquement à des fins non commerciales ; les adaptations gardent la même licence.
+[MIT](LICENSE) : libre d'utiliser, de copier, de modifier et de partager, pour tout usage ; il suffit de garder la mention de copyright et la licence.
